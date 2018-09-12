@@ -243,15 +243,15 @@ local_setup_configure_nm_dcb () {
     #start dcb modules
     yum -y install lldpad fcoe-utils
     systemctl enable fcoe
-    systemctl start fcoe
+    systemctl restart fcoe
     systemctl enable lldpad
-    systemctl start lldpad
+    systemctl restart lldpad
 
     modprobe -r ixgbe; modprobe ixgbe
-    sleep 2
-    dcbtool sc p6p2 dcb on
+    #sleep 2
+    #dcbtool sc p6p2 dcb on
 
-    touch /tmp/dcb_configured
+    #touch /tmp/dcb_configured
 }
 
 local_setup_configure_nm_inf () {

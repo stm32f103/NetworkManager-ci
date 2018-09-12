@@ -52,7 +52,7 @@
     * Bring "up" connection "dcb"
     * Disconnect device "em2"
     # dcb off
-    #Then "DCB State:\s+off" is visible with command "dcbtool gc em2 dcb"
+    Then "DCB State:\s+off" is visible with command "dcbtool gc em2 dcb"
     Then "Enable:\s+false" is visible with command "dcbtool gc em2 pg" in "5" seconds
     Then "Enable:\s+false" is visible with command "dcbtool gc em2 pfc"
     Then "Enable:\s+false" is visible with command "dcbtool gc em2 app:fcoe"
@@ -69,10 +69,10 @@
     * Bring "up" connection "dcb"
     When "activated" is visible with command "nmcli -g GENERAL.STATE con show dcb" in "40" seconds
     * Reboot
-    When "activated" is visible with command "nmcli -g GENERAL.STATE con show dcb" in "40" seconds
 
     # dcb on
-    # Then "DCB State:\s+on" is visible with command "dcbtool gc em2 dcb"
+    When "DCB State:\s+on" is visible with command "dcbtool gc em2 dcb"
+    When "activated" is visible with command "nmcli -g GENERAL.STATE con show dcb" in "40" seconds
 
     # priority groups
     Then "Enable:\s+true\s+Advertise:\s+true\s+Willing:\s+true" is visible with command "dcbtool gc em2 pg"
