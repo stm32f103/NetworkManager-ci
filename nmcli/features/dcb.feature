@@ -10,7 +10,7 @@
     @dcb
     @dcb_enable_connection
     Scenario: nmcli - dcb - enable connection
-    * Add a new connection of type "ethernet" and options "ifname em2 con-name dcb ipv4.addresses 1.2.3.4/24 ipv4.method manual"
+    * Add a new connection of type "ethernet" and options "ifname em2 con-name dcb"
     #* Open editor for connection "dcb"
     * Prepare connection
     * Set default DCB options
