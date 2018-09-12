@@ -36,6 +36,9 @@
     Then "Enable:\s+true\s+Advertise:\s+true\s+Willing:\s+true" is visible with command "dcbtool gc em2 app:fip"
     Then "appcfg:\s+04" is visible with command "dcbtool gc em2 app:fip"
 
+    # dcb still on
+    Then "DCB State:\s+on" is visible with command "dcbtool gc em2 dcb"
+
 
     @dcb
     @dcb_disable_connection
