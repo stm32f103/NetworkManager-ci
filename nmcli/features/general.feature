@@ -1932,3 +1932,23 @@ Feature: nmcli - general
     * Modify connection "con_con" changing options "connection.autoconnect yes"
     * Wait for at least "2" seconds
     Then "PASSWORD_PROMPT_COUNT='1'" is visible with command "tmp/nm_agent_prompt_counter.sh stop"
+
+
+    @rhbz1628576
+    @ver+=1.10
+    @con_general_remove @regenerate_veth @veth_driver @remove_custom_cfg
+    @crash_when_dns_is_dnsmasq_and_device_removed
+    Scenario: NM - general - crash when using dns=dnsmasq and a device is removed
+    * Append "[main]" to file "/etc/NetworkManager/conf.d/99-xxcustom.conf"
+    * Append "dns=dnsmasq" to file "/etc/NetworkManager/conf.d/99-xxcustom.conf"
+    * Stop NM
+    * Start NM
+    * Note the output of "pidof NetworkManager" as value "1"
+    * Add a new connection of type "ethernet" and options "ifname eth5 con-name con_general connection.autoconnect yes"
+    * Bring "up" connection "con_general"
+    * Wait for at least "3" seconds
+    * Execute "sudo modprobe -r veth"
+    * Wait for at least "3" seconds
+    * Note the output of "pidof NetworkManager" as value "2"
+    Then Check noted values "1" and "2" are the same
+    * Execute "sudo modprobe veth"

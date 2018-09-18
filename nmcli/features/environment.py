@@ -1904,6 +1904,11 @@ def after_scenario(context, scenario):
                 print("---------------------------")
                 print("WORKAROUND for permissive selinux")
                 call('setenforce 1', shell=True)
+        
+        if 'veth_driver' in scenario.tags:
+            print ("---------------------------")
+            print ("load veth kernel driver")
+            call('modprobe veth', shell=True)
 
         if 'regenerate_veth' in scenario.tags or 'restart' in scenario.tags:
             print ("---------------------------")

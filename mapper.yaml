@@ -1118,6 +1118,8 @@ testmapper:
         feature: general
     - autoconnect_no_secrets_prompt:
         feature: general
+    - crash_when_dns_is_dnsmasq_and_device_removed:
+        feature: general
     - openvswitch_interface_recognized:
         feature: ovs
     - openvswitch_ignore_ovs_network_setup:
