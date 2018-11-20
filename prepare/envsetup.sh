@@ -251,7 +251,8 @@ local_setup_configure_nm_dcb () {
     modprobe -r ixgbe; modprobe ixgbe
     sleep 2
     dcbtool sc em2 dcb on
-
+    sleep 2
+    dcbtool gc em2 dcb
     touch /tmp/dcb_configured
 }
 
