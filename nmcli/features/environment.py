@@ -921,6 +921,13 @@ def before_scenario(context, scenario):
 
         if context.nm_pid is not None:
             context.log.write("NetworkManager memory consumption before: %d KiB\n" % nm_size_kb())
+            smaps = open("/proc/%d/smaps" % nm_pid())
+            for line in smaps:
+                fields = line.split()
+                if not 'Huge' in fields[0] and not 'Locked' in fields[0] and not 'PageSize' in fields[0] and not 'Shmem' in fields[0]:
+                    context.log.write("%s" % line)
+            smaps.close()
+
             if call("[ -f /etc/systemd/system/NetworkManager.service ] && grep -q valgrind /etc/systemd/system/NetworkManager.service", shell=True) == 0:
                 call("LOGNAME=root HOSTNAME=localhost gdb /usr/sbin/NetworkManager -ex 'target remote | vgdb' -ex 'monitor leak_check summary' -batch", shell=True, stdout=context.log, stderr=context.log)
 
@@ -2015,6 +2022,13 @@ def after_scenario(context, scenario):
 
         if nm_pid_after is not None and context.nm_pid == nm_pid_after:
             context.log.write("NetworkManager memory consumption after: %d KiB\n" % nm_size_kb())
+            smaps = open("/proc/%d/smaps" % nm_pid())
+            for line in smaps:
+                fields = line.split()
+                if not 'Huge' in fields[0] and not 'Locked' in fields[0] and not 'PageSize' in fields[0] and not 'Shmem' in fields[0]:
+                    context.log.write("%s" % line)
+            smaps.close()
+
             if call("[ -f /etc/systemd/system/NetworkManager.service ] && grep -q valgrind /etc/systemd/system/NetworkManager.service", shell=True) == 0:
                 sleep(3) # Wait for dispatcher to finish its business
                 call("LOGNAME=root HOSTNAME=localhost gdb /usr/sbin/NetworkManager -ex 'target remote | vgdb' -ex 'monitor leak_check full kinds all increased' -batch", shell=True, stdout=context.log, stderr=context.log)
