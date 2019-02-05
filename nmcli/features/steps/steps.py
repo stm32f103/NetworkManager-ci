@@ -216,6 +216,20 @@ def clear_text_typed(context):
     context.prompt.send("\b"*128)
 
 
+@step(u'Block all traffic')
+def block_traffic(context):
+    command_code(context, "iptables -P INPUT DROP")
+    command_code(context, "iptables -P OUTPUT DROP")
+    command_code(context, "iptables -P FORWARD DROP")
+
+
+@step(u'Unblock all traffic')
+def unblock_traffic(context):
+    command_code(context, "iptables -P INPUT ACCEPT")
+    command_code(context, "iptables -P OUTPUT ACCEPT")
+    command_code(context, "iptables -P FORWARD ACCEPT")
+
+
 @step(u'Bring "{action}" connection "{name}"')
 def start_stop_connection(context, action, name):
     if action == "down":
