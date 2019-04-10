@@ -15,6 +15,7 @@ This repo contains a set of integration tests for NetworkManager and vagrant bas
 ### Howto execute basic test suite manually on localhost (~90minutes)
 
 * Prerequisites
+  
   * vagrant ( https://www.vagrantup.com/downloads.html )
   * libvirt (kvm) or virtualbox ( http://download.virtualbox.org/virtualbox/ )
     * install vagrant libvirt-plugin if needed (```vagrant plugin install --plugin-version=0.0.35 vagrant-libvirt```)
