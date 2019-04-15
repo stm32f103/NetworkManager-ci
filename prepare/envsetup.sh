@@ -444,20 +444,12 @@ install_usb_hub_driver_el8 () {
 
 install_usb_hub_driver_el7 () {
     # Accomodate to RHEL7 and CentOS7.
-    # Package python2-pip depends on installation of EPEL7.
-    # Check for EPEL7 installation.
-    if ! rpm -q --quiet epel-release; then
-        echo "Error: EPEL7 in not installed but it's needed for installing Python2 modules." >&2
-        return 1
-    fi
-
     yum install -y libffi-devel python-devel
     pushd tmp/usb_hub
         # The module brainstem is already stored in project NetworkManager-ci.
         # Install BrainStem Development Kit (v2.7.1)
         # for Ubuntu LTS 14.04 x86_64.
         # This version of BrainStem works under RHEL 7.6 with Python 2.7.
-
         tar xf brainstem_dev_kit_ubuntu_lts_14.04_x86_64.tgz
         cd development/python/
         python -m pip install brainstem-2.7.1-py2.py3-none-any.whl; local rc=$?
