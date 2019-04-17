@@ -71,6 +71,7 @@ def find_modem():
 
     return 'USB ID 0000:0000 Modem Not in List'
 
+
 def get_modem_info():
     """
     Get a list of connected modem via command 'mmcli -L'.
@@ -118,6 +119,111 @@ def get_modem_info():
         return modem_info
     else:
         return 'MODEM INFO\n{}\nSIM CARD INFO\n{}'.format(modem_info, sim_info)
+
+
+def get_modem_status(output):
+    """
+    Expect a string containing output from ModemManager
+    mmcli --modem $MODEM_INDEX
+    :return: A dictionary of modem parameters.
+    """
+    lock_status = unlock_retries_list = state = power_state = access_tech_list = signal_quality = None
+
+    regex = r'lock: \'(\w+-*\w*)\''
+    mo = re.search(regex, output)
+    if mo:
+        lock_status = mo.groups()[0]
+
+    regex = r'unlock retries: \'(.*)\''
+    mo = re.search(regex, output)
+    if mo:
+        unlock_retries_list = mo.groups()[0].split(', ')
+
+    regex = r'state: \'(\w+)\''
+    mo = re.search(regex, output)
+    if mo:
+        state = mo.groups()[0]
+
+    regex = 'power state: \'(\w+)\''
+    mo = re.search(regex, output)
+    if mo:
+        power_state = mo.groups()[0]
+
+    regex = r'access tech: \'(\w+.*)\''
+    mo = re.search(regex, output)
+    if mo:
+        access_tech_list = mo.groups()[0].split(', ')
+
+    regex = 'signal quality: \'(\w+)\''
+    mo = re.search(regex, output)
+    if mo:
+        signal_quality = mo.groups()[0]
+        try:
+            signal_quality = int(signal_quality)
+        except ValueError:
+            raise Exception('Signal quality should be an integer, but it is "{}".'.format(signal_quality))
+
+    state_dict = {'lock': lock_status,
+                  'unlock retries': unlock_retries_list,
+                  'state': state,
+                  'power state': power_state,
+                  'access tech': access_tech_list,
+                  'signal quality': signal_quality}
+    return state_dict
+
+
+def is_sim_locked(output):
+    """
+    Expect a string containing output from ModemManager
+    mmcli --modem $MODEM_INDEX
+    :return: True/False/None on if locked/unlocked/exception.
+    """
+    lock_status_list = ['none', 'sim-pin','sim-pin2', 'sim-puk', 'sim-puk2']
+
+    regex = r'lock: \'(\w+-*\w*)\''
+    mo = re.search(regex, output)
+    if mo:
+        lock_status = mo.groups()[0]
+        print('Lock status: ', lock_status)
+    else:
+        print('Cannot determine lock status of SIM card.')
+        return None
+
+    isFound = False
+    if lock_status in lock_status_list:
+        isFound = True
+    if isFound is False:
+        print(
+            'Invalid lock status of SIM card: "{0}".\nShould be in the list {1}.'.format(lock_status, lock_status_list))
+        return None
+
+    return lock_status.find('none') < 0
+
+
+def unlock_sim(sim_index, pin, puk=None):
+    """
+    Unlock the SIM card of a broadband modem
+    via ModemManager
+    by sending PIN or PUK code to the card.
+    :return: True/False/None on success/failure/exception.
+    """
+    if pin and not(puk):
+        print('Unlock SIM via PIN code.')
+        cmd = 'mmcli --sim {0} --pin={1}'.format(sim_index, pin)
+        os.system(cmd)
+    elif puk:
+        print('Unlock SIM via PUK code.')
+        cmd = 'mmcli --sim {0} --pin={1} --puk={2}'.format(sim_index, pin, puk)
+    else:
+        print('Error: incorrect combination of PIN and PUK code.')
+        return None
+
+    RC = os.system(cmd)
+    if RC == 0:
+        return True
+    else:
+        return False
+
 
 # the order of these steps is as follows
 # 1. before scenario
