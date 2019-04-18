@@ -72,6 +72,33 @@ def find_modem():
     return 'USB ID 0000:0000 Modem Not in List'
 
 
+def get_modem_index():
+    """
+    Get the index of the 1st modem via command 'mmcli -L'.
+    :return: Integer/None on success/exception.
+    """
+    modem_index = None
+
+    # Get a list of modems from ModemManager.
+    try:
+        output = check_output('mmcli -L', shell=True).decode('utf-8')
+    except CalledProcessError:
+        print('Cannot get modem info from ModemManager.'.format(modem_index))
+        return None
+
+    regex = r'/org/freedesktop/ModemManager1/Modem/(\d+)'
+    mo = re.search(regex, output)
+    if mo:
+        modem_index = mo.groups()[0]
+        try:
+            modem_index = int(modem_index)
+        except ValueError:
+            print('Unable to convert modem index "{}" to integer.'.format(modem_index))
+            return None
+
+    return modem_index
+
+
 def get_modem_info():
     """
     Get a list of connected modem via command 'mmcli -L'.
