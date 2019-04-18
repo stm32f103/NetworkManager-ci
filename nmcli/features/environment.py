@@ -72,33 +72,6 @@ def find_modem():
     return 'USB ID 0000:0000 Modem Not in List'
 
 
-def get_modem_index():
-    """
-    Get the index of the 1st modem via command 'mmcli -L'.
-    :return: Integer/None on success/exception.
-    """
-    modem_index = None
-
-    # Get a list of modems from ModemManager.
-    try:
-        output = check_output('mmcli -L', shell=True).decode('utf-8')
-    except CalledProcessError:
-        print('Cannot get modem info from ModemManager.'.format(modem_index))
-        return None
-
-    regex = r'/org/freedesktop/ModemManager1/Modem/(\d+)'
-    mo = re.search(regex, output)
-    if mo:
-        modem_index = mo.groups()[0]
-        try:
-            modem_index = int(modem_index)
-        except ValueError:
-            print('Unable to convert modem index "{}" to integer.'.format(modem_index))
-            return None
-
-    return modem_index
-
-
 def get_modem_info():
     """
     Get a list of connected modem via command 'mmcli -L'.
@@ -148,11 +121,29 @@ def get_modem_info():
         return 'MODEM INFO\n{}\nSIM CARD INFO\n{}'.format(modem_info, sim_info)
 
 
+def get_modem_index(output):
+    """
+    Get the index of a modem from the output of command 'mmcli -m $MODEM_INDEX'.
+    :return: Integer/None on success/exception
+    """
+    modem_index = None
+    regex = r'/org/freedesktop/ModemManager1/Modem/(\d+)'
+    mo = re.search(regex, output)
+    if mo:
+        modem_index = mo.groups()[0]
+        try:
+            modem_index = int(modem_index)
+        except ValueError:
+            print('Unable to convert modem index "{}" to integer.'.format(modem_index))
+            return None
+
+    return modem_index
+
+
 def get_modem_status(output):
     """
-    Expect a string containing output from ModemManager
-    mmcli --modem $MODEM_INDEX
-    :return: A dictionary of modem parameters.
+    Analyse a string from the output of command 'mmcli -m $MODEM_INDEX'.
+    :return: A dictionary of modem parameters on success. Else return None.
     """
     lock_status = unlock_retries_list = state = power_state = access_tech_list = signal_quality = None
 
@@ -188,7 +179,8 @@ def get_modem_status(output):
         try:
             signal_quality = int(signal_quality)
         except ValueError:
-            raise Exception('Signal quality should be an integer, but it is "{}".'.format(signal_quality))
+            print('Unable to convert signal quality meter "{}" to integer.'.format(signal_quality))
+            return None
 
     state_dict = {'lock': lock_status,
                   'unlock retries': unlock_retries_list,
@@ -201,8 +193,7 @@ def get_modem_status(output):
 
 def is_sim_locked(output):
     """
-    Expect a string containing output from ModemManager
-    mmcli --modem $MODEM_INDEX
+    Analyse a string from the output of command 'mmcli -m $MODEM_INDEX'.
     :return: True/False/None on if locked/unlocked/exception.
     """
     lock_status_list = ['none', 'sim-pin','sim-pin2', 'sim-puk', 'sim-puk2']
@@ -231,7 +222,7 @@ def unlock_sim(sim_index, pin, puk=None):
     """
     Unlock the SIM card of a broadband modem
     via ModemManager
-    by sending PIN or PUK code to the card.
+    by sending PIN or PIN+PUK code to the card.
     :return: True/False/None on success/failure/exception.
     """
     if pin and not(puk):
@@ -250,6 +241,25 @@ def unlock_sim(sim_index, pin, puk=None):
         return True
     else:
         return False
+
+
+def get_sim_index(output):
+    """
+    Get the index of the SIM card from the output of command 'mmcli -m $MODEM_INDEX'.
+    :return: Integer/None on success/exception
+    """
+    sim_index = None
+    regex = r'/org/freedesktop/ModemManager1/SIM/(\d+)'
+    mo = re.search(regex, output)
+    if mo:
+        sim_index = mo.groups()[0]
+        try:
+            sim_index = int(sim_index)
+        except ValueError:
+            print('Unable to convert SIM card index "{}" to integer.'.format(sim_index))
+            return None
+
+    return sim_index
 
 
 # the order of these steps is as follows

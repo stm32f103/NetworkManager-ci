@@ -40,3 +40,22 @@ output_puk = """
            |    access tech: 'unknown'
            | signal quality: '0' (cached)
 """
+
+output_puk2 = """
+  Status   |           lock: 'sim-puk'
+           | unlock retries: 'sim-pin (0), sim-pin2 (3), sim-puk (10), sim-puk2 (10)'
+           |          state: 'locked'
+           |    power state: 'on'
+           |    access tech: 'unknown'
+           | signal quality: '0' (cached)
+"""
+
+output_sim_missing = """
+  Status   |           lock: 'unknown'
+           | unlock retries: 'unknown'
+           |          state: 'failed'
+           |  failed reason: 'sim-missing'
+           |    power state: 'unknown'
+           |    access tech: 'unknown'
+           | signal quality: '0' (cached)
+"""
