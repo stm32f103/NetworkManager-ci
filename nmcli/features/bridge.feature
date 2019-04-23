@@ -561,3 +561,36 @@ Feature: nmcli - bridge
     Then "1" is visible with command "nmcli connection | grep '^bridge-slave-eth4' | wc -l"
      And "1" is visible with command "nmcli connection | grep '^bridge0' | wc -l"
      And "\neth4" is not visible with command "nmcli connection show"
+
+
+    @rhbz1652910
+    @ver+=1.17.3
+    @bridge
+    @bridge_vlan_filtering_no_pvid
+    Scenario: NM - bridge - bridge vlan filtering no pvid
+    * Add a new connection of type "bridge" and options "ifname bridge0 con-name bridge0 bridge.vlan-default-pvid 0 bridge.vlan-filtering yes bridge.vlans 10"
+    * Add a new connection of type "ethernet" and options "ifname eth4 con-name bridge-slave-eth4 master bridge0 slave-type bridge bridge-port.vlans 4094"
+    Then "bridge0\s+10\s" is visible with command "bridge vlan" in "10" seconds
+     And "eth4\s+4094\s" is visible with command "bridge vlan"
+
+
+    @rhbz1652910
+    @ver+=1.17.3
+    @bridge
+    @bridge_vlan_filtering_default_pvid
+    Scenario: NM - bridge - bridge vlan filtering default pvid
+    * Add a new connection of type "bridge" and options "ifname bridge0 con-name bridge0 bridge.vlan-filtering yes bridge.vlans '10-14 untagged'"
+    * Add a new connection of type "ethernet" and options "ifname eth4 con-name bridge-slave-eth4 master bridge0 slave-type bridge bridge-port.vlans '4 untagged, 5'"
+    Then "bridge0\s+1 PVID Egress Untagged\s+10 Egress Untagged\s+11 Egress Untagged\s+12 Egress Untagged\s+13 Egress Untagged\s+14 Egress Untagged\s" is visible with command "bridge vlan" in "10" seconds
+     And "eth4\s+1 PVID Egress Untagged\s+4 Egress Untagged\s+5\s" is visible with command "bridge vlan"
+
+
+    @rhbz1652910
+    @ver+=1.17.3
+    @bridge
+    @bridge_vlan_filtering_non_default_pvid
+    Scenario: NM - bridge - bridge vlan filtering non-default pvid
+    * Add a new connection of type "bridge" and options "ifname bridge0 con-name bridge0 bridge.vlan-filtering yes bridge.vlan-default-pvid 80 bridge.vlans '1-10, 100 pvid, 200 untagged'"
+    * Add a new connection of type "ethernet" and options "ifname eth4 con-name bridge-slave-eth4 master bridge0 slave-type bridge bridge-port.vlans '4000-4010'"
+    Then "bridge0\s+1\s+2\s+3\s+4\s+5\s+6\s+7\s+8\s+9\s+10\s+80 Egress Untagged\s+100 PVID\s+200 Egress Untagged\s" is visible with command "bridge vlan" in "10" seconds
+     And "eth4\s+80 PVID Egress Untagged\s+4000\s+4001\s+4002\s+4003\s+4004\s+4005\s+4006\s+4007\s+4008\s+4009\s+4010\s" is visible with command "bridge vlan"
