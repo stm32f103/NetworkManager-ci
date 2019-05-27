@@ -157,34 +157,32 @@ def note_the_output_of(context, command):
 @step(u'Noted value is visible with command "{command}"')
 @step(u'Noted value "{index}" is visible with command "{command}"')
 @step(u'"{pattern}" is visible with command "{command}"')
-def check_pattern_visible_with_command(context, command, pattern=None, index=None):
-    if pattern is None and index is None:
-        pattern = context.noted_value
-    if index is not None:
-        pattern = context.noted[index]
-    proc = pexpect.spawn('/bin/bash', ['-c', command], maxread=100000, logfile=context.log, encoding='utf-8')
-    if proc.expect([pattern, pexpect.EOF]) != 0:
-        sleep(1)
-        proc = pexpect.spawn('/bin/bash', ['-c', command],  encoding='utf-8', maxread=100000, logfile=context.log)
-        assert proc.expect([pattern, pexpect.EOF]) == 0, 'pattern %s is not visible with %s' % (pattern, command)
-    else:
-        return True
-
-
+@step(u'String "{string}" is visible with command "{command}"')
 @step(u'Noted value is visible with command "{command}" in "{seconds}" seconds')
 @step(u'Noted value "{index}" is visible with command "{command}" in "{seconds}" seconds')
 @step(u'"{pattern}" is visible with command "{command}" in "{seconds}" seconds')
-def check_pattern_visible_with_command_in_time(context, command, seconds, pattern=None, index=None):
+@step(u'String "{string}" is visible with command "{command}" in "{seconds}" seconds')
+def check_pattern_visible_with_command_in_time(context, command, seconds=2, pattern=None, index=None, string=None):
+    exact_check = False
     if pattern is None and index is None:
         pattern = context.noted_value
+        exact_check = True
     if index is not None:
         pattern = context.noted[index]
+        exact_check = True
+    if string is not None:
+        pattern = string
+        exact_check = True
     seconds = int(seconds)
     orig_seconds = seconds
     while seconds > 0:
         proc = pexpect.spawn('/bin/bash', ['-c', command], timeout = 180, logfile=context.log, encoding='utf-8')
-        if proc.expect([pattern, pexpect.EOF]) == 0:
-            return True
+        if exact_check:
+            if proc.expect_exact([pattern, pexpect.EOF]) == 0:
+                return True
+        else:
+            if proc.expect([pattern, pexpect.EOF]) == 0:
+                return True
         seconds = seconds - 1
         sleep(1)
     raise Exception('Did not see the pattern %s in %d seconds' % (pattern, orig_seconds))
@@ -217,33 +215,38 @@ def check_pattern_visible_with_command_fortime(context, pattern, command, second
         seconds = seconds - 1
         sleep(1)
 
-
+@step(u'Noted value is not visible with command "{command}"')
+@step(u'Noted value "{index}" is not visible with command "{command}"')
+@step(u'"{pattern}" is not visible with command "{command}"')
+@step(u'String "{string}" is not visible with command "{command}"')
 @step(u'Noted value is not visible with command "{command}" in "{seconds}" seconds')
-@step('"{pattern}" is not visible with command "{command}" in "{seconds}" seconds')
-def check_pattern_not_visible_with_command_in_time(context, command, seconds, pattern=None):
-    if pattern is None:
+@step(u'Noted value "{index}" is not visible with command "{command}" in "{seconds}" seconds')
+@step(u'"{pattern}" is not visible with command "{command}" in "{seconds}" seconds')
+@step(u'String "{string}" is not visible with command "{command}" in "{seconds}" seconds')
+def check_pattern_not_visible_with_command_in_time(context, command, seconds=2, pattern=None, index=None, string=None):
+    exact_check = False
+    if pattern is None and index is None:
         pattern = context.noted_value
+        exact_check = True
+    if index is not None:
+        pattern = context.noted[index]
+        exact_check = True
+    if string is not None:
+        pattern = string
+        exact_check = True
     seconds = int(seconds)
     orig_seconds = seconds
     while seconds > 0:
         proc = pexpect.spawn('/bin/bash', ['-c', command], timeout = 180, logfile=context.log, encoding='utf-8')
-        if proc.expect([pattern, pexpect.EOF]) != 0:
-            return True
+        if exact_check:
+            if proc.expect_exact([pattern, pexpect.EOF]) != 0:
+                return True
+        else:
+            if proc.expect([pattern, pexpect.EOF]) != 0:
+                return True
         seconds = seconds - 1
         sleep(1)
     raise Exception('Did still see the pattern %s after %d seconds' % (pattern, orig_seconds))
-
-
-@step('"{pattern}" is not visible with command "{command}"')
-def check_pattern_not_visible_with_command(context, pattern, command):
-    # In command you have to use '' quotes
-    proc = pexpect.spawn('/bin/bash', ['-c', command], maxread=100000, logfile=context.log, encoding='utf-8')
-    if proc.expect([pattern, pexpect.EOF]) == 0:
-        sleep(1)
-        proc = pexpect.spawn('/bin/bash', ['-c', command], maxread=100000, logfile=context.log, encoding='utf-8')
-        assert proc.expect([pattern, pexpect.EOF]) != 0, 'pattern %s is visible with %s' % (pattern, command)
-    else:
-        return True
 
 
 @step(u'"{pattern}" is visible with tab after "{command}"')
