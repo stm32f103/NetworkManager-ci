@@ -1511,3 +1511,20 @@
      And "2000::2 dev testX6 proto static metric 10[0-1] pref medium" is visible with command "ip -6 route"
      # And "namespace 192.168.3.11" is visible with command "cat /etc/resolv.conf" in "10" seconds
      And "activated" is visible with command "nmcli -g GENERAL.STATE con show con_ipv6" in "45" seconds
+
+
+    @rhbz1548237
+    @ver+=1.18
+    @con_ipv6_remove
+    @ipv6_link_down_up_address_persists
+    Scenario: NM - ipv6 - IPv6 address persists link down link up
+    * Add a new connection of type "ethernet" and options "con-name con_ipv6 ifname eth10"
+    When "inet6" is visible with command "ip a show eth10" in "10" seconds
+     And "global" is visible with command "ip a show eth10" in "10" seconds
+    * Note the output of "ip a s eth10 | grep inet6 | grep global | awk '{print $2}'" as value "ip6_dhcp"
+    * Note the output of "ip a s eth10 | grep inet6 | grep -v global | awk '{print $2}'" as value "ip6_local"
+    * Execute "ip link set dev eth10 down"
+    When Noted value "ip6_local" is not visible with command "ip a show eth10" in "20" seconds
+    * Execute "ip link set dev eth10 up"
+    Then Noted value "ip6_local" is visible with command "ip a show eth10" in "20" seconds
+     And Noted value "ip6_dhcp" is visible with command "ip a show eth10" in "20" seconds
