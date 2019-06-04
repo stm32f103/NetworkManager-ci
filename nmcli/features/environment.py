@@ -507,6 +507,10 @@ def before_scenario(context, scenario):
                     else:
                         return False
 
+                def start_stty_unit_logging ():
+                    # Start logging stty from sierra 7608
+                    Popen("""systemd-run --unit=modem-tty /usr/bin/awk 'BEGINFILE {system("stty -F "FILENAME" 115200 -icrnl")} {print >"/dev/fd/2"}' /dev/serial/by-id/usb-FTDI_FT230X_Basic_UART_DM005ZBG-if00-port0""", shell=True)
+
                 print ("---------------------------")
                 while(True):
                     print ("* looking for gsm lock in nfs nest.test.redhat.com:/mnt/qa/desktop/broadband_lock")
@@ -531,6 +535,9 @@ def before_scenario(context, scenario):
                             if timeout == 0:
                                 raise Exception("Timeout reached!")
                             continue
+                start_stty_unit_logging ()
+                call("mmcli -G debug", shell=True)
+                sleep (1)
 
         if 'unmanage_eth' in scenario.tags:
             links = get_ethernet_devices()
@@ -2071,6 +2078,15 @@ def after_scenario(context, scenario):
             data = open("/tmp/journal-mm.log", 'r').read()
             if data:
                 context.embed('text/plain', data, caption="MM")
+
+            # Attach stty for sierra 7608
+            os.system("echo '~~~~~~~~~~~~~~~~~~~~~~~~~~ MM LOG ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~' > /tmp/journal-stty.log")
+            print("Attaching stty log")
+            os.system("sudo journalctl -u modem-tty --no-pager -o cat %s >> /tmp/journal-stty.log" % context.log_cursor)
+            data = open("/tmp/journal-stty.log", 'r').read()
+            if data:
+                context.embed('text/plain', data, caption="STTY")
+
             # Extract modem model.
             # Example: 'USB ID 1c9e:9603 Zoom 4595' -> 'Zoom 4595'
             regex = r'USB ID (\w{4}:\w{4}) (.*)'
