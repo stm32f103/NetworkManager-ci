@@ -2089,6 +2089,9 @@ testmapper:
     - gsm_create_default_connection:
         timeout: 60m
         feature: gsm
+    - gsm_create_assisted_connection:
+        timeout: 60m
+        feature: gsm
     - gsm_disconnect:
         timeout: 60m
         feature: gsm
@@ -2105,9 +2108,6 @@ testmapper:
         timeout: 60m
         feature: gsm
     - gsm_load_from_file:
-        timeout: 60m
-        feature: gsm
-    - gsm_create_assisted_connection:
         timeout: 60m
         feature: gsm
     - gsm_hub:
