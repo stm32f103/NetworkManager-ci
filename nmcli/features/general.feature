@@ -2150,7 +2150,7 @@ Feature: nmcli - general
 
 
     @rhbz1541013
-    @ver+=1.20
+    @ver+=1.19
     @remove_custom_cfg_before_restart @restart
     @invalid_config_warning
     Scenario: NM - general - warn about invalid config options
