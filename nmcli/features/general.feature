@@ -2110,8 +2110,8 @@ Feature: nmcli - general
     * Execute "echo 'plugins=keyfile,ifcfg-rh' >> /etc/NetworkManager/conf.d/99-xxcustom.conf"
     * Restart NM
     * Add a new connection of type "ethernet" and options "ifname \* con-name con_general autoconnect no"
-    Then "/etc/NetworkManager/system-connections/con_general" is file
-     And Path "/etc/NetworkManager/system-connections/con_general.nmconnection" does not exist
+    Then "/etc/NetworkManager/system-connections/con_general.nmconnection" is file
+     And Path "/etc/NetworkManager/system-connections/con_general" does not exist
 
 
     @rhbz1697858
