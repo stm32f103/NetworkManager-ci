@@ -729,7 +729,7 @@
 
 
     @rhbz1643841
-    @ver+=1.20
+    @ver+=1.19
     @con_ipv6_remove
     @ipv6_method_disabled
     Scenario: nmcli - ipv6 - method disabled
