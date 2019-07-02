@@ -2103,6 +2103,7 @@ Feature: nmcli - general
 
 
     @rhbz1697858
+    @ver+=1.19
     @rhel8_only @con_general_remove @remove_custom_cfg_before_restart @restart
     @keyfile_nmconnection_extension_rhel8
     Scenario: NM - general - keyfile does have .nmconnection extension
