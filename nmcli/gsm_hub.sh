@@ -109,11 +109,12 @@ function test_modems_usb_hub() {
         fi
 
         for T in $GSM_TESTS; do
+            # Adding sleep 20 just to make tests more stable
+            sleep 20
+
             runtest $T $M || RC=1
             cat /tmp/report.html >> /tmp/report_$NMTEST.html
 
-            # Adding sleep 10 just to make tests more stable
-            sleep 10
         done
     done
 
