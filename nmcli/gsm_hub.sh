@@ -109,9 +109,10 @@ function test_modems_usb_hub() {
         fi
 
         for T in $GSM_TESTS; do
-            # Adding sleep 20 just to make tests more stable
-            sleep 20
-
+            while ! mmcli -m $(mmcli -L |awk -F "/" '{print $6}' |awk '{print $1}') |grep -q recent; do
+                sleep 1
+            done
+            
             runtest $T $M || RC=1
             cat /tmp/report.html >> /tmp/report_$NMTEST.html
 
