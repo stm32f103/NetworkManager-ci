@@ -2056,11 +2056,11 @@ def after_scenario(context, scenario):
         if 'openvswitch' in scenario.tags:
             print ("---------------------------")
             print ("remove openvswitch residuals")
-            call('sudo ifdown bond0', shell=True)
-            call('sudo ifdown eth1', shell=True)
-            call('sudo ifdown eth2', shell=True)
-            call('sudo ifdown ovsbridge0', shell=True)
-            call('sudo nmcli con del eth1 eth2 ovs-bond0 ovs-port0 ovs-bridge0 ovs-port1 ovs-eth2 ovs-eth3 ovs-iface0 eth2 dpdk-sriov', shell=True) # to be sure
+            # call('sudo ifdown bond0', shell=True)
+            # call('sudo ifdown eth1', shell=True)
+            # call('sudo ifdown eth2', shell=True)
+            #call('sudo ifdown ovsbridge0', shell=True)
+            call('sudo nmcli con del ovs-bridge0 eth1 eth2 ovs-bond0 ovs-port0  ovs-port1 ovs-eth2 ovs-eth3 ovs-iface0 eth2 dpdk-sriov', shell=True) 
             sleep(1)
             call('ovs-vsctl del-br ovsbr0', shell=True)
             call('ovs-vsctl del-br ovsbridge0', shell=True)
