@@ -474,6 +474,9 @@ def before_scenario(context, scenario):
                 sys.exit(77)
             call("sudo prepare/gsm_sim.sh modemu", shell=True)
 
+        if 'failer' in scenario.tags:
+            sys.exit(1)
+
         if 'gsm' in scenario.tags:
             call("mmcli -G debug", shell=True)
             call("nmcli general logging level DEBUG domains ALL", shell=True)
@@ -2204,7 +2207,7 @@ def after_scenario(context, scenario):
         if 'gsm_sim' in scenario.tags:
             call("sudo prepare/gsm_sim.sh teardown", shell=True)
             call("nmcli con del id gsm", shell=True)
-            
+
         if 'add_testeth10' in scenario.tags:
             print ("---------------------------")
             print ("restoring testeth10 profile")
