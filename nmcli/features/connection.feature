@@ -792,3 +792,117 @@ Feature: nmcli: connection
     * Note the output of "nmcli con show con_con"
     Then Check noted output contains "connection.id"
     Then Check noted output contains "connection.zone"
+
+
+    @con_con_remove @restart
+    @in_memory_connection_delete_on_reboot
+    Scenario: nmcli - connection - in-memory connection delete on reboot
+    * Add a new connection of type "ethernet" and options "ifname eth5 con-name con_con autoconnect yes save no"
+    Then "con_con" is visible with command "nmcli -g name connection show --active"
+    * Reboot
+    Then "con_con" is not visible with command "nmcli -g name connection show" in "5" seconds
+
+
+    @con_con_remove @restart
+    @in_memory_connection_restart_persistency
+    Scenario: nmcli - connection - in-memory connection restart persistency
+    * Add a new connection of type "ethernet" and options "ifname eth5 con-name con_con autoconnect yes save no"
+    Then "con_con" is visible with command "nmcli -g name connection show --active"
+    * Restart NM
+    Then "con_con" is visible with command "nmcli -g name connection show --active"
+
+
+    @con_con_remove @restart
+    @in_memory_connection_reload_persistency
+    Scenario: nmcli - connection - in-memory connection reload persistency
+    * Add a new connection of type "ethernet" and options "ifname eth5 con-name con_con autoconnect yes save no"
+    Then "con_con" is visible with command "nmcli -g name connection show --active"
+    * Reload connections
+    Then "con_con" is visible with command "nmcli -g name connection show --active"
+
+    @con_con_remove
+    @in_memory_move
+    Scenario: nmcli - connection - in-memory move
+    * Add a new connection of type "ethernet" and options "ifname eth5 con-name con_con autoconnect yes"
+    Then "con_con" is not visible with command "ls /var/run/NetworkManager/system-connections/"
+     And "con_con" is visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
+    * Update connection "con_con" changing options "SETTING_CONNECTION_AUTOCONNECT:True" using libnm with flags "IN_MEMORY"
+    Then "con_con" is visible with command "ls /var/run/NetworkManager/system-connections/"
+     And "con_con" is visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
+    * Delete connection "con_con"
+    Then "con_con" is not visible with command "ls /var/run/NetworkManager/system-connections/"
+     And "con_con" is not visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
+
+
+    @con_con_remove
+    @in_memory_move_only
+    Scenario: nmcli - connection - in-memory move only to in memory
+    * Add a new connection of type "ethernet" and options "ifname eth5 con-name con_con autoconnect yes"
+    Then "con_con" is not visible with command "ls /var/run/NetworkManager/system-connections/"
+     And "con_con" is visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
+    * Update connection "con_con" changing options "SETTING_CONNECTION_AUTOCONNECT:True" using libnm with flags "IN_MEMORY_ONLY"
+    Then "con_con" is visible with command "ls /var/run/NetworkManager/system-connections/"
+     And "con_con" is not visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
+    * Delete connection "con_con"
+    Then "con_con" is not visible with command "ls /var/run/NetworkManager/system-connections/"
+     And "con_con" is not visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
+
+
+    @con_con_remove @remove_tombed_connections
+    @in_memory_move_detached
+    Scenario: nmcli - connection - in-memory move detached
+    * Add a new connection of type "ethernet" and options "ifname eth5 con-name con_con autoconnect yes"
+    * Note the output of "nmcli -g connection.uuid con show id con_con" as value "uuid"
+    Then "con_con" is not visible with command "ls /var/run/NetworkManager/system-connections/"
+     And "con_con" is visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
+    * Update connection "con_con" changing options "SETTING_CONNECTION_AUTOCONNECT:True" using libnm with flags "IN_MEMORY_DETACHED"
+    Then "con_con" is visible with command "ls /var/run/NetworkManager/system-connections/"
+     And "con_con" is visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
+    * Delete connection "con_con"
+    Then "con_con" is not visible with command "ls /var/run/NetworkManager/system-connections/"
+     And Noted value "uuid" is visible with command "ls /var/run/NetworkManager/system-connections/"
+     And "con_con" is visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
+    * Execute "rm -f /var/run/NetworkManager/system-connections/*.nmmeta"
+    * Reload connections
+    Then "con_con" is visible with command "nmcli -g name con show"
+    * Delete connection "con_con"
+    Then "con_con" is not visible with command "ls /var/run/NetworkManager/system-connections/"
+     And Noted value "uuid" is not visible with command "ls /var/run/NetworkManager/system-connections/"
+     And "con_con" is not visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
+
+
+     @con_con_remove @remove_tombed_connections
+     @in_memory_move_detached_resurect
+     Scenario: nmcli - connection - in-memory move detached and then resurect
+     * Add a new connection of type "ethernet" and options "ifname eth5 con-name con_con autoconnect yes"
+     * Note the output of "nmcli -g connection.uuid con show id con_con" as value "uuid"
+     Then "con_con" is not visible with command "ls /var/run/NetworkManager/system-connections/"
+      And "con_con" is visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
+     * Update connection "con_con" changing options "SETTING_CONNECTION_AUTOCONNECT:True" using libnm with flags "IN_MEMORY_DETACHED"
+     Then "con_con" is visible with command "ls /var/run/NetworkManager/system-connections/"
+      And "con_con" is visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
+     * Delete connection "con_con"
+     Then "con_con" is not visible with command "ls /var/run/NetworkManager/system-connections/"
+      And Noted value "uuid" is visible with command "ls /var/run/NetworkManager/system-connections/"
+      And "con_con" is visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
+     * Add connection with name "con_con" and uuid "noted.uuid" using libnm with flags "TO_DISK,BLOCK_AUTOCONNECT"
+     * Execute "nmcli con show id con_con > /tmp/con"
+     Then "con_con" is not visible with command "ls /var/run/NetworkManager/system-connections/"
+      And Noted value "uuid" is not visible with command "ls /var/run/NetworkManager/system-connections/"
+      And "con_con" is visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
+     * Update connection "con_con" changing options "SETTING_CONNECTION_INTERFACE_NAME:eth5" using libnm with flags "IN_MEMORY_DETACHED"
+
+
+     @con_con_remove @remove_tombed_connections
+     @in_memory_move_detached_move_to_disk
+     Scenario: nmcli - connection - in-memory move detached then move to disk
+     * Add a new connection of type "ethernet" and options "ifname eth5 con-name con_con autoconnect yes"
+     * Note the output of "nmcli -g connection.uuid con show id con_con" as value "uuid"
+     Then "con_con" is not visible with command "ls /var/run/NetworkManager/system-connections/"
+      And "con_con" is visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
+     * Update connection "con_con" changing options "SETTING_CONNECTION_AUTOCONNECT:True" using libnm with flags "IN_MEMORY_DETACHED"
+     Then "con_con" is visible with command "ls /var/run/NetworkManager/system-connections/"
+      And "con_con" is visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
+     * Update connection "con_con" changing options "SETTING_CONNECTION_AUTOCONNECT:True" using libnm with flags "TO_DISK"
+     Then "con_con" is not visible with command "ls /var/run/NetworkManager/system-connections/"
+      And "con_con" is visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
