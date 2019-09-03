@@ -794,6 +794,7 @@ Feature: nmcli: connection
     Then Check noted output contains "connection.zone"
 
 
+    @ver+=1.19.5
     @con_con_remove @restart
     @in_memory_connection_delete_on_reboot
     Scenario: nmcli - connection - in-memory connection delete on reboot
@@ -803,6 +804,7 @@ Feature: nmcli: connection
     Then "con_con" is not visible with command "nmcli -g name connection show" in "5" seconds
 
 
+    @ver+=1.19.5
     @con_con_remove @restart
     @in_memory_connection_restart_persistency
     Scenario: nmcli - connection - in-memory connection restart persistency
@@ -812,6 +814,7 @@ Feature: nmcli: connection
     Then "con_con" is visible with command "nmcli -g name connection show --active"
 
 
+    @ver+=1.19.5
     @con_con_remove @restart
     @in_memory_connection_reload_persistency
     Scenario: nmcli - connection - in-memory connection reload persistency
@@ -820,6 +823,7 @@ Feature: nmcli: connection
     * Reload connections
     Then "con_con" is visible with command "nmcli -g name connection show --active"
 
+    @ver+=1.19.5
     @con_con_remove
     @in_memory_move
     Scenario: nmcli - connection - in-memory move
@@ -834,6 +838,7 @@ Feature: nmcli: connection
      And "con_con" is not visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
 
 
+    @ver+=1.19.5
     @con_con_remove
     @in_memory_move_only
     Scenario: nmcli - connection - in-memory move only to in memory
@@ -848,6 +853,7 @@ Feature: nmcli: connection
      And "con_con" is not visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
 
 
+    @ver+=1.19.5
     @con_con_remove @remove_tombed_connections
     @in_memory_move_detached
     Scenario: nmcli - connection - in-memory move detached
@@ -871,9 +877,10 @@ Feature: nmcli: connection
      And "con_con" is not visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
 
 
+     @ver+=1.19.5
      @con_con_remove @remove_tombed_connections
-     @in_memory_move_detached_resurect
-     Scenario: nmcli - connection - in-memory move detached and then resurect
+     @in_memory_move_detached_resurrect
+     Scenario: nmcli - connection - in-memory move detached and then resurrect
      * Add a new connection of type "ethernet" and options "ifname eth5 con-name con_con autoconnect yes"
      * Note the output of "nmcli -g connection.uuid con show id con_con" as value "uuid"
      Then "con_con" is not visible with command "ls /var/run/NetworkManager/system-connections/"
@@ -893,6 +900,7 @@ Feature: nmcli: connection
      * Update connection "con_con" changing options "SETTING_CONNECTION_INTERFACE_NAME:eth5" using libnm with flags "IN_MEMORY_DETACHED"
 
 
+     @ver+=1.19.5
      @con_con_remove @remove_tombed_connections
      @in_memory_move_detached_move_to_disk
      Scenario: nmcli - connection - in-memory move detached then move to disk

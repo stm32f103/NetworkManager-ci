@@ -1619,7 +1619,7 @@ testmapper:
         feature: connection
     - in_memory_move_detached:
         feature: connection
-    - in_memory_move_detached_resurect:
+    - in_memory_move_detached_resurrect:
         feature: connection
     - in_memory_move_detached_move_to_disk:
         feature: connection
