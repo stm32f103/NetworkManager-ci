@@ -1613,15 +1613,15 @@ testmapper:
         feature: connection
     - in_memory_connection_reload_persistency:
         feature: connection
-    - in_memory_move:
+    - all_to_in_memory_move:
         feature: connection
-    - in_memory_move_only:
+    - all_to_in_memory_only_move:
         feature: connection
-    - in_memory_move_detached:
+    - all_to_in_memory_detached_move:
         feature: connection
-    - in_memory_move_detached_resurrect:
+    - in_memory_detached_resurrect:
         feature: connection
-    - in_memory_move_detached_move_to_disk:
+    - in_memory_detached_delete_nmmeta:
         feature: connection
     - add_default_tap_device:
         feature: tuntap
