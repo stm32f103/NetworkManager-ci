@@ -26,34 +26,15 @@ fi
 
 NMTEST_REPORT=/tmp/report_$NMTEST.html
 
-#check if NM version is correct for test
-TAG="$(python $DIR/version_control.py $DIR/nmcli $NMTEST)"; vc=$?
-if [ $vc -eq 1 ]; then
-    logger "Skipping due to incorrect NM version for this test"
-    rstrnt-report-result -o "" $NMTEST "SKIP"
-    exit 0
 
-# do we have tag to run tagged test?
-elif [ $vc -eq 0 ]; then
-    # if yes, run with -t $TAG
-    if [ x$TAG != x"" ]; then
-        logger "Running $TAG version of $NMTEST"
-        behave $DIR/nmcli/features -t $1 -t $TAG -k -f html -o "$NMTEST_REPORT" -f plain; rc=$?
-
-    # if not
-    else
-        # check if we have gsm_hub use this
-        if [[ $1 == gsm_hub* ]];then
-            # Test 3 modems on USB hub with 8 ports.
-            test_modems_usb_hub; rc=$?
-
-        # if we do not have tag or gsm_hub
-        else
-            behave $DIR/nmcli/features -t $1 -k -f html -o "$NMTEST_REPORT" -f plain; rc=$?
-        fi
-    fi
+# check if we have gsm_hub use this
+if [[ $1 == gsm_hub* ]];then
+    # Test 3 modems on USB hub with 8 ports.
+    test_modems_usb_hub; rc=$?
+# if we do not have tag or gsm_hub
+else
+    (cd $DIR/nmcli/pytest; pytest -v -k "test_${1} and not test_${1}_" --html="$NMTEST_REPORT" .); rc=$?
 fi
-
 
 if [ $rc -eq 0 ]; then
     RESULT="PASS"
