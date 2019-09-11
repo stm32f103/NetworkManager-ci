@@ -105,3 +105,14 @@ class NMTest:
             assert ind != 0, "did not see %s" % keywords[ind]
             keywords.pop(ind-1)
         exp.terminate(force=True)
+
+    def not_double_tab_after(self, command, keywords, timeout=2):
+        os.system('echo "set page-completions off" > ~/.inputrc')
+        os.system('echo "set completion-display-width 0" >> ~/.inputrc')
+        exp = pexpect.spawn('/bin/bash', encoding='utf-8')
+        exp.send(command)
+        exp.sendcontrol('i')
+        exp.sendcontrol('i')
+        ind = exp.expect([pexpect.TIMEOUT]+keywords, timeout=timeout)
+        assert ind == 0, "did see %s" % keywords[ind]
+        exp.terminate(force=True)
