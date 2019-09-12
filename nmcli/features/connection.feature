@@ -948,24 +948,24 @@ Feature: nmcli: connection
      And "con_con" is not visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
 
 
-     @ver+=1.19.5
-     @con_con_remove @remove_tombed_connections
-     @in_memory_detached_resurrect
-     Scenario: nmcli - connection - in-memory move detached and then resurrect
-     * Add a new connection of type "ethernet" and options "ifname eth5 con-name con_con autoconnect yes"
-     * Note the output of "nmcli -g connection.uuid con show id con_con" as value "uuid"
-     Then "con_con" is not visible with command "ls /var/run/NetworkManager/system-connections/"
-      And "con_con" is visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
-     * Update connection "con_con" changing options "SETTING_CONNECTION_AUTOCONNECT:True" using libnm with flags "IN_MEMORY_DETACHED"
-     Then "con_con" is visible with command "ls /var/run/NetworkManager/system-connections/"
-      And "con_con" is visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
-     * Delete connection "con_con"
-     Then "con_con" is not visible with command "ls /var/run/NetworkManager/system-connections/"
-      And Noted value "uuid" is visible with command "ls /var/run/NetworkManager/system-connections/"
-      And "con_con" is visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
-     * Add connection with name "con_con" and uuid "noted.uuid" using libnm with flags "TO_DISK,BLOCK_AUTOCONNECT"
-     * Execute "nmcli con show id con_con > /tmp/con"
-     Then "con_con" is not visible with command "ls /var/run/NetworkManager/system-connections/"
-      And Noted value "uuid" is not visible with command "ls /var/run/NetworkManager/system-connections/"
-      And "con_con" is visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
-     * Update connection "con_con" changing options "SETTING_CONNECTION_INTERFACE_NAME:eth5" using libnm with flags "IN_MEMORY_DETACHED"
+    @ver+=1.19.5
+    @con_con_remove @remove_tombed_connections
+    @in_memory_detached_resurrect
+    Scenario: nmcli - connection - in-memory move detached and then resurrect
+    * Add a new connection of type "ethernet" and options "ifname eth5 con-name con_con autoconnect yes"
+    * Note the output of "nmcli -g connection.uuid con show id con_con" as value "uuid"
+    Then "con_con" is not visible with command "ls /var/run/NetworkManager/system-connections/"
+     And "con_con" is visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
+    * Update connection "con_con" changing options "SETTING_CONNECTION_AUTOCONNECT:True" using libnm with flags "IN_MEMORY_DETACHED"
+    Then "con_con" is visible with command "ls /var/run/NetworkManager/system-connections/"
+     And "con_con" is visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
+    * Delete connection "con_con"
+    Then "con_con" is not visible with command "ls /var/run/NetworkManager/system-connections/"
+     And Noted value "uuid" is visible with command "ls /var/run/NetworkManager/system-connections/"
+     And "con_con" is visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
+    * Add connection with name "con_con" and uuid "noted.uuid" using libnm with flags "TO_DISK,BLOCK_AUTOCONNECT"
+    * Execute "nmcli con show id con_con > /tmp/con"
+    Then "con_con" is not visible with command "ls /var/run/NetworkManager/system-connections/"
+     And Noted value "uuid" is not visible with command "ls /var/run/NetworkManager/system-connections/"
+     And "con_con" is visible with command "ls /etc/NetworkManager/system-connections/ /etc/sysconfig/network-scripts/ifcfg-*"
+    * Update connection "con_con" changing options "SETTING_CONNECTION_INTERFACE_NAME:eth5" using libnm with flags "IN_MEMORY_DETACHED"
