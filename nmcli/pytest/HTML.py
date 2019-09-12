@@ -57,12 +57,21 @@ class HTML:
         rep.append(report)
         self.test_reports[id] = rep
         if report.when == "teardown":
-            with open("/tmp/journal-nm.log", "r") as f:
-                self.nm_log_data[id] = f.read()
-            with open("/tmp/main-nm.log", "r") as f:
-                self.main_log_data[id] = f.read()
-            with open("/tmp/test_duration", "r") as f:
-                self.duration[id] = f.read()
+            if os.path.exists("/tmp/journal-nm.log"):
+                with open("/tmp/journal-nm.log", "r") as f:
+                    self.nm_log_data[id] = f.read()
+            else:
+                self.nm_log_data[id] = "!!! No log file created !!!"
+            if os.path.exists("/tmp/main-nm.log"):
+                with open("/tmp/main-nm.log", "r") as f:
+                    self.main_log_data[id] = f.read()
+            else:
+                self.main_log_data[id] = ""
+            if os.path.exists("/tmp/test_duration"):
+                with open("/tmp/test_duration", "r") as f:
+                    self.duration[id] = f.read()
+            else:
+                self.duration[id] = ""
             if os.path.exists("/tmp/last_dump"):
                 with open("/tmp/last_dump", "r") as f:
                     self.dump[id] = f.read()
@@ -176,7 +185,7 @@ class HTML:
                 dump = "\n".join(dump[1:])
                 self._embed(data=dump, target=result_div, caption=caption)
 
-            if not skip:
+            if not skip and self.main_log_data[test]:
                 self._embed(data=raw(escape(self.main_log_data[test])), target=result_div, caption="MAIN")
             if len(fail) == 0:
                 if skip:
