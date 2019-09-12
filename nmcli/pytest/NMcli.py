@@ -1,4 +1,5 @@
 import pexpect
+from time import sleep
 
 class NMcli:
 
@@ -26,10 +27,14 @@ class NMcli:
         self._nmcli("nmcli con del %s" % conn, timeout=timeout)
 
     def connection_up(self, conn, timeout=10):
-        self._nmcli("nmcli con up %s" % conn, timeout=timeout)
+        self._nmcli("nmcli con up id %s" % conn, timeout=timeout)
 
     def connection_down(self, conn, timeout=10):
-        self._nmcli("nmcli con down %s" + conn, timeout=timeout)
+        self._nmcli("nmcli con down id %s" % conn, timeout=timeout)
+
+    def connection_reload(self, timeout=10):
+        self._nmcli("nmcli con reload", timeout=timeout)
+        sleep(0.5)
 
     def device_disconect(self, device, timeout=180):
         self._nmcli("nmcli device disconnect %s" % device, timeout=timeout)

@@ -9,9 +9,81 @@ from time import sleep
 
 class NMTest:
 
-    log = None
+    def _check_dump_package(self, pkg_name):
+        if pkg_name in ["NetworkManager","ModemManager"]:
+            return True
+        return False
 
-    @pytest.mark.order(-100)
+
+    def _embed_dump(self, dump_dir, dump_output, caption):
+        print("Attaching %s, %s" % (caption, dump_dir))
+        with open("/tmp/reported_crashes", "a") as f:
+            f.write(dump_dir+"\n")
+        with open("/tmp/last_crash", "w") as f:
+            f.write(caption+"\n")
+            f.write(dump_output)
+        pytest.fail("Detected crash")
+
+
+    def _list_dumps(self, dumps_search):
+        p = subprocess.Popen("ls -d %s" % (dumps_search), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=-1)
+        list_of_dumps, _ = p.communicate()
+        return list_of_dumps.decode('utf-8').strip('\n').split('\n')
+
+
+    @pytest.mark.order(-500)
+    @pytest.fixture(autouse=True)
+    def detect_faf(self):
+        abrt_search = "/var/spool/abrt/ccpp*"
+        list_of_dumps = self._list_dumps(abrt_search)
+        for dump_dir in list_of_dumps:
+            if not dump_dir:
+                continue
+            print("Examing crash: " + dump_dir)
+            with open("%s/pkg_name" % (dump_dir), "r") as f:
+                pkg = f.read()
+            if not self._check_dump_package(pkg):
+                continue
+            with open("%s/last_occurrence" % (dump_dir), "r") as f:
+                last_timestamp = f.read()
+            # append last_timestamp, to check if last occurrence is reported
+            if not self._is_dump_reported("%s-%s" % (dump_dir, last_timestamp)):
+                with open("%s/reported_to" % (dump_dir), "r") as f:
+                    reports = f.read().strip("\n").split("\n")
+                url = ""
+                for report in reports:
+                    if "URL=" in report:
+                        url = report.replace("URL=","")
+                self._embed_dump("%s-%s" % (dump_dir ,last_timestamp), url, caption="FAF")
+
+
+    @pytest.mark.order(-500)
+    @pytest.fixture(autouse=True)
+    def detect_coredump(self):
+        coredump_search = "/var/lib/systemd/coredump/*"
+        list_of_dumps = self._list_dumps(coredump_search)
+        for dump_dir in list_of_dumps:
+            if not dump_dir:
+                continue
+            print("Examing crash: " + dump_dir)
+            dump_dir_split = dump_dir.split('.')
+            if len(dump_dir_split) < 6:
+                print("Some garbage in %s" % (dump_dir))
+                continue
+            if not self._check_dump_package(dump_dir_split[1]):
+                continue
+            try:
+                pid, dump_timestamp = int(dump_dir_split[4]), int(dump_dir_split[5])
+            except Exception as e:
+                print("Some garbage in %s: %s" % (dump_dir, str(e)))
+                continue
+            if not self._is_dump_reported(dump_dir):
+                p = subprocess.Popen('echo backtrace | coredumpctl debug %d' % (pid), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=-1)
+                dump_output, _ = p.communicate()
+                self._embed_dump(dump_dir, dump_output.decode('utf-8'), caption="COREDUMP")
+
+
+    @pytest.mark.order(-400)
     @pytest.fixture(autouse=True)
     def capture_NM_log(self):
         t_start = datetime.now()
@@ -34,20 +106,12 @@ class NMTest:
             f.write(str(t_end - t_start))
 
 
-    @pytest.mark.order(-99)
-    @pytest.fixture(autouse=True)
-    def catch_faf_crash(self):
-        pass
-
-
     @pytest.mark.order(-98)
     @pytest.fixture(autouse=True)
     def output_state(self, request):
-        self.log = open("/tmp/main-nm.log", "w")
         self.dump_status("setup")
         yield
         self.dump_status("teardown")
-        self.log.close()
 
 
     @pytest.mark.order(-97)
@@ -85,9 +149,7 @@ class NMTest:
 
     # =================== steps ==============================
     def command_call(self, com, shell=False, log="std"):
-        if log == "log":
-            log_out = log_err = self.log
-        elif not log:
+        if not log:
             log_out = log_err = open(os.devnull, 'w')
         elif log == "std":
             return call(com, shell=shell)
@@ -103,41 +165,13 @@ class NMTest:
 
 
     def popen(self, com, shell=False, timeout=15):
-        p = Popen(com, shell=shell, stdout=subprocess.PIPE, sterr=subprocess.PIPE, timeout=timeout)
+        p = subprocess.Popen(com, shell=shell, stdout=subprocess.PIPE, sterr=subprocess.PIPE, timeout=timeout)
         out, err = p.communicate()
         return out.decode("utf-8"), err.decode("utf-8")
 
 
     def command_expect(self, command, keywords):
         exp = pexpect.spawn('/bin/bash', encoding='utf-8')
-
-
-    def double_tab_after(self, command, keywords, timeout=2):
-        os.system('echo "set page-completions off" > ~/.inputrc')
-        os.system('echo "set completion-display-width 0" >> ~/.inputrc')
-        exp = pexpect.spawn('/bin/bash', encoding='utf-8')
-        exp.send(command)
-        exp.sendcontrol('i')
-        exp.sendcontrol('i')
-        # copy list not to modify argument
-        keywords = list(keywords)
-        while len(keywords):
-            ind = exp.expect([pexpect.TIMEOUT]+keywords, timeout=timeout)
-            assert ind != 0, "did not see '%s'" % "|".join(keywords)
-            keywords.pop(ind-1)
-        exp.terminate(force=True)
-
-
-    def not_double_tab_after(self, command, keywords, timeout=2):
-        os.system('echo "set page-completions off" > ~/.inputrc')
-        os.system('echo "set completion-display-width 0" >> ~/.inputrc')
-        exp = pexpect.spawn('/bin/bash', encoding='utf-8')
-        exp.send(command)
-        exp.sendcontrol('i')
-        exp.sendcontrol('i')
-        ind = exp.expect([pexpect.TIMEOUT]+keywords, timeout=timeout)
-        assert ind == 0, "did see %s" % keywords[ind-1]
-        exp.terminate(force=True)
 
 
     def get_ver_comparable(self, ver):

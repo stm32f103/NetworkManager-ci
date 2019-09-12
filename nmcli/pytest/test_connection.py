@@ -8,38 +8,38 @@ nmcli = NMcli.NMcli()
 
 class TestConnection(ConnectionNMTest):
 
-    def test_connection_help(self):
+    def test_connection_help(self, com):
         keywords=["--active","id","uuid"]
-        self.double_tab_after("nmcli con show ", keywords)
+        com.double_tab_after("nmcli con show ", keywords)
         keywords = ["autoconnect","con-name","help","ifname","type"]
-        self.double_tab_after("nmcli con add ", keywords)
+        com.double_tab_after("nmcli con add ", keywords)
         keywords = ["add","down","help","modify","show","delete","edit","load","reload","up"]
-        out = self.double_tab_after("nmcli con ", keywords)
+        com.double_tab_after("nmcli con ", keywords)
 
 
-    def test_connection_names_autocompletion(self):
+    def test_connection_names_autocompletion(self, com):
         keywords = ["testeth0", "testeth6"]
-        self.double_tab_after("nmcli con edit id ", keywords)
+        com.double_tab_after("nmcli con edit id ", keywords)
         self.not_double_tab_after("nmcli con edit id ", ["con_con"])
         nmcli.connection_add("con-name con_con type ethernet ifname eth5")
-        self.double_tab_after("nmcli con edit id ", ["con_con"])
-        self.double_tab_after("nmcli con edit ", ["con_con"])
+        com.double_tab_after("nmcli con edit id ", ["con_con"])
+        com.double_tab_after("nmcli con edit ", ["con_con"])
 
 
-    @pytest.mark.rhbz1375933
-    def test_device_autocompletion(self):
-        self.double_tab_after("mcli connection add type ethernet ifname ", ["eth0","eth2","eth10"])
+    @pytest.mark.rhbz(1375933)
+    def test_device_autocompletion(self, com):
+        com.double_tab_after("mcli connection add type ethernet ifname ", ["eth0","eth2","eth10"])
 
 
-    @pytest.mark.rhbz1367736
-    def test_connection_objects_autocompletion(self):
-        self.double_tab_after("nmcli connection add type bond -- ipv4.method manual ipv4.addresses 1.1.1.1/24 ip", ["ipv4.dad-timeout"])
+    @pytest.mark.rhbz(1367736)
+    def test_connection_objects_autocompletion(self, com):
+        com.double_tab_after("nmcli connection add type bond -- ipv4.method manual ipv4.addresses 1.1.1.1/24 ip", ["ipv4.dad-timeout"])
 
 
-    @pytest.mark.rhbz1301226
-    def test_connection_objects_autocompletion(self):
+    @pytest.mark.rhbz(1301226)
+    def test_connection_objects_autocompletion(self, com):
         self.run_ver("+=1.4.0")
-        self.double_tab_after("nmcli connection add type bond -- ipv4.method manual ipv4.addresses 1.1.1.1/24 ip", ["ipv4.dad-timeout"])
+        com.double_tab_after("nmcli connection add type bond -- ipv4.method manual ipv4.addresses 1.1.1.1/24 ip", ["ipv4.dad-timeout"])
 
 
     def test_connection_double_delete(self):

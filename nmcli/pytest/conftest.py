@@ -1,7 +1,7 @@
 # content of ./test_smtpsimple.py
 import pytest
 
-pytest_plugins = ["NMTest","ConnectionNMTest", "HTML", "editor", "service", "nmconfig"]
+pytest_plugins = ["NMTest","ConnectionNMTest", "HTML", "editor", "service", "nmconfig", "com"]
 
 #@pytest.hookimpl(hookwrapper=True)
 #def pytest_runtest_makereport(item, call):
@@ -30,3 +30,9 @@ def order_fixtures(metafunc):
 
 def pytest_generate_tests(metafunc):
     order_fixtures(metafunc)
+
+# custom markers
+def pytest_configure(config):
+    config.addinivalue_line(
+        "markers", "rhbz(id): Red Hat Bugzilla bug reproducer"
+    )

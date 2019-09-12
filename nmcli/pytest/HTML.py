@@ -1,4 +1,5 @@
 import pytest
+import os
 from datetime import datetime
 
 from py.xml import html, raw
@@ -37,6 +38,7 @@ class HTML:
     nm_log_data = {}
     main_log_data = {}
     duration = {}
+    dump = {}
     embed_index = 0
     def __init__(self, report_filename):
         self.report_filename = report_filename
@@ -47,6 +49,7 @@ class HTML:
 #        outcome = yield
 #        report = outcome.get_result()
 #        #report.cls = item.cls
+
 
     def pytest_runtest_logreport(self, report):
         id = report.nodeid
@@ -60,6 +63,10 @@ class HTML:
                 self.main_log_data[id] = f.read()
             with open("/tmp/test_duration", "r") as f:
                 self.duration[id] = f.read()
+            if os.path.exists("/tmp/last_dump"):
+                with open("/tmp/last_dump", "r") as f:
+                    self.dump[id] = f.read()
+                os.remove("/tmp/last_dump")
 
 
     def pytest_sessionfinish(self, session):
@@ -124,6 +131,7 @@ class HTML:
         import inspect
         return inspect.getsource(m)
 
+
     def _get_reports(self):
         div = html.div("Results")
         test_index = 0
@@ -160,6 +168,14 @@ class HTML:
                         header = header.replace("Captured ", "")
                         self._embed(data=content, target=result_div, caption=header)
                         sec_index += 1
+
+            if test in self.dump:
+                dump = self.dump[test]
+                dump = dump.split("\n")
+                caption = dump[0]
+                dump = "\n".join(dump[1:])
+                self._embed(data=dump, target=result_div, caption=caption)
+
             if not skip:
                 self._embed(data=raw(escape(self.main_log_data[test])), target=result_div, caption="MAIN")
             if len(fail) == 0:
