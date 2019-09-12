@@ -8,7 +8,6 @@ class NMcli:
     def _nmcli(self, cmd, timeout=5):
         cli = pexpect.spawn(cmd, timeout=timeout, encoding='utf-8')
         r = cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF])
-        r2 = cli.expect([pexpect.EOF, pexpect.TIMEOUT], timeout=180)
         if self.do_assert:
             assert r != 0, 'error in "%s":\n%s%s' % (cmd, cli.after, cli.buffer)
             assert r != 1, '"%s" timed out (%ds)' % (cmd, timeout)
@@ -17,6 +16,7 @@ class NMcli:
                 print('error in "%s":\n%s%s' % (cmd, cli.after, cli.buffer))
             elif r == 1:
                 print('"%s" timed out (%ds)' % (cmd, timeout))
+        r2 = cli.expect([pexpect.EOF, pexpect.TIMEOUT], timeout=180)
         assert r2 == 0, '"%s" hanged !!!' % (cmd)
 
     def connection_add(self, args, timeout=5):
