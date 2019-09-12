@@ -138,7 +138,7 @@ testmapper:
         feature: bond
     - bond_mode_active_backup:
         feature: bond
-    - bond_active-backup_primary_set:
+    - bond_active_backup_primary_set:
         feature: bond
     - bond_mode_balance_xor:
         feature: bond
@@ -181,7 +181,7 @@ testmapper:
         feature: bond
     - nmcli_novice_mode_create_bond_with_arp_monitor_values:
         feature: bond
-    - nmcli_novice_mode_create_bond-slave_with_default_options:
+    - nmcli_novice_mode_create_bond_slave_with_default_options:
         feature: bond
     - bond_reflect_changes_from_outside_of_NM:
         feature: bond
@@ -211,7 +211,7 @@ testmapper:
         tags: gate
     - bond_8023ad_no_error:
         feature: bond
-    - bond_balance-alb_no_error:
+    - bond_balance_alb_no_error:
         feature: bond
     - reapply_unchanged_slave:
         feature: bond
@@ -336,7 +336,7 @@ testmapper:
         feature: team
     - nmcli_novice_mode_create_team:
         feature: team
-    - nmcli_novice_mode_create_team-slave_with_default_options:
+    - nmcli_novice_mode_create_team_slave_with_default_options:
         feature: team
     - add_two_slaves_to_team:
         feature: team
@@ -521,22 +521,22 @@ testmapper:
         feature: ipv6
     - ipv6_dns_auto_with_more_manually_set:
         feature: ipv6
-    - ipv6_dns_ignore-auto-dns_with_manually_set_dns:
+    - ipv6_dns_ignore_auto_dns_with_manually_set_dns:
         feature: ipv6
         tags: gate
     - ipv6_dns_add_more_when_already_have_some:
         feature: ipv6
     - ipv6_dns_remove_manually_set:
         feature: ipv6
-    - ipv6_dns-search_set:
+    - ipv6_dns_search_set:
         feature: ipv6
-    - ipv6_dns-search_remove:
+    - ipv6_dns_search_remove:
         feature: ipv6
-    - ipv6_ignore-auto-dns_set:
+    - ipv6_ignore_auto_dns_set:
         feature: ipv6
-    - ipv6_ignore-auto-dns_set-generic:
+    - ipv6_ignore_auto_dns_set_generic:
         feature: ipv6
-    - ipv6_method_link-local:
+    - ipv6_method_link_local:
         feature: ipv6
         tags: gate
     - ipv6_method_ignored:
@@ -546,15 +546,15 @@ testmapper:
     - ipv6_may_fail_set_true:
         feature: ipv6
         tags: gate
-    - ipv6_never-default_set_true:
+    - ipv6_never_default_set_true:
         feature: ipv6
         tags: gate
-    - ipv6_never-default_remove:
+    - ipv6_never_default_remove:
         feature: ipv6
         tags: gate
-    - ipv6_dhcp-hostname_set:
+    - ipv6_dhcp_hostname_set:
         feature: ipv6
-    - ipv6_dhcp-hostname_remove:
+    - ipv6_dhcp_hostname_remove:
         feature: ipv6
         tags: gate
     - ipv6_send_fqdn.fqdn_to_dhcpv6:
@@ -563,15 +563,15 @@ testmapper:
         feature: ipv6
     - ipv6_secondary_address:
         feature: ipv6
-    - ipv6_ip6-privacy_0:
+    - ipv6_ip6_privacy_0:
         feature: ipv6
-    - ipv6_ip6-privacy_1:
+    - ipv6_ip6_privacy_1:
         feature: ipv6
-    - ipv6_ip6-privacy_2:
+    - ipv6_ip6_privacy_2:
         feature: ipv6
-    - ipv6_ip6-default_privacy:
+    - ipv6_ip6_default_privacy:
         feature: ipv6
-    - ipv6_ip6-privacy_incorrect_value:
+    - ipv6_ip6_privacy_incorrect_value:
         feature: ipv6
     - ipv6_lifetime_no_padding:
         feature: ipv6
@@ -592,7 +592,7 @@ testmapper:
     - ipv6_set_ra_announced_mtu:
         feature: ipv6
         tags: gate
-    - nm-online_wait_for_ipv6_to_finish:
+    - nm_online_wait_for_ipv6_to_finish:
         feature: ipv6
         tags: gate
     - ipv6_shared_connection_error:
@@ -742,13 +742,13 @@ testmapper:
     - dns_priority:
         feature: ipv4
         tags: gate
-    - ipv4_dns-search_add:
+    - ipv4_dns_search_add:
         feature: ipv4
         tags: gate
-    - ipv4_dns-search_remove:
+    - ipv4_dns_search_remove:
         feature: ipv4
         tags: gate
-    - ipv4_dhcp-hostname_set:
+    - ipv4_dhcp_hostname_set:
         feature: ipv4
     - nmcli_ipv4_set_fqdn:
         feature: ipv4
@@ -757,7 +757,7 @@ testmapper:
         feature: ipv4
     - nmcli_ipv4_remove_fqdn:
         feature: ipv4
-    - ipv4_dhcp-hostname_remove:
+    - ipv4_dhcp_hostname_remove:
         feature: ipv4
     - ipv4_do_not_send_hostname:
         feature: ipv4
@@ -769,9 +769,9 @@ testmapper:
         feature: ipv4
     - ipv4_remove_dns_options:
         feature: ipv4
-    - ipv4_dns-search_ignore_auto_routes:
+    - ipv4_dns_search_ignore_auto_routes:
         feature: ipv4
-    - ipv4_method_link-local:
+    - ipv4_method_link_local:
         feature: ipv4
     - ipv4_dhcp_client_id_set:
         feature: ipv4
@@ -789,15 +789,15 @@ testmapper:
         feature: ipv4
     - ipv4_dhcp_client_id_default_rhel8:
         feature: ipv4
-    - ipv4_may-fail_yes:
+    - ipv4_may_fail_yes:
         feature: ipv4
         tags: gate
     - ipv4_method_disabled:
         feature: ipv4
         tags: gate
-    - ipv4_never-default_set:
+    - ipv4_never_default_set:
         feature: ipv4
-    - ipv4_never-default_remove:
+    - ipv4_never_default_remove:
         feature: ipv4
         tags: gate
     - ipv4_describe:
@@ -811,22 +811,22 @@ testmapper:
     - renewal_gw_after_long_dhcp_outage:
         feature: ipv4
         timeout: 20m
-    - dhcp-timeout:
+    - dhcp_timeout:
         feature: ipv4
-    - dhcp-timeout_infinity:
+    - dhcp_timeout_infinity:
         feature: ipv4
-    - dhcp-timeout_default_in_cfg:
+    - dhcp_timeout_default_in_cfg:
         feature: ipv4
     - renewal_gw_after_dhcp_outage_for_assumed_var0:
         feature: ipv4
     - renewal_gw_after_dhcp_outage_for_assumed_var1:
         feature: ipv4
-    - manual_routes_preserved_when_never-default_yes:
+    - manual_routes_preserved_when_never_default_yes:
         feature: ipv4
     - dhcp4_outages_in_various_situation:
         feature: ipv4
         timeout: 20m
-    - manual_routes_removed_when_never-default_no:
+    - manual_routes_removed_when_never_default_no:
         feature: ipv4
     - ipv4_dad:
         feature: ipv4
@@ -865,7 +865,7 @@ testmapper:
         feature: ipv4
     - ipv4_multiple_ip4:
         feature: ipv4
-    - ipv4_dhcp-hostname_shared_persists:
+    - ipv4_dhcp_hostname_shared_persists:
         feature: ipv4
     - nm_dhcp_lease_renewal_link_down:
         feature: ipv4
@@ -1127,7 +1127,7 @@ testmapper:
         tags: gate
     - run_once_helper_for_localhost_localdomain:
         feature: general
-    - wait-online-for-both-ips:
+    - wait_online_for_both_ips:
         feature: general
     - network_online_target_not_depend_on_wait_online:
         feature: general
@@ -1299,7 +1299,7 @@ testmapper:
         feature: general
     - resolv_conf_dangling_symlink:
         feature: general
-    - macsec_send-sci_by_default:
+    - macsec_send_sci_by_default:
         feature: general
     - libnm_async_tasks_cancelable:
         feature: general
@@ -1333,7 +1333,7 @@ testmapper:
         feature: general
     - nmcli_novice_print_types:
         feature: general
-    - nmcli_modify_altsubject-matches:
+    - nmcli_modify_altsubject_matches:
         feature: general
     - libnm_get_dns_crash:
         feature: general
@@ -1528,7 +1528,7 @@ testmapper:
         feature: connection
     - connection_set_uuid_error:
         feature: connection
-    - connection_set_interface-name:
+    - connection_set_interface_name:
         feature: connection
     - connection_autoconnect_yes:
         feature: connection
