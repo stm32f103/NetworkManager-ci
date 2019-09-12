@@ -144,6 +144,7 @@ class NMTest:
         ver_list = [ int(x) for x in ver.split('.') ]
         return ver_list
 
+
     def check_ver(self, ver_str):
         ver = ver_str.replace("-","").replace("+","").replace("=","")
         ver = self.get_ver_comparable(ver)
@@ -162,28 +163,3 @@ class NMTest:
     def run_ver(self, ver_str):
         if not self.check_ver(ver_str):
             pytest.skip("incorrect NM version")
-
-
-    def reboot(self):
-        assert self.command_call("sudo systemctl stop NetworkManager", shell=True) == 0
-        for x in range(1,11):
-            self.command_call("sudo ip link set dev eth%d down" %int(x), shell=True)
-            self.command_call("sudo ip addr flush dev eth%d" %int(x), shell=True)
-
-        self.command_call("sudo ip link set dev em2 down", shell=True)
-        self.command_call("sudo ip addr flush dev em2", shell=True)
-
-        self.command_call("ip link del nm-bond", shell=True)
-        self.command_call("ip link del nm-team", shell=True)
-        self.command_call("ip link del team7", shell=True)
-        self.command_call("ip link del bridge7", shell=True)
-        # for nmtui
-        self.command_call("ip link del bond0", shell=True)
-        self.command_call("ip link del team0", shell=True)
-
-
-        self.command_call("rm -rf /var/run/NetworkManager", shell=True)
-
-        sleep(1)
-        assert self.command_call("sudo systemctl restart NetworkManager", shell=True) == 0
-        sleep(2)

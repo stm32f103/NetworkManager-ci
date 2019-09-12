@@ -48,7 +48,7 @@ class TestConnection(ConnectionNMTest):
 
 
     #def test_connection_autoconnect_yes(self, veth, editor):
-    def test_connection_autoconnect_yes(self, editor):
+    def test_connection_autoconnect_yes(self, editor, service):
         nmcli.connection_add("con-name con_con type ethernet ifname eth6")
         ed = editor.open("con_con")
         editor.send(ed, "set connection.autoconnect yes\n")
@@ -56,5 +56,5 @@ class TestConnection(ConnectionNMTest):
         editor.quit(ed)
         nmcli.connection_up("con_con") == 0
         nmcli.device_disconect("eth6")
-        self.reboot()
+        service.reboot()
         assert "con_con" in self.command_output("nmcli -t -f NAME  connection show -a", shell=True)
