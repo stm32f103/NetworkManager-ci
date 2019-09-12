@@ -36,19 +36,23 @@ else
     (cd $DIR/nmcli/pytest; pytest -v -k "test_${1} and not test_${1}_" --html="$NMTEST_REPORT" .); rc=$?
 fi
 
+# check for skip
+if grep -q SKIPPED "$NMTEST_REPORT" ; then
+    rc=77
+fi
+
 if [ $rc -eq 0 ]; then
     RESULT="PASS"
 elif [ $rc -eq 77 ]; then
     RESULT="SKIP"
     rc=0
+elif [ $rc -eq 5 ]; then
+    # rc 5 means test no found - so empty report
+    RESULT="SKIP"
+    rm "$NMTEST_REPORT"
+    rc=0
 else
     RESULT="FAIL"
-fi
-
-# check for NM crash
-if grep -q CRASHED_STEP_NAME "$NMTEST_REPORT" ; then
-    RESULT="FAIL"
-    rc=1
 fi
 
 # check for empty file: -s means nonempty
