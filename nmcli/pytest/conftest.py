@@ -1,7 +1,7 @@
 # content of ./test_smtpsimple.py
 import pytest
 
-pytest_plugins = ["NMTest","ConnectionNMTest", "HTML"]
+pytest_plugins = ["NMTest","ConnectionNMTest", "HTML", "editor"]
 
 #@pytest.hookimpl(hookwrapper=True)
 #def pytest_runtest_makereport(item, call):

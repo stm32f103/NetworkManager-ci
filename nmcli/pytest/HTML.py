@@ -74,7 +74,7 @@ class HTML:
     def _gen_HTML(self):
         head = html.head(
             html.meta(charset="utf-8"), html.title("Test Report"),
-            html.style(raw(".hover{background-color:#ddd; padding:0.5em;} .hover:hover{background-color:#eee;} .container{margin-left:0.5em;padding:0.5em;}"))
+            html.style(raw(".hover{background-color:#ddd; padding:0.5em;} .hover:hover{background-color:#eee;} .container{margin-left:0.5em;}"))
         )
 
         body = html.body(
@@ -97,8 +97,7 @@ class HTML:
 
     def _embed(self, data, target, caption):
         target.append(html.u(caption, onclick="toggleById('emb_%d')" % (self.embed_index), style="cursor:pointer;"))
-        data_elem = html.tt(id="emb_%d" %(self.embed_index), style="white-space: pre-wrap;")
-        data_elem.extend([html.br(), data, html.br()])
+        data_elem = html.div(html.tt(data, style="white-space: pre-wrap;"), id="emb_%d" %(self.embed_index), style="background-color:#eee; padding:0.5em;")
         target.extend([data_elem, html.span(" ")])
         self.embed_index += 1
 
@@ -112,7 +111,7 @@ class HTML:
             else:
                 code_html.append(html.span(raw(escape(line))))
             code_html.append(html.br())
-        target.extend([html.br(), html.div(code_html, style="background-color:#eee;")])
+        target.extend([html.br(), html.div(code_html, style="background-color:#eee; padding:0.5em;")])
 
     def _get_source_by_location(self, location):
         file, _, module = location
@@ -139,12 +138,16 @@ class HTML:
             result_div = html.div(id="test_%d" % (test_index), Class="container")
             fail = []
             embeded_code = False
+            skip = False
             for rep in self.test_reports[test]:
                 if rep.failed:
                     fail.append(rep.when)
                 if rep.longrepr:
                     self._embed_code(rep.longreprtext, result_div)
                     embeded_code = True
+                if rep.skipped:
+                    skip = True
+                    break
                 # all standard outputs are stored in "teardown" report
                 if rep.when == "teardown":
                     # if there was no report, get test source
@@ -157,16 +160,18 @@ class HTML:
                         header = header.replace("Captured ", "")
                         self._embed(data=content, target=result_div, caption=header)
                         sec_index += 1
-
-            test_div.append(html.small(" (%s)" % self.duration[test]))
-            self._embed(data=raw(escape(self.main_log_data[test])), target=result_div, caption="MAIN")
-
+            if not skip:
+                self._embed(data=raw(escape(self.main_log_data[test])), target=result_div, caption="MAIN")
             if len(fail) == 0:
-                test_div.append(html.span("PASS", style="color:green;"))
+                if skip:
+                    test_div.append(html.span("SKIP", style="color:yellow;"))
+                else:
+                    test_div.append(html.span("PASS", style="color:green;"))
             else:
                 test_div.append(html.span("FAIL (%s)" % (" ".join(fail)), style="color:red;"))
                 self._embed(data=raw(escape(self.nm_log_data[test])), target=result_div, caption="NM")
 
+            test_div.append(html.small(" (%s)" % self.duration[test]))
 
             div.append(result_div)
             div.append(html.hr())

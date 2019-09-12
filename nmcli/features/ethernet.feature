@@ -492,7 +492,7 @@ Feature: nmcli - ethernet
 
     @ver+=1.6.0
     @con_ethernet_remove @8021x @attach_hostapd_log @attach_wpa_supplicant_log
-    @8021x_ttls_mschap
+    @8021x_ttls_mschapv1
     Scenario: nmcli - ethernet - connect to 8021x -ttls - mschap
     * Add a new connection of type "ethernet" and options "ifname test8X con-name con_ethernet autoconnect no 802-1x.eap ttls 802-1x.identity test_ttls 802-1x.anonymous-identity test 802-1x.ca-cert /tmp/certs/test_user.ca.pem 802-1x.phase2-auth mschap 802-1x.password password"
     Then Bring "up" connection "con_ethernet"

@@ -174,7 +174,7 @@ Feature: nmcli - wifi
 
     @ver+=1.10
     @simwifi_wpa2 @attach_hostapd_log @attach_wpa_supplicant_log
-    @simwifi_ttls_mschap
+    @simwifi_ttls_mschapv1
     Scenario: nmcli - simwifi - connect to TTLS MSCHAP
     Given "wpa2-eap" is visible with command "nmcli -f SSID device wifi list" in "60" seconds
     * Add a new connection of type "wifi" and options "ifname wlan0 con-name wifi autoconnect no ssid wpa2-eap 802-11-wireless-security.key-mgmt wpa-eap 802-1x.eap ttls 802-1x.identity test_ttls 802-1x.anonymous-identity test 802-1x.ca-cert /tmp/certs/test_user.ca.pem 802-1x.phase2-auth mschap 802-1x.password password"

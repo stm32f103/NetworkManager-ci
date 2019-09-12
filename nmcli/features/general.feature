@@ -1533,7 +1533,7 @@ Feature: nmcli - general
     @ver+=1.10.0
     @delete_testeth0
     @allow_veth_connections @no_config_server @long @logging_info_only
-    @stable_mem_consumption2
+    @stable_mem_consumption_2
     Scenario: NM - general - stable mem consumption - var 2
     * Execute "sh tmp/repro_1461643.sh && sleep 10"
     * Note the output of "pmap -x $(pidof NetworkManager) |grep 'total' | awk '{print $4}'" as value "0"

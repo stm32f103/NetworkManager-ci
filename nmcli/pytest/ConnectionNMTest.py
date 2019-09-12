@@ -2,6 +2,10 @@ import pytest
 
 from NMTest import NMTest
 
+# import nmcli with disabled assertions - connections does not have to exists in setup/teardown
+import NMcli
+nmcli = NMcli.NMcli(do_assert=False)
+
 from subprocess import call
 
 
@@ -9,16 +13,6 @@ class ConnectionNMTest(NMTest):
 
     @pytest.fixture(autouse=True)
     def con_con_remove(self):
-        self.nmcli_delete_connection("con_con")
+        nmcli.connection_delete("con_con con_con2")
         yield
-        self.nmcli_delete_connection("con_con")
-
-    def nmcli_delete_connection(self, args):
-        cmd = "nmcli connection delete " + args
-        cmd = [ arg for arg in cmd.split(" ") if arg != "" ]
-        return self.command_call(cmd)
-
-    def nmcli_add_connection(self, args):
-        cmd = "nmcli connection add " + args
-        cmd = [ arg for arg in cmd.split(" ") if arg != "" ]
-        return self.command_call(cmd)
+        nmcli.connection_delete("con_con con_con2")
