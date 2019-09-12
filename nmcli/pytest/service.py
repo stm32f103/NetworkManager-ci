@@ -1,17 +1,27 @@
 import pytest
 import subprocess
 
+from time import sleep
+
+from ip import IP
+ip = IP(do_assert=False)
 
 class Service:
 
     def restart_NM(self):
         self.restart("NetworkManager")
 
+    def stop_NM(self):
+        self.stop("NetworkManager")
+
     def restart_MM(self):
         self.restart("ModemManager")
 
     def restart(self, service):
         self._systemctl("restart", service)
+
+    def stop(self, service):
+        self._systemctl("stop", service)
 
     def reload(self, service):
         self._systemctl("reload", service)
@@ -29,22 +39,22 @@ class Service:
     def reboot(self):
         self.stop_NM()
         for x in range(1,11):
-            subprocess.call("sudo ip link set dev eth%d down" %int(x), shell=True)
-            subprocess.call("sudo ip addr flush dev eth%d" %int(x), shell=True)
+            ip("link set dev eth%d down" % x, sudo=True)
+            ip("addr flush dev eth%d" % x, sudo=True)
 
-        subprocess.call("sudo ip link set dev em2 down", shell=True)
-        subprocess.call("sudo ip addr flush dev em2", shell=True)
+        ip("link set dev em2 down", sudo=True)
+        ip("addr flush dev em2", sudo=True)
 
-        subprocess.call("ip link del nm-bond", shell=True)
-        subprocess.call("ip link del nm-team", shell=True)
-        subprocess.call("ip link del team7", shell=True)
-        subprocess.call("ip link del bridge7", shell=True)
+        ip("link del nm-bond")
+        ip("link del nm-team")
+        ip("link del team7")
+        ip("link del bridge7")
         # for nmtui
-        subprocess.call("ip link del bond0", shell=True)
-        subprocess.call("ip link del team0", shell=True)
+        ip("link del bond0")
+        ip("link del team0")
 
 
-        subprocess.call("rm -rf /var/run/NetworkManager", shell=True)
+        subprocess.call("sudo rm -rf /var/run/NetworkManager", shell=True)
 
         sleep(1)
         self.restart_NM()

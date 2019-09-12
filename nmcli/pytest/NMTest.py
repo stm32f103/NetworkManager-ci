@@ -65,8 +65,8 @@ class NMTest:
         print("=================================================================================")
         print("Network configuration %s:\n" % when)
         if self.command_call(['systemctl', 'status', 'NetworkManager'], log=None) != 0:
-            for cmd in [['ip', 'addr'], ['ip', '-4', 'route'], ['ip','-6', 'route'], ['ls', 'x']]:
-                print("--- %s ---" % cmd)
+            for cmd in [['ip', 'addr'], ['ip', '-4', 'route'], ['ip','-6', 'route']]:
+                print("--- %s ---" % " ".join(cmd))
                 self.log.flush()
                 self.command_call(cmd)
         else:
