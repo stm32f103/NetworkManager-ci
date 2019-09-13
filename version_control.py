@@ -13,7 +13,7 @@ def skip_non_default_packages(tags):
             return False
     else:
         return False
-        
+
 current_nm_version = "".join(check_output("""NetworkManager -V |awk 'BEGIN { FS = "." }; {printf "%03d%03d%03d", $1, $2, $3}'""", shell=True).decode('utf-8').split('-')[0])
 
 if "NetworkManager" in sys.argv[2] and "Test" in sys.argv[2]:
@@ -21,7 +21,7 @@ if "NetworkManager" in sys.argv[2] and "Test" in sys.argv[2]:
 else:
     test_name = sys.argv[2]
 
-raw_tags = check_output ("behave %s/features/  -k -t %s --dry-run |grep %s" %(sys.argv[1], test_name, test_name), shell=True).decode('utf-8')
+raw_tags = check_output ("behave $(grep -l @%s %s/features/*.feature) -k -t %s --dry-run |grep %s" %(test_name, sys.argv[1], test_name, test_name), shell=True).decode('utf-8')
 tests_tags = raw_tags.split('\n')
 
 tag_to_return = ""

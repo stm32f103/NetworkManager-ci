@@ -16,10 +16,14 @@ function runtest () {
         return 0
     fi
 
+    FEATURE_FILE=$(grep "@$TEST_NAME" -l $DIR/nmcli/features/*.feature)
+    if [ -z $FEATURE_FILE ]; then
+        FEATURE_FILE=$DIR/nmcli/features
+    fi
     if [ x$TAG != x"" ]; then
-        behave $DIR/nmcli/features -t $TEST_NAME -t $TAG -k -f html -o /tmp/report.html -f plain || RC=1
+        behave $FEATURE_FILE -t $TEST_NAME -t $TAG -k -f html -o /tmp/report.html -f plain || RC=1
     else
-        behave $DIR/nmcli/features -t $TEST_NAME -k -f html -o /tmp/report.html -f plain || RC=1
+        behave $FEATURE_FILE -t $TEST_NAME -k -f html -o /tmp/report.html -f plain || RC=1
     fi
 
     # Insert the modem's USB ID and model into the HTML report.
