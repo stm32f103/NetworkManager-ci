@@ -40,7 +40,7 @@ elif [ $vc -eq 0 ]; then
         FEATURE_FILE=$DIR/nmcli/features
     fi
     # if yes, run with -t $TAG
-    if [ x$TAG != x"" ]; then
+    if [ "x$TAG" != "x" ]; then
         logger "Running $TAG version of $NMTEST"
         behave $FEATURE_FILE -t $1 -t $TAG -k -f html -o "$NMTEST_REPORT" -f plain 2>/dev/null; rc=$?
 
