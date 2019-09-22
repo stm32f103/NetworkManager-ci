@@ -220,6 +220,7 @@ install_el7_packages () {
     # Add OVS repo and install OVS
     if grep -q -e 'CentOS Linux release 7' /etc/redhat-release; then
         yum -y install https://cbs.centos.org/kojifiles/packages/openvswitch/2.11.0/4.el7/$(arch)/openvswitch-2.11.0-4.el7.$(arch).rpm
+    fi
     mv -f  tmp/ovs-rhel7.repo /etc/yum.repos.d/ovs.repo
     yum -y install openvswitch
 
