@@ -264,8 +264,8 @@
 
     @slaves
     @bond
-    @testcase_301107
-    Scenario: nmcli - connection - slave-type and master settings
+    @bond_slave_type
+    Scenario: nmcli - bond - slave-type and master settings
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add connection type "ethernet" named "bond0.0" for device "eth1"
      * Open editor for connection "bond0.0"
@@ -422,10 +422,7 @@
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Add slave connection for master "nm-bond" on device "eth4" named "bond0.1"
-     * Open editor for connection "bond0.0"
-     * Submit "set connection.autoconnect no" in editor
-     * Save in editor
-     * Quit editor
+     * Modify connection "bond0.0" changing options "autoconnect no"
      * Bring "up" connection "bond0"
      Then Check bond "nm-bond" link state is "up"
      Then Check slave "eth1" not in bond "nm-bond" in proc
@@ -438,14 +435,8 @@
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Add slave connection for master "nm-bond" on device "eth4" named "bond0.1"
-     * Open editor for connection "bond0.0"
-     * Submit "set connection.autoconnect yes" in editor
-     * Save in editor
-     * Quit editor
-     * Open editor for connection "bond0.1"
-     * Submit "set connection.autoconnect yes" in editor
-     * Save in editor
-     * Quit editor
+     * Modify connection "bond0.0" changing options "autoconnect yes"
+     * Modify connection "bond0.1" changing options "autoconnect yes"
      * Bring "up" connection "bond0"
      * Reboot
      Then Check bond "nm-bond" link state is "up"
@@ -691,10 +682,7 @@
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Add slave connection for master "nm-bond" on device "eth4" named "bond0.1"
-     * Open editor for connection "bond0"
-     * Submit "set connection.autoconnect-slaves 1" in editor
-     * Save in editor
-     * Quit editor
+     * Modify connection "bond0" changing options "connection.autoconnect-slaves 1"
      * Disconnect device "nm-bond"
      * Bring "up" connection "bond0"
      Then Check bond "nm-bond" link state is "up"
@@ -708,18 +696,9 @@
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Add slave connection for master "nm-bond" on device "eth4" named "bond0.1"
-     * Open editor for connection "bond0.0"
-     * Submit "set connection.autoconnect no" in editor
-     * Save in editor
-     * Quit editor
-     * Open editor for connection "bond0.1"
-     * Submit "set connection.autoconnect no" in editor
-     * Save in editor
-     * Quit editor
-     * Open editor for connection "bond0"
-     * Submit "set connection.autoconnect no" in editor
-     * Save in editor
-     * Quit editor
+     * Modify connection "bond0.0" changing options "connection.autoconnect no"
+     * Modify connection "bond0.1" changing options "connection.autoconnect no"
+     * Modify connection "bond0" changing options "connection.autoconnect no"
      * Disconnect device "nm-bond"
      * Reboot
      Then Check bond "nm-bond" link state is "down"
@@ -733,18 +712,9 @@
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Add slave connection for master "nm-bond" on device "eth4" named "bond0.1"
-     * Open editor for connection "bond0.0"
-     * Submit "set connection.autoconnect no" in editor
-     * Save in editor
-     * Quit editor
-     * Open editor for connection "bond0.1"
-     * Submit "set connection.autoconnect yes" in editor
-     * Save in editor
-     * Quit editor
-     * Open editor for connection "bond0"
-     * Submit "set connection.autoconnect no" in editor
-     * Save in editor
-     * Quit editor
+     * Modify connection "bond0.0" changing options "connection.autoconnect yes"
+     * Modify connection "bond0.1" changing options "connection.autoconnect yes"
+     * Modify connection "bond0" changing options "connection.autoconnect yes"
      * Bring "up" connection "bond0"
      * Reboot
      Then Check bond "nm-bond" link state is "up"
@@ -758,18 +728,9 @@
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Add slave connection for master "nm-bond" on device "eth4" named "bond0.1"
-     * Open editor for connection "bond0.0"
-     * Submit "set connection.autoconnect no" in editor
-     * Save in editor
-     * Quit editor
-     * Open editor for connection "bond0.1"
-     * Submit "set connection.autoconnect yes" in editor
-     * Save in editor
-     * Quit editor
-     * Open editor for connection "bond0"
-     * Submit "set connection.autoconnect yes" in editor
-     * Save in editor
-     * Quit editor
+     * Modify connection "bond0.0" changing options "connection.autoconnect no"
+     * Modify connection "bond0.1" changing options "connection.autoconnect yes"
+     * Modify connection "bond0" changing options "connection.autoconnect yes"
      * Bring "up" connection "bond0"
      * Bring "up" connection "bond0.0"
      * Bring "up" connection "bond0.1"
