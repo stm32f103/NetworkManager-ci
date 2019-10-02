@@ -883,11 +883,7 @@
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Add slave connection for master "nm-bond" on device "eth4" named "bond0.1"
-     * Open editor for connection "bond0"
-     * Set a property named "bond.options" to "mode=0, miimon=100, downdelay=100, updelay=100" in editor
-     * Save in editor
-     Then Value saved message showed in editor
-     * Quit editor
+     * Modify connection "bond0" changing options "bond.options mode=0,miimon=100,downdelay=100,updelay=100"
      * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" link state is "up"
