@@ -2464,14 +2464,16 @@ def after_scenario(context, scenario):
                 call('nmcli con down testeth1', shell=True)
                 call('nmcli con up testeth2', shell=True)
                 call('nmcli con down testeth2', shell=True)
-                reset_hwaddr_nmcli('eth2')
-                reset_hwaddr_nmcli('eth3')
 
             if 'dpdk' in scenario.tags:
                 print ("---------------------------")
                 print ("remove dpdk residuals")
-                call('nmcli con del dpdk-sriov ovs-iface1', shell=True)
-                call('systemctl stop openvswitch ', shell=True)
+                call('systemctl stop ovsdb-server', shell=True)
+                call('systemctl stop openvswitch', shell=True)
+                sleep(5)
+                call('nmcli con del dpdk-sriov ovs-iface1 && sleep 1', shell=True)
+                call('systemctl device disconnect p4p1', shell=True)
+
 
             if 'remove_custom_cfg' in scenario.tags:
                 print("---------------------------")
