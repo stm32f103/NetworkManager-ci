@@ -1280,7 +1280,7 @@ def before_scenario(context, scenario):
                 call('echo 1 > /sys/module/vfio/parameters/enable_unsafe_noiommu_mode', shell=True)
 
                 print (" * enable two VFs")
-                call('nmcli  connection add type ethernet ifname em2 con-name dpdk-sriov sriov.total-vfs 2', shell=True)
+                call('nmcli  connection add type ethernet ifname em1 con-name dpdk-sriov sriov.total-vfs 2', shell=True)
                 call('nmcli  connection up dpdk-sriov', shell=True)
 
                 print (" * add both VFs to DPDK")
@@ -2079,7 +2079,7 @@ def after_scenario(context, scenario):
                 call("nmcli con del sriov_2", shell=True)
 
                 print ("set 0 to /sys/class/net/*/device/sriov_numvfs")
-                call("echo 0 > /sys/class/net/em2/device/sriov_numvfs", shell=True)
+                call("echo 0 > /sys/class/net/em1/device/sriov_numvfs", shell=True)
                 call("echo 0 > /sys/class/net/p4p1/device/sriov_numvfs", shell=True)
 
                 print ("remove /etc/NetworkManager/conf.d/9*-sriov.conf")
@@ -2088,7 +2088,7 @@ def after_scenario(context, scenario):
 
                 call("set 1 to /sys/class/net/p4p1/device/sriov_drivers_autoprobe", shell=True)
                 call("echo 1 > /sys/class/net/p4p1/device/sriov_drivers_autoprobe", shell=True)
-                call("echo 1 > /sys/class/net/em2/device/sriov_drivers_autoprobe", shell=True)
+                call("echo 1 > /sys/class/net/em1/device/sriov_drivers_autoprobe", shell=True)
 
                 print ("remove ixgbevf driver")
                 call("modprobe -r ixgbevf", shell=True)
