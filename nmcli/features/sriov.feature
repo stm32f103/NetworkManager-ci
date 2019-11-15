@@ -280,6 +280,7 @@
     * Add a new connection of type "ethernet" and options "ifname p4p1 con-name sriov sriov.vfs '0 mac=00:11:22:33:44:55 trust=true' sriov.total-vfs 1"
     * Add a new connection of type "bond" and options "ifname sriov_bond con-name sriov_bond0 ipv4.method manual ipv4.address 1.2.3.4/24 bond.options 'mode=active-backup,primary=p4p1_0,miimon=100,fail_over_mac=2'"
     * Add slave connection for master "sriov_bond" on device "p4p1_0" named "sriov_bond0.0"
+    * Execute "sleep 2"
     * Add slave connection for master "sriov_bond" on device "p6p1" named "sriov_bond0.1"
     When "Bonding Mode: fault-tolerance \(active-backup\) \(fail_over_mac follow\)\s+Primary Slave: p4p1_0 \(primary_reselect always\)\s+Currently Active Slave: p4p1_0" is visible with command "cat /proc/net/bonding/sriov_bond"
     When Check bond "sriov_bond" link state is "up"
@@ -309,6 +310,8 @@
     Scenario: nmcli - sriov - set VF number to 0
     * Add a new connection of type "ethernet" and options "ifname p4p1 con-name sriov sriov.total-vfs 1 sriov.autoprobe-drivers false"
     * Execute "nmcli connection modify sriov sriov.total-vfs 0"
+    # Workaround for 1772960
+    * Execute "sleep 2"
     * Bring "up" connection "sriov"
     Then "1" is not visible with command "cat /sys/class/net/p4p1/device/sriov_numvfs"
     And "vf 0" is not visible with command "ip link show dev p4p1 |grep 'vf 0'"
