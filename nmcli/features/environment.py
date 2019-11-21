@@ -1711,8 +1711,9 @@ def after_scenario(context, scenario):
                 if not os.path.isfile('/tmp/nm_newveth_configured'):
                     # Undo: set veths as managed if we don't use veths yet
                     unmanage_veths ()
-                    # Restore all connections back as before
-                    restore_connections ()
+
+                # Restore all connections back as before
+                restore_connections ()
 
                 print("* attaching nmstate log")
                 nmstate = utf_only_open_read("/tmp/nmstate.txt")
