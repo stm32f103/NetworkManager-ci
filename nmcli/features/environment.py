@@ -1714,6 +1714,7 @@ def after_scenario(context, scenario):
 
                 # Restore all connections back as before
                 restore_connections ()
+                wait_for_testeth0 ()
 
                 print("* attaching nmstate log")
                 nmstate = utf_only_open_read("/tmp/nmstate.txt")
