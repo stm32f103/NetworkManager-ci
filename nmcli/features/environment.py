@@ -1703,7 +1703,9 @@ def after_scenario(context, scenario):
                 reset_hwaddr_nmcli('eth1')
                 reset_hwaddr_nmcli('eth2')
 
-                call("nmcli con del eth1 eth2 linux-br0", shell=True)
+                call("nmcli con del eth1 eth2 linux-br0 dhcpcli dhcpsrv", shell=True)
+                call("nmcli device delete dhcpsrv", shell=True)
+                call("nmcli device delete dhcpcli", shell=True)
 
                 call("nmcli con up testeth1 && nmcli con down testeth1", shell=True)
                 call("nmcli con up testeth2 && nmcli con down testeth2", shell=True)
