@@ -1713,6 +1713,8 @@ def after_scenario(context, scenario):
                 if not os.path.isfile('/tmp/nm_newveth_configured'):
                     # Undo: set veths as managed if we don't use veths yet
                     unmanage_veths ()
+                else:
+                    call('sh prepare/vethsetup.sh check', shell=True)
 
                 # Restore all connections back as before
                 restore_connections ()
