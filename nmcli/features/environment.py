@@ -330,7 +330,7 @@ def setup_libreswan(mode, dh_group, phase1_al="aes", phase2_al=None, ike="ikev1"
 def restore_connections ():
     print ("* recreate all connections")
     for X in range(0,11):
-        call('nmcli con del testeh%s 2>&1 > /dev/null' % X, shell=True)
+        call('nmcli con del testeth%s 2>&1 > /dev/null' % X, shell=True)
         call('nmcli connection add type ethernet con-name testeth%s ifname eth%s autoconnect no' % (X,X), shell=True)
     restore_testeth0 ()
 
