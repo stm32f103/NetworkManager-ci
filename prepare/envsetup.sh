@@ -92,6 +92,10 @@ install_fedora_packages () {
     dnf -4 -y remove NetworkManager-config-connectivity-fedora NetworkManager-config-connectivity-redhat
     dnf -4 -y install openvswitch2* NetworkManager-ovs
 
+    # Enable rawhide sshd to root
+    echo "PermitRootLogin no" >> /etc/ssh/sshd_config
+    systemctl restart sshd
+    
     if ! rpm -q --quiet NetworkManager-pptp; then
         dnf -4 -y install NetworkManager-pptp
     fi
