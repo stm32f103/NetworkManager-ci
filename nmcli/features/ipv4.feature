@@ -1843,6 +1843,7 @@ Feature: nmcli: ipv4
 
 
     @rhbz1767681 @rhbz1686634
+    @ver+=1.18.4
     @two_bridged_veths @tshark
     @ipv4_send_arp_announcements
     Scenario: NM - ipv4 - check that gratuitous ARP announcements are sent"

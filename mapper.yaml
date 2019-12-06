@@ -893,7 +893,7 @@ testmapper:
     - dhcp_private_option_internal:
         feature: ipv4
     - ipv4_send_arp_announcements:
-        feature: vlan
+        feature: ipv4
         tags: gate
     - vlan_add_default_device:
         feature: vlan
