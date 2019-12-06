@@ -1608,3 +1608,16 @@
     * Add a new connection of type "ethernet" and options "con-name bond0.1 ifname eth4 master nm-bond"
     When "connected" is visible with command "nmcli -g GENERAL.STATE dev show nm-bond" in "40" seconds
     Then "Error.*" is not visible with command "python tmp/repro_reapply_no_wired_settings.py bond0 nm-bond" in "1" seconds
+
+
+    @rhbz1686634
+    @ver+=1.22
+    @bond @slaves @modprobe_cfg_remove
+    @bond_reconnect_previously_unavailable_device
+    Scenario: NM - bond - reconnect device
+    * Execute "rmmod bonding && echo 'blacklist bonding' > /etc/modprobe.d/99-test.conf"
+    * Add a new connection of type "bond" and options "con-name bond0 ifname nm-bond connection.autoconnect-slaves 1"
+    * Add a new connection of type "ethernet" and options "con-name bond0.1 ifname eth4 master nm-bond"
+    * Execute "sleep 2 && rm -rf /etc/modprobe.d/99-test.conf"
+    * Bring "up" connection "bond0"
+    When "connected" is visible with command "nmcli -g GENERAL.STATE dev show nm-bond" in "40" seconds
