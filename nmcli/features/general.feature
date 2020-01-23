@@ -1324,6 +1324,7 @@ Feature: nmcli - general
     @nmstate_setup @regenerate_veth @restart
     @nmstate
     Scenario: NM - general - nmstate
+    * Restart NM
     * Execute "ip link add eth1 type veth peer name eth1p && ip link set dev eth1p up"
     * Execute "ip link add eth2 type veth peer name eth2p && ip link set dev eth2p up"
     * Execute "cd nmstate && ulimit -n 10000 && pytest -vv tests/integration -k 'not test_dhcp_on_bridge0' --log-level=DEBUG 2>&1 | tee /tmp/nmstate.txt"

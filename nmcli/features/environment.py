@@ -1695,6 +1695,9 @@ def after_scenario(context, scenario):
                 print ("---------------------------")
                 print ("* remove nmstate setup")
 
+                # nmstate restarts NM few times during tests
+                context.nm_restarted = True
+
                 call("ip link del eth1", shell=True)
                 call("ip link del eth2", shell=True)
 
