@@ -1346,16 +1346,13 @@ def before_scenario(context, scenario):
                     sys.exit(77)
 
                 call("sh prepare/vethsetup.sh teardown", shell=True)
+                context.nm_restarted = True
 
                 manage_veths ()
 
-                # Install some deps
-                call("yum -y install python3-devel rpm-build", shell=True)
-                call("rm -rf /usr/bin/python && ln -s /usr/bin/python3 /usr/bin/python", shell=True)
-                call("git clone https://github.com/nmstate/nmstate/", shell=True)
-                call("sh nmstate/packaging/make_rpm.sh && rm -rf nmstate/nmstate-*.src.rpm", shell=True)
-                call("yum -y install nmstate-* python3-libnmstate-*", shell=True)
-                call("python -m pip install pytest", shell=True)
+                context.nm_pid = nm_pid()
+                # prepare nmstate
+                call("sh prepare/nmstate.sh", shell=True)
 
             if 'nmcli_general_dhcp_profiles_general_gateway' in scenario.tags:
                 print("---------------------------")
@@ -1710,7 +1707,9 @@ def after_scenario(context, scenario):
                 call('rm -rf /etc/dnsmasq.d/nmstate.conf', shell=True)
                 call('systemctl stop dnsmasq', shell=True)
 
-                call('sh prepare/vethsetup.sh check', shell=True)
+                # remove nmstate bits
+                call("rm -rf nmstate", shell=True)
+                call("yum remove -y nmstate python3-libnmstate", shell=True)
 
                 wait_for_testeth0 ()
 
