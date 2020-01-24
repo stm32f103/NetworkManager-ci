@@ -1354,6 +1354,10 @@ def before_scenario(context, scenario):
                 # prepare nmstate
                 call("sh prepare/nmstate.sh", shell=True)
 
+                if call('systemctl is-active openvswitch', shell=True) != 0:
+                    call('systemctl restart openvswitch', shell=True)
+                    restart_NM_service()
+                    
             if 'nmcli_general_dhcp_profiles_general_gateway' in scenario.tags:
                 print("---------------------------")
                 print("backup of /etc/sysconfig/network")
