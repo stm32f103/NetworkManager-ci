@@ -1109,7 +1109,6 @@ testmapper:
     - nmstate:
        feature: general
        timeout: 30m
-        tags: gate
     - general_check_version:
         feature: general
     - general_state_connected:
