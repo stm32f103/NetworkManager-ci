@@ -7,5 +7,5 @@ cd nmstate
 git checkout $(git tag |tail -1)
 sh packaging/make_rpm.sh
 rm -rf nmstate-*.src.rpm
-yum -y install python3-libnmstate* nmstate-* 
+yum -y localinstall python3-libnmstate* nmstate-*
 python -m pip install pytest

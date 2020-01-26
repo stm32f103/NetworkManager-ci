@@ -1346,6 +1346,8 @@ def before_scenario(context, scenario):
                     sys.exit(77)
 
                 call("sh prepare/vethsetup.sh teardown", shell=True)
+                # Need to have the file to be able to regenerate
+                call("touch /tmp/nm_newveth_configured", shell=True)
                 context.nm_restarted = True
 
                 manage_veths ()
@@ -1357,7 +1359,7 @@ def before_scenario(context, scenario):
                 if call('systemctl is-active openvswitch', shell=True) != 0:
                     call('systemctl restart openvswitch', shell=True)
                     restart_NM_service()
-                    
+
             if 'nmcli_general_dhcp_profiles_general_gateway' in scenario.tags:
                 print("---------------------------")
                 print("backup of /etc/sysconfig/network")
@@ -1705,7 +1707,7 @@ def after_scenario(context, scenario):
                 call("ip link del eth1", shell=True)
                 call("ip link del eth2", shell=True)
 
-                call("nmcli con del eth1 eth2 linux-br0 dhcpcli dhcpsrv bond99 eth1.101 eth1.102", shell=True)
+                call("nmcli con del eth1 eth2 linux-br0 dhcpcli dhcpsrv brtest0 bond99 eth1.101 eth1.102", shell=True)
                 call("nmcli device delete dhcpsrv", shell=True)
                 call("nmcli device delete dhcpcli", shell=True)
                 call("nmcli device delete bond99", shell=True)
