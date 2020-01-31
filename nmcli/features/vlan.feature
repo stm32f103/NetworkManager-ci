@@ -597,7 +597,33 @@ Feature: nmcli - vlan
     Then vxlan device "dummy0" check for parent "eth7"
 
 
-    @rhbz1066705
+    @rhbz1768388
+    @ver+=1.22
+    @vlan
+    @vxlan_dbus_shows_port_numbers
+    Scenario: NM - vxlan - dbus shows port numbers
+    * Add a new connection of type "vxlan" and options "ifname vlan1 con-name vlan1 vxlan.destination-port 70 vxlan.source-port-max 50 vxlan.source-port-min 30 id 70 dev eth7 ip4 1.2.3.4/24 remote 1.2.3.1"
+    * Execute "nmcli con up vlan1"
+    Then vxlan device "vlan1" check for ports "70, 30, 50"
+
+
+    @rhbz1768388
+    @ver+=1.22
+    @vlan
+    @vxlan_libnm_shows_port_numbers
+    Scenario: NM - vxlan - libnm shows port numbers
+    * Add a new connection of type "vxlan" and options "ifname vlan1 con-name vlan1 vxlan.destination-port 70 vxlan.source-port-max 50 vxlan.source-port-min 30 id 70 dev eth7 ip4 1.2.3.4/24 remote 1.2.3.1"
+    * Execute "nmcli con up vlan1"
+    Then "70" is visible with command "python prepare/nmclient_get_connection_property.py vlan1 destination-port"
+    Then "30" is visible with command "python prepare/nmclient_get_connection_property.py vlan1 source-port-min"
+    Then "50" is visible with command "python prepare/nmclient_get_connection_property.py vlan1 source-port-max"
+    Then "70" is visible with command "python prepare/nmclient_get_device_property.py vlan1 get_dst_port"
+    Then "30" is visible with command "python prepare/nmclient_get_device_property.py vlan1 get_src_port_min"
+    Then "50" is visible with command "python prepare/nmclient_get_device_property.py vlan1 get_src_port_max"
+
+
+    @rhbz1774074
+    @ver+=1.22
     @vlan
     @vxlan_do_not_up_if_no_master
     Scenario: NM - vxlan - do not up when no master
