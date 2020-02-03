@@ -174,7 +174,7 @@ Feature: nmcli - ovs
     When "activated" is visible with command "nmcli -g GENERAL.STATE con show ovs-iface0" in "40" seconds
     * Delete connection "ovs-eth2"
     Then "Bridge [\"]?ovsbridge0[\"]?" is visible with command "ovs-vsctl show"
-     And "Port [\"]?bond0[\"]?\s+tag: 120\s+Interface [\"]?eth3"\s+type: system" is visible with command "ovs-vsctl show"
+     And "Port [\"]?bond0[\"]?\s+tag: 120\s+Interface [\"]?eth3[\"]?\s+type: system" is visible with command "ovs-vsctl show"
      And "Port [\"]?port0[\"]?\s+tag: 120\s+Interface [\"]?iface0[\"]?\s+type: internal" is visible with command "ovs-vsctl show"
      And "master ovs-system" is not visible with command "ip a s eth2"
      And "master ovs-system" is visible with command "ip a s eth3"
@@ -223,7 +223,7 @@ Feature: nmcli - ovs
     When "activated" is visible with command "nmcli -g GENERAL.STATE con show ovs-iface0" in "40" seconds
     * Delete connection "ovs-bridge0"
     Then "Bridge [\"]?ovsbridge0[\"]?" is not visible with command "ovs-vsctl show"
-     And "Port [\"]?bond0[\"]?\s+tag: 120\s+Interface [\"]?eth3"\s+type: system" is not visible with command "ovs-vsctl show"
+     And "Port [\"]?bond0[\"]?\s+tag: 120\s+Interface [\"]?eth3[\"]?\s+type: system" is not visible with command "ovs-vsctl show"
      And "Port [\"]?port0[\"]?\s+tag: 120\s+Interface [\"]?iface0[\"]?\s+type: internal" is not visible with command "ovs-vsctl show"
      And "master ovs-system" is not visible with command "ip a s eth2"
      And "master ovs-system" is not visible with command "ip a s eth3"
@@ -247,7 +247,7 @@ Feature: nmcli - ovs
     When "activated" is visible with command "nmcli -g GENERAL.STATE con show ovs-iface0" in "40" seconds
     * Delete connection "ovs-bridge0"
     Then "Bridge [\"]?ovsbridge0[\"]?" is not visible with command "ovs-vsctl show"
-     And "Port [\"]?bond0[\"]?\s+tag: 120\s+Interface [\"]?eth3"\s+type: system" is not visible with command "ovs-vsctl show"
+     And "Port [\"]?bond0[\"]?\s+tag: 120\s+Interface [\"]?eth3[\"]?\s+type: system" is not visible with command "ovs-vsctl show"
      And "Port [\"]?port0[\"]?\s+tag: 120\s+Interface [\"]?iface0[\"]?\s+type: internal" is not visible with command "ovs-vsctl show"
      And "master ovs-system" is not visible with command "ip a s eth2"
      And "master ovs-system" is not visible with command "ip a s eth3"
