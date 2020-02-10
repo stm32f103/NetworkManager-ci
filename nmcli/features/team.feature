@@ -1597,5 +1597,5 @@
     Then JSON "{"device":"nm-team","ports":{"eth5":{"prio":-10,"sticky":true}}}" is visible with command "teamdctl nm-team config dump"
      And JSON "{"device":"nm-team","ports":{"eth6":{"prio": 10}}}" is visible with command "teamdctl nm-team config dump"
     * Bring "down" connection "team0.0"
-    Then JSON "{"ports":{"eth5":{}}}" is not visible with command "teamdctl nm-team config dump"
+    Then JSON "{"ports":{"eth5":{}}}" is visible with command "teamdctl nm-team config dump"
     And  JSON "{"device":"nm-team","ports":{"eth6":{"prio": 10}}}" is visible with command "teamdctl nm-team config dump"
