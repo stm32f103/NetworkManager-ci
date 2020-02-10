@@ -973,16 +973,7 @@ Feature: nmcli - general
     @con_PBR_remove @firewall @eth0 @teardown_testveth @tcpdump
     @policy_based_routing_doc_procedure
     Scenario: NM - general - PBR procedure in documentation
-    * Prepare simulated test "provA" device without DHCP
-    * Finish "ip -n provA_ns address add 198.51.100.2/30 dev provAp"
-    * Prepare simulated test "provB" device without DHCP
-    * Finish "ip -n provB_ns address add 192.0.2.2/30 dev provBp"
-    * Prepare simulated test "servers" device without DHCP
-    * Finish "ip -n servers_ns address add 203.0.113.2/24 dev serversp"
-    * Prepare simulated test "int_work" device without DHCP
-    * Finish "ip -n int_work_ns address add 10.0.0.2/24 dev int_workp"
-    * Create device "defA" in "provA_ns" with address "172.20.20.20/24"
-    * Create device "defB" in "provB_ns" with address "172.20.20.20/24"
+    * Prepare PBR documentation procedure
     * Add a new connection of type "ethernet" and options "con-name Provider-A ifname provA ipv4.method manual ipv4.addresses 198.51.100.1/30 ipv4.gateway 198.51.100.2 ipv4.dns 198.51.100.2 connection.zone external"
     * Bring "up" connection "Provider-A"
     * Add a new connection of type "ethernet" and options "con-name Provider-B ifname provB ipv4.method manual ipv4.addresses 192.0.2.1/30 ipv4.routes '0.0.0.0/1 192.0.2.2 table=5000, 128.0.0.0/1 192.0.2.2 table=5000' connection.zone external"
