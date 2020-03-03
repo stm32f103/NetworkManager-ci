@@ -14,7 +14,7 @@ fi
 # Workaround for not working repo
 rm -rf /etc/yum.repos.d/CentOS-Media.repo
 
-$SUDO dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+$SUDO dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 $SUDO yum config-manager --set-enabled PowerTools
 $SUDO curl https://copr.fedorainfracloud.org/coprs/nmstate/nm-build-deps/repo/epel-8/nmstate-nm-build-deps-epel-8.repo > /etc/yum.repos.d/nmstate-nm-build-deps-epel-8.repo
 
