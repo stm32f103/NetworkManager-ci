@@ -63,6 +63,7 @@ $SUDO yum install \
     jansson-devel \
     make \
     libcurl-devel \
+    python3 \
     libasan \
     gnutls-devel \
     https://vbenes.fedorapeople.org/NM/openvswitch2.13-2.13.0-4.el8fdp.$(arch).rpm \
