@@ -65,7 +65,7 @@ $SUDO yum install \
     libcurl-devel \
     libasan \
     gnutls-devel \
-    https://vbenes.fedorapeople.org/NM/openvswitch2.13-2.13.0-4.el8fdp.$arch.rpm \
+    https://vbenes.fedorapeople.org/NM/openvswitch2.13-2.13.0-4.el8fdp.$(arch).rpm \
     https://vbenes.fedorapeople.org/NM/openvswitch-selinux-extra-policy-1.0-22.el8fdp.noarch.rpm \
     --skip-broken \
     -y
