@@ -785,9 +785,9 @@ Feature: nmcli - dns
      And "ndots\\:2" is not visible with command "nmcli -g ipv4.dns-options con show id con_dns"
     * Modify connection "con_dns" changing options "ifname eth2 +ipv4.dns-options 'attempts:2 timeout:5 ndots:1'"
     * Bring "up" connection "con_dns"
-    Then "options[^\n]*attempts:2" is visible with command "cat /etc/resolv\.conf" in "5" seconds in "5" seconds
-     And "options[^\n]*timeout:5" is visible with command "cat /etc/resolv\.conf" in "5" seconds in "5" seconds
-     And "options[^\n]*ndots:1" is visible with command "cat /etc/resolv\.conf" in "5" seconds in "5" seconds
+    Then "options[^\n]*attempts:2" is visible with command "cat /etc/resolv\.conf" in "5" seconds
+     And "options[^\n]*timeout:5" is visible with command "cat /etc/resolv\.conf" in "5" seconds
+     And "options[^\n]*ndots:1" is visible with command "cat /etc/resolv\.conf" in "5" seconds
 
 
     @restart @remove_dns_clean
@@ -818,7 +818,7 @@ Feature: nmcli - dns
     * Restart NM
     * Bring "up" connection "testeth0"
     Then "nameserver 1.2.3.4" is not visible with command "cat /etc/resolv\.conf" in "5" seconds
-    Then "nameserver 1[0-9]" is visible with command "cat /etc/resolv\.conf" in "5" seconds in "45" seconds
+    Then "nameserver 1[0-9]" is visible with command "cat /etc/resolv\.conf" in "45" seconds
 
 
     @rhbz1593661
