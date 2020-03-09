@@ -1401,7 +1401,7 @@ Feature: nmcli - general
 
     @ver+=1.22.0
     @rhelver+=8
-    @nmstate_setup @restart
+    @nmstate_setup
     @nmstate
     Scenario: NM - general - nmstate
     * Restart NM
