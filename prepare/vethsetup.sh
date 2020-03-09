@@ -40,20 +40,6 @@ function setup_veth_env ()
         yum -y install NetworkManager-config-server
     fi
 
-    # If different than default connection is up after compilation bring it down and restart service
-    for i in $(nmcli -t -f DEVICE connection); do
-        nmcli device disconnect $i
-        rm -rf /var/run/NetworkManager*
-    done
-    sleep 2
-    systemctl restart NetworkManager; sleep 5
-
-    # # log state of net after service restart
-    # ip a
-    # nmcli con
-    # nmcli dev
-    # nmcli gen
-
     # Get active device
     counter=0
     DEV=""
@@ -70,6 +56,25 @@ function setup_veth_env ()
     # Save device to be restored to file
     echo $DEV > /tmp/nm_veth_device
 
+    # If different than default connection is up after compilation bring it down and restart service
+    for i in $(nmcli -t -f DEVICE connection); do
+        if ! [ "$DEV" == "$i" ]; then
+            nmcli device disconnect $i
+        fi
+    done
+    # systemctl stop NetworkManager
+    # sleep 0.5
+    # rm -rf /var/run/NetworkManager*
+    # sleep 0.5
+    # systemctl restart NetworkManager
+    # sleep 4
+
+    # # log state of net after service restart
+    ip a
+    nmcli con
+    nmcli dev
+    nmcli gen
+
     # Make sure the active ethernet device is eth0
     if ! [ "x$DEV" == "xeth0" ]; then
         sleep 1
@@ -79,6 +84,7 @@ function setup_veth_env ()
     UUID_NAME=$(nmcli -t -f UUID,NAME c show --active | head -n 1)
     NAME=${UUID_NAME#*:}
     UUID=${UUID_NAME%:*}
+
     # Overwrite the name in order to be sure to have all the NM keys (including UUID) in the ifcfg file
     nmcli con mod $UUID connection.id "$NAME"
 
