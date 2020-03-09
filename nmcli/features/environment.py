@@ -1729,6 +1729,9 @@ def after_scenario(context, scenario):
                 call('rm -rf /etc/dnsmasq.d/nmstate.conf', shell=True)
                 call('systemctl stop dnsmasq', shell=True)
 
+                if os.path.isfile('/tmp/nm_newveth_configured'):
+                    call('sh prepare/vethsetup.sh check', shell=True)
+
                 print("* attaching nmstate log")
                 nmstate = utf_only_open_read("/tmp/nmstate.txt")
                 if nmstate:
