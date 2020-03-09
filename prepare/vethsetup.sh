@@ -348,15 +348,14 @@ function teardown_veth_env ()
     if test -f /tmp/nm_veth_device; then
         ORIGDEV=$(cat /tmp/nm_veth_device)
     fi
+
     # Disconnect eth0
     nmcli device disconnect eth0
 
     # Move all profiles and reload
     rm -rf /etc/sysconfig/network-scripts/ifcfg-testeth0*
+    rm -rf /etc/sysconfig/network-scripts/ifcfg-$ORIGDEV
     mv -f /tmp/ifcfg-$ORIGDEV /etc/sysconfig/network-scripts/ifcfg-$ORIGDEV
-    sleep 1
-    nmcli con reload
-    sleep 1
 
     # Rename the device back to ORIGNAME
     if [ "$ORIGDEV" != "eth0" ]; then
@@ -364,6 +363,10 @@ function teardown_veth_env ()
         ip link set dev eth0 name $ORIGDEV
         ip link set dev $ORIGDEV up
     fi
+
+    nmcli con reload
+    sleep 1
+    nmcli device connect $ORIGDEV
 
     # Rename original devices back
     for DEV in $(nmcli -f DEVICE -t d | grep '^orig-' | sed 's/^orig-//'); do
