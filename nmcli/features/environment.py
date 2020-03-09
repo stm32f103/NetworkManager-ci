@@ -1729,8 +1729,6 @@ def after_scenario(context, scenario):
                 call('rm -rf /etc/dnsmasq.d/nmstate.conf', shell=True)
                 call('systemctl stop dnsmasq', shell=True)
 
-                wait_for_testeth0 ()
-
                 print("* attaching nmstate log")
                 nmstate = utf_only_open_read("/tmp/nmstate.txt")
                 if nmstate:
