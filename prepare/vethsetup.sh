@@ -1,5 +1,5 @@
 #!/bin/bash
-#set -x
+set -x
 
 # Note: This entire setup is available from NetworkManager 1.0.4 up
 
@@ -357,9 +357,9 @@ function teardown_veth_env ()
 
     # Disconnect eth0
     nmcli device disconnect eth0
-
+    nmcli con delete testeth0
     # Move all profiles and reload
-    rm -rf /etc/sysconfig/network-scripts/ifcfg-testeth0*
+    rm -rf /etc/sysconfig/network-scripts/ifcfg-testeth0
     rm -rf /etc/sysconfig/network-scripts/ifcfg-$ORIGDEV
     mv -f /tmp/ifcfg-$ORIGDEV /etc/sysconfig/network-scripts/ifcfg-$ORIGDEV
 
