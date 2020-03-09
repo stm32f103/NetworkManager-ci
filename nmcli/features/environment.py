@@ -1730,6 +1730,8 @@ def after_scenario(context, scenario):
 
                 # Need to setup and then perform only check later on
                 call('sh prepare/vethsetup.sh setup', shell=True)
+                # Very crucial here for s390x
+                restore_testeth0 ()
 
                 print("* attaching nmstate log")
                 nmstate = utf_only_open_read("/tmp/nmstate.txt")

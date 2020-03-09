@@ -53,6 +53,7 @@ function setup_veth_env ()
                 echo "Unable to get active device"
                 exit 1
             fi
+        done
         break
     done
 
