@@ -66,6 +66,10 @@ function setup_veth_env ()
             exit 1
         fi
     done
+
+    # Save device to be restored to file
+    echo $DEV > /tmp/nm_veth_device
+
     # Make sure the active ethernet device is eth0
     if ! [ "x$DEV" == "xeth0" ]; then
         sleep 1
@@ -341,15 +345,14 @@ function teardown_veth_env ()
     done
 
     # Get ORIGDEV name to bring device back to and copy the profile back
-    ORIGDEV=$(grep DEVICE /tmp/ifcfg-* | awk -F '=' '{print $2}' | tr -d '"')
-    if [ "x$ORIGDEV" == "x" ]; then
-        ORIGDEV=$(ls /tmp/ifcfg-* | awk -F '-' '{print $2}' |tr -d '"')
-    fi
+    if test -f /tmp/nm_veth_device; then
+        ORIGDEV=$(cat /tmp/nm_veth_device)
+
     # Disconnect eth0
     nmcli device disconnect eth0
 
     # Move all profiles and reload
-    rm /etc/sysconfig/network-scripts/ifcfg-testeth0*
+    rm -rf /etc/sysconfig/network-scripts/ifcfg-testeth0*
     mv -f /tmp/ifcfg-$ORIGDEV /etc/sysconfig/network-scripts/ifcfg-$ORIGDEV
     sleep 1
     nmcli con reload

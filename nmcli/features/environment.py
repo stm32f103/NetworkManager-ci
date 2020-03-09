@@ -1349,8 +1349,6 @@ def before_scenario(context, scenario):
                     call("ip link set dev eth2 down", shell=True)
                     call("ip link set name eth9 eth2", shell=True)
                     call("ip link set dev eth9 up", shell=True)
-                # Need to have the file to be able to regenerate
-                call("touch /tmp/nm_newveth_configured", shell=True)
                 context.nm_restarted = True
 
                 manage_veths ()
@@ -1729,8 +1727,12 @@ def after_scenario(context, scenario):
                 call('rm -rf /etc/dnsmasq.d/nmstate.conf', shell=True)
                 call('systemctl stop dnsmasq', shell=True)
 
-                if os.path.isfile('/tmp/nm_newveth_configured'):
-                    call('sh prepare/vethsetup.sh check', shell=True)
+                call('ip link del eth1', shell=True)
+                call('ip link del eth2', shell=True)
+                call("ip link del linux-br0", shell=True)
+
+                # Need to setup and then perform only check later on
+                call('sh prepare/vethsetup.sh setup', shell=True)
 
                 print("* attaching nmstate log")
                 nmstate = utf_only_open_read("/tmp/nmstate.txt")
