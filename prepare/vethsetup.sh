@@ -347,7 +347,7 @@ function teardown_veth_env ()
     # Get ORIGDEV name to bring device back to and copy the profile back
     if test -f /tmp/nm_veth_device; then
         ORIGDEV=$(cat /tmp/nm_veth_device)
-
+    fi
     # Disconnect eth0
     nmcli device disconnect eth0
 
