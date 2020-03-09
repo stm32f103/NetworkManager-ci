@@ -1713,9 +1713,6 @@ def after_scenario(context, scenario):
 
                 # nmstate restarts NM few times during tests
                 context.nm_restarted = True
-                call('ip link del eth1', shell=True)
-                call('ip link del eth2', shell=True)
-                call("ip link del linux-br0", shell=True)
 
                 call("nmcli con del eth1 eth2 linux-br0 dhcpcli dhcpsrv brtest0 bond99 eth1.101 eth1.102", shell=True)
                 call("nmcli device delete dhcpsrv", shell=True)
@@ -1726,6 +1723,10 @@ def after_scenario(context, scenario):
                 # in case of fail we need to kill this
                 call('rm -rf /etc/dnsmasq.d/nmstate.conf', shell=True)
                 call('systemctl stop dnsmasq', shell=True)
+
+                call('ip link del eth1', shell=True)
+                call('ip link del eth2', shell=True)
+                call("ip link del linux-br0", shell=True)
 
                 # Need to setup and then perform only check later on
                 call('sh prepare/vethsetup.sh setup', shell=True)

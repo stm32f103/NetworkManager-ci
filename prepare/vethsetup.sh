@@ -58,7 +58,7 @@ function setup_veth_env ()
     counter=0
     DEV=""
     while [ -z $DEV ]; do
-        DEV=$(nmcli -f DEVICE,TYPE,STATE -t d | grep ethernet | grep connected | awk -F':' '{print $1}' | head -n 1)
+        DEV=$(nmcli device show |grep -v lo | grep -Ze IP4.DNS -e IP4.GATEWAY -e GENERAL.DEVICE |grep DEVICE |awk '{print $2}' |head -1)
         sleep 1
         ((counter++))
         if [ $counter -eq 20 ]; then
