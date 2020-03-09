@@ -38,19 +38,22 @@ function setup_veth_env ()
     # Need 'config server' like setup
     if ! rpm -q NetworkManager-config-server; then
         yum -y install NetworkManager-config-server
+        systemctl reload NetworkManager
     fi
 
     # Get active device
     counter=0
     DEV=""
-    while [ -z $DEV ]; do
-        DEV=$(nmcli device show |grep -v lo | grep -Ze IP4.DNS -e IP4.GATEWAY -e GENERAL.DEVICE |grep DEVICE |awk '{print $2}' |head -1)
-        sleep 1
-        ((counter++))
-        if [ $counter -eq 20 ]; then
-            echo "Unable to get active device"
-            exit 1
-        fi
+    for d in $(nmcli -t -f DEVICE device); do
+        while [ -z $DEV ]; do
+            DEV=$(nmcli device show $d | grep -Ze IP4.DNS -e IP4.GATEWAY -e GENERAL.DEVICE |grep DEVICE |awk '{print $2}')
+            sleep 1
+            ((counter++))
+            if [ $counter -eq 20 ]; then
+                echo "Unable to get active device"
+                exit 1
+            fi
+        break
     done
 
     # Save device to be restored to file
