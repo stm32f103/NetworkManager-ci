@@ -182,6 +182,7 @@ install_el8_packages () {
         if ! yum -y install http://download.eng.bos.redhat.com/brewroot/vol/rhel-8/packages/openvswitch2.13/2.13.0/0.20200117git8ae6a5f.el8fdp.1/$(arch)/openvswitch2.13-2.13.0-0.20200117git8ae6a5f.el8fdp.1.$(arch).rpm; then
             yum -y install openvswitch2.12
         fi
+        systemctl restart openvswitch
     fi
 
     # We still need pptp and pptpd in epel to be packaged
