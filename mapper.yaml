@@ -1117,6 +1117,9 @@ testmapper:
         feature: ethernet
     - ethtool_features_fixed_connection:
         feature: ethernet
+    - nmstate:
+       feature: general
+       timeout: 25m
     - logging:
         feature: general
     - reduce_logging:
@@ -1350,9 +1353,6 @@ testmapper:
     - connectivity_check:
         feature: general
         tags: gate
-    - nmstate:
-       feature: general
-       timeout: 25m
     - disable_connectivity_check:
         feature: general
     - manipulate_connectivity_check_via_dbus:
