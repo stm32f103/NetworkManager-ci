@@ -257,8 +257,9 @@ install_el7_packages () {
 
     # install dbus-python3 for s390x via pip
     if uname -a |grep -q s390x; then
-        yum -y install gcc python3-devel
+        yum -y install gcc python3-devel cairo-gobject-devel pygobject3-devel cairo-devel cairo pycairo
         python3 -m pip install dbus-python
+        python3 -m pip install PyGObject
     fi
 
     yum -y install git iw net-tools wireshark psmisc bridge-utils firewalld dhcp ethtool python36-dbus python36-gobject dnsmasq NetworkManager-vpnc
