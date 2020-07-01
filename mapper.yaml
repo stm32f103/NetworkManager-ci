@@ -1161,7 +1161,7 @@ testmapper:
     - reduce_logging:
         feature: general
     - man_pages:
-        feature: general        
+        feature: general
     - hostname_change:
         feature: general
         tags: gate
@@ -1505,6 +1505,8 @@ testmapper:
         feature: ovs
     - ovs_cloned_mac_set_on_iface:
         feature: ovs
+    - ovs_mtu:
+        feature: ovs        
     - ovs_cloned_mac_with_the_same_bridge_iface_name:
         feature: ovs
     - clear_ovs_settings:
