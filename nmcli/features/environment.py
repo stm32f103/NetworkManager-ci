@@ -1785,6 +1785,8 @@ def after_scenario(context, scenario):
 
                 # remove nmstate_eth0 ipv4 only
                 call("nmcli con del nmstate_eth0", shell=True)
+                call("nmcli device connect eth0", shell=True)
+
                 call("sh prepare/vethsetup.sh setup", shell=True)
 
                 print("* attaching nmstate log")
