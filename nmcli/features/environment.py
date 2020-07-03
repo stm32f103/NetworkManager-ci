@@ -1379,6 +1379,10 @@ def before_scenario(context, scenario):
                 call("rm -rf /tmp/nmstate_backup; mkdir /tmp/nmstate_backup; cp /tmp/ifcfg-* /tmp/nmstate_backup/", shell=True)
                 call("sh prepare/vethsetup.sh teardown", shell=True)
 
+                # Create just ipv4 profile"
+                call("nmcli con add type ethernet ifname eth0 con-name nmstate_eth0 ipv6.method disabled", shell=True)
+                call("nmcli con up nmstate_eth0", shell=True)
+
                 # In case eth1 and eth2 exist we need to remove them
                 if call ("ip a s |grep -q 'eth1:'", shell=True) == 0:
                     call("ip link set dev eth1 down", shell=True)
@@ -1779,6 +1783,8 @@ def after_scenario(context, scenario):
                 call("mv -f /tmp/nmstate_backup/* /etc/sysconfig/network-scripts/", shell=True)
                 call("systemctl stop NetworkManager; rm -rf /var/run/NetworkManager; systemctl restart NetworkManager; sleep 5", shell=True)
 
+                # remove nmstate_eth0 ipv4 only
+                call("nmcli con del nmstate_eth0", shell=True)
                 call("sh prepare/vethsetup.sh setup", shell=True)
 
                 print("* attaching nmstate log")
