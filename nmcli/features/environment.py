@@ -1191,6 +1191,8 @@ def before_scenario(context, scenario):
                 if call ("hostname |grep -q gsm-r5", shell=True) != 0:
                     print ("** skipping")
                     sys.exit(77)
+                # NM needs to go down
+                context.nm_restarted = True
 
             if 'preserve_8021x_certs' in scenario.tags:
                 print ("---------------------------")
