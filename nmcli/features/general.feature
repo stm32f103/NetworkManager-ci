@@ -2260,3 +2260,11 @@ Feature: nmcli - general
     * Execute "echo -e 'if not option domain-name = "example.org" {\nprepend domain-name-servers 127.0.0.1;}' > /etc/dhcp/dhclient-eth8.conf"
     * Bring "up" connection "con_general"
     Then "prepend domain-name-servers 127.0.0.1" is visible with command "cat /var/lib/NetworkManager/dhclient-eth8.conf"
+
+
+    @rhbz1711215
+    @ver+=1.25
+    @remove_custom_cfg
+    @NM_performance_test1
+    Scenario: NM - general - create and activate 100 devices
+    Then "PASS" is visible with command "tmp/./activate 100 |grep Completed |grep [3-6] && echo PASS" in "50" seconds

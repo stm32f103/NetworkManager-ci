@@ -1760,6 +1760,11 @@ def after_scenario(context, scenario):
                 call("nmcli networking on", shell=True)
                 wait_for_testeth0()
 
+            if 'NM_performance_test1' in scenario.tags:
+                print ("---------------------------")
+                print ("* remove perf setup")
+                call ("tmp/./setup.sh 0", shell=True)
+
             if 'nmstate_setup' in scenario.tags:
                 print ("---------------------------")
                 print ("* remove nmstate setup")
