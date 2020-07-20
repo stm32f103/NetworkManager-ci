@@ -2267,4 +2267,5 @@ Feature: nmcli - general
     @remove_custom_cfg
     @NM_performance_test1
     Scenario: NM - general - create and activate 100 devices
+    * Restart NM
     Then "PASS" is visible with command "cd tmp; ./activate.py 100 |grep Completed |grep [3-6] && echo PASS" in "50" seconds

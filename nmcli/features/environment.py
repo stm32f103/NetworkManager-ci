@@ -1762,6 +1762,7 @@ def after_scenario(context, scenario):
             if 'NM_performance_test1' in scenario.tags:
                 print ("---------------------------")
                 print ("* remove perf setup")
+                context.nm_restarted = True
                 call ("tmp/./setup.sh 0", shell=True)
 
             if 'nmstate_setup' in scenario.tags:
