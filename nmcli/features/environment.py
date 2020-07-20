@@ -1185,15 +1185,11 @@ def before_scenario(context, scenario):
                     print("netdevsim setup failed with exitcode: %d" % rc)
                     sys.exit(rc)
 
-            # if 'macsec' in scenario.tags:
-            #     print("---------------------------")
-            #     print("installing macsec stuff")
-            #     install = "yum install -y https://vbenes.fedorapeople.org/NM/dnsmasq-debuginfo-2.76-2.el7.$(uname -p).rpm \
-            #                           https://vbenes.fedorapeople.org/NM/dnsmasq-2.76-2.el7.$(uname -p).rpm \
-            #                           https://vbenes.fedorapeople.org/NM/wpa_supplicant-2.6-4.el7.$(uname -p).rpm \
-            #                           https://vbenes.fedorapeople.org/NM/wpa_supplicant-debuginfo-2.6-4.el7.$(uname -p).rpm"
-            #     call(install, shell=True)
-            #     call("systemctl restart wpa_supplicant", shell=True)
+            if 'NM_performance_test1' in scenario.tags:
+                print ("---------------------------")
+                print ("* remove perf setup")
+                if call ("hostname |grep -q gsm-r5", shell=True) != 0:
+                    sys.exit(77)
 
             if 'preserve_8021x_certs' in scenario.tags:
                 print ("---------------------------")
