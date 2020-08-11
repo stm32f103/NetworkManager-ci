@@ -125,17 +125,17 @@ Feature: nmcli - ppp
     When "activated" is visible with command "nmcli -g GENERAL.STATE con show ppp2" in "45" seconds
     When "nameserver 8.8.8.8" is visible with command "cat /etc/resolv.conf" in "5" seconds
     When "nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf" in "5" seconds
-    When "inet 192.168.111.2 peer 192.168.111.254/32 .*scope global my-ppp" is visible with command "ip a s"
+    When "inet 192.168.111.2 peer 192.168.111.254/32" is visible with command "ip a s my-ppp"
     When "192.168.111.254 dev my-ppp\s+proto kernel\s+scope link\s+src 192.168.111.2" is visible with command "ip r"
     When "default via 192.168.111.254 dev my-ppp.*\s+proto static\s+metric" is visible with command "ip r"
     When "default via 192.168.99.1 dev test11\s+proto dhcp\s+metric" is visible with command "ip r"
     When "192.168.99.0/24 dev test11 proto kernel scope link src 192.168.99" is visible with command "ip r"
-    * Reboot 
+    * Reboot
     Then "activated" is visible with command "nmcli -g GENERAL.STATE con show ppp" in "45" seconds
     Then "activated" is visible with command "nmcli -g GENERAL.STATE con show ppp2" in "45" seconds
     Then "nameserver 8.8.8.8" is visible with command "cat /etc/resolv.conf" in "5" seconds
     Then "nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf" in "5" seconds
-    When "inet 192.168.111.2 peer 192.168.111.254/32 .*scope global my-ppp" is visible with command "ip a s"
+    When "inet 192.168.111.2 peer 192.168.111.254/32" is visible with command "ip a s my-ppp"
     When "192.168.111.254 dev my-ppp\s+proto kernel\s+scope link\s+src 192.168.111.2" is visible with command "ip r"
     When "default via 192.168.111.254 dev my-ppp.*\s+proto static\s+metric" is visible with command "ip r"
     When "default via 192.168.99.1 dev test11\s+proto dhcp\s+metric" is visible with command "ip r"
