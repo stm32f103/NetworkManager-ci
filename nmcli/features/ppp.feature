@@ -130,9 +130,7 @@ Feature: nmcli - ppp
     When "default via 192.168.111.254 dev my-ppp.*\s+proto static\s+metric" is visible with command "ip r"
     When "default via 192.168.99.1 dev test11\s+proto dhcp\s+metric" is visible with command "ip r"
     When "192.168.99.0/24 dev test11 proto kernel scope link src 192.168.99" is visible with command "ip r"
-    * Stop NM
-    * Execute "rm -rf /var/run/NetworkManager*"
-    * Start NM
+    * Reboot 
     Then "activated" is visible with command "nmcli -g GENERAL.STATE con show ppp" in "45" seconds
     Then "activated" is visible with command "nmcli -g GENERAL.STATE con show ppp2" in "45" seconds
     Then "nameserver 8.8.8.8" is visible with command "cat /etc/resolv.conf" in "5" seconds
