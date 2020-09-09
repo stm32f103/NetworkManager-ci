@@ -2634,6 +2634,7 @@ def after_scenario(context, scenario):
                 print ("---------------------------")
                 print ("resetting ifcfg plugin")
                 call('sudo rm -f /etc/NetworkManager/conf.d/99-xxcustom.conf', shell=True)
+                sleep(0.1)
                 restart_NM_service()
 
             if 'keyfile_cleanup' in scenario.tags:
