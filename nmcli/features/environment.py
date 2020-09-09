@@ -523,7 +523,7 @@ def reload_NM_service():
     sleep(1)
 
 def restart_NM_service():
-    call("sudo systemctl restart NetworkManager.service", shell=True)
+    call("systemctl reset-failed NetworkManager.service ; systemctl restart NetworkManager.service", shell=True)
 
 def reset_hwaddr_nmtui(ifname):
     try:
