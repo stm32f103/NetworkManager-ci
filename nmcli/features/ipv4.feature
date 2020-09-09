@@ -246,7 +246,7 @@ Feature: nmcli: ipv4
 
     @rhbz1373698
     @ver+=1.8.0
-    @con_ipv4_remove
+    @ifcfg-rh @con_ipv4_remove
     @ipv4_route_set_route_with_src_old_syntax
     Scenario: nmcli - ipv4 - routes - set route with src in old syntax
     * Add a new connection of type "ethernet" and options "ifname eth3 con-name con_ipv4 autoconnect no ipv4.method manual ipv4.addresses 192.168.3.10/24 ipv4.gateway 192.168.4.1 ipv4.route-metric 256"
@@ -263,7 +263,7 @@ Feature: nmcli: ipv4
 
     @rhbz1452648
     @ver+=1.8.0
-    @con_ipv4_remove
+    @ifcfg-rh @con_ipv4_remove
     @ipv4_route_modify_route_with_src_old_syntax_no_metric
     Scenario: nmcli - ipv4 - routes - modify route with src and no metric in old syntax
     * Add a new connection of type "ethernet" and options "ifname eth3 con-name con_ipv4 autoconnect no ipv4.method manual ipv4.addresses 192.168.3.10/24 ipv4.gateway 192.168.4.1 ipv4.route-metric 256"
@@ -282,7 +282,7 @@ Feature: nmcli: ipv4
 
     @rhbz1373698
     @ver+=1.8.0
-    @con_ipv4_remove @restart
+    @con_ipv4_remove @restart @ifcfg-rh
     @ipv4_route_set_route_with_src_old_syntax_restart_persistence
     Scenario: nmcli - ipv4 - routes - set route with src old syntaxt restart persistence
     * Add a new connection of type "ethernet" and options "ifname eth3 con-name con_ipv4 ipv4.method manual ipv4.addresses 192.168.3.10/24 ipv4.gateway 192.168.4.1 ipv4.route-metric 256"
@@ -595,7 +595,7 @@ Feature: nmcli: ipv4
 
     @rhbz1422610
     @ver+=1.8.0
-    @con_ipv4_remove @delete_testeth0 @restore_hostname @eth3_disconnect
+    @con_ipv4_remove @delete_testeth0 @restore_hostname @eth3_disconnect @ifcfg-rh
     @ipv4_ignore_resolveconf_with_ignore_auto_dns_var3
     Scenario: NM - ipv4 - preserve resolveconf when hostnamectl is called and ignore_auto_dns set
     * Add a new connection of type "ethernet" and options "con-name con_ipv4 ifname eth3 ipv4.ignore-auto-dns yes ipv6.ignore-auto-dns yes"
@@ -1213,7 +1213,7 @@ Feature: nmcli: ipv4
 
     @rhbz1350830
     @ver+=1.10.0
-    @con_ipv4_remove @teardown_testveth
+    @con_ipv4_remove @teardown_testveth @ifcfg-rh
     @dhcp-timeout_infinity
     Scenario: NM - ipv4 - add dhcp-timeout infinity
     * Prepare simulated test "testX4" device
@@ -1307,7 +1307,7 @@ Feature: nmcli: ipv4
 
     @rhbz1503587 @rhbz1518091 @rhbz1246496 @rhbz1503587
     @ver+=1.11
-    @con @profie @con_ipv4_remove @teardown_testveth @long @restart
+    @con @profie @con_ipv4_remove @teardown_testveth @long @restart @ifcfg-rh
     @dhcp4_outages_in_various_situation
     Scenario: NM - ipv4 - all types of dhcp outages
     ################# PREPARE testX4 AND testY4 ################################
@@ -1496,7 +1496,7 @@ Feature: nmcli: ipv4
 
     @rhbz1404148
     @ver+=1.10
-    @two_bridged_veths @kill_dnsmasq_ip4
+    @two_bridged_veths @kill_dnsmasq_ip4 @ifcfg-rh
     @ipv4_method_shared_with_already_running_dnsmasq
     Scenario: nmcli - ipv4 - method shared when dnsmasq does run
     * Note the output of "pidof NetworkManager" as value "1"
@@ -1810,7 +1810,7 @@ Feature: nmcli: ipv4
 
     @rhbz1519299
     @ver+=1.12
-    @con_ipv4_remove
+    @con_ipv4_remove @ifcfg-rh
     @ipv4_dhcp-hostname_shared_persists
     Scenario: nmcli - ipv4 - ipv4 dhcp-hostname persists after method shared set
     * Add a new connection of type "ethernet" and options "ifname eth3 con-name con_ipv4 ipv4.dhcp-hostname test"
