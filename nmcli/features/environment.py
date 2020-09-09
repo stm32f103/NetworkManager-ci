@@ -1267,6 +1267,12 @@ def before_scenario(context, scenario):
                     call("touch /tmp/nm_pptp_configured", shell=True)
                     sleep(1)
 
+            if 'ifcfg-rh' in scenario.tags:
+                print ("---------------------------")
+                print ("setting ifcfg-rh plugin")
+                call("printf '# configured by beaker-test\n[main]\nplugins=ifcfg-rh\n' > /etc/NetworkManager/conf.d/99-xxcustom.conf", shell=True)
+                restart_NM_service()
+
             if 'firewall' in scenario.tags:
                 print ("---------------------------")
                 print ("starting firewall")
@@ -2598,8 +2604,9 @@ def after_scenario(context, scenario):
 
             if 'ifcfg-rh' in scenario.tags:
                 print ("---------------------------")
-                print ("enabling ifcfg-plugin")
-                call("sudo sh -c \"echo '[main]\nplugins=ifcfg-rh' > /etc/NetworkManager/NetworkManager.conf\" ", shell=True)
+                print ("resetting ifcfg plugin")
+                call('sudo rm -f /etc/NetworkManager/conf.d/99-xxcustom.conf', shell=True)
+                restart_NM_service()
 
             if 'keyfile_cleanup' in scenario.tags:
                 print ("---------------------------")
@@ -2706,7 +2713,7 @@ def after_scenario(context, scenario):
                 print("---------------------------")
                 print("Removing custom cfg file in conf.d")
                 call('sudo rm -f /etc/NetworkManager/conf.d/99-xxcustom.conf', shell=True)
-                reload_NM_service()
+                restart_NM_service()
 
             if 'device_connect_no_profile' in scenario.tags or 'device_connect' in scenario.tags:
                 print ("---------------------------")
