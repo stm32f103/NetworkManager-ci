@@ -949,6 +949,12 @@ def before_scenario(context, scenario):
                 call("printf '# configured by beaker-test\n[main]\ndhcp=dhclient\n' > /etc/NetworkManager/conf.d/99-xtest-dhcp-dhclient.conf", shell=True)
                 restart_NM_service()
 
+            if 'ifcfg-rh' in scenario.tags:
+                print ("---------------------------")
+                print ("setting ifcfg-rh plugin")
+                call("printf '# configured by beaker-test\n[main]\nplugins=ifcfg-rh\n' > /etc/NetworkManager/conf.d/99-xxcustom.conf", shell=True)
+                restart_NM_service()
+
             if 'dummy' in scenario.tags:
                 print ("---------------------------")
                 print ("removing dummy devices")
@@ -1266,12 +1272,6 @@ def before_scenario(context, scenario):
                     #call("nmcli con del pptp", shell=True)
                     call("touch /tmp/nm_pptp_configured", shell=True)
                     sleep(1)
-
-            if 'ifcfg-rh' in scenario.tags:
-                print ("---------------------------")
-                print ("setting ifcfg-rh plugin")
-                call("printf '# configured by beaker-test\n[main]\nplugins=ifcfg-rh\n' > /etc/NetworkManager/conf.d/99-xxcustom.conf", shell=True)
-                restart_NM_service()
 
             if 'firewall' in scenario.tags:
                 print ("---------------------------")
@@ -2161,6 +2161,12 @@ def after_scenario(context, scenario):
                 call("rm -f /etc/NetworkManager/conf.d/99-xtest-dhcp-dhclient.conf", shell=True)
                 restart_NM_service()
 
+            if 'ifcfg-rh' in scenario.tags:
+                print ("---------------------------")
+                print ("resetting ifcfg plugin")
+                call('sudo rm -f /etc/NetworkManager/conf.d/99-xxcustom.conf', shell=True)
+                restart_NM_service()
+
             if 'dhcpd' in scenario.tags:
                 print ("---------------------------")
                 print ("deleting veth devices")
@@ -2601,13 +2607,6 @@ def after_scenario(context, scenario):
             if 'nmcli_wifi_ap' in scenario.tags:
                 wifi_rescan()
                 sleep(10)
-
-            if 'ifcfg-rh' in scenario.tags:
-                print ("---------------------------")
-                print ("resetting ifcfg plugin")
-                call('sudo rm -f /etc/NetworkManager/conf.d/99-xxcustom.conf', shell=True)
-                sleep(0.1)
-                restart_NM_service()
 
             if 'keyfile_cleanup' in scenario.tags:
                 print ("---------------------------")
