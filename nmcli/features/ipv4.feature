@@ -594,7 +594,7 @@ Feature: nmcli: ipv4
 
 
     @rhbz1422610
-    @ver+=1.8.0
+    @ver+=1.8.0 @fedoraver-=32
     @con_ipv4_remove @delete_testeth0 @restore_hostname @eth3_disconnect @ifcfg-rh
     @ipv4_ignore_resolveconf_with_ignore_auto_dns_var3
     Scenario: NM - ipv4 - preserve resolveconf when hostnamectl is called and ignore_auto_dns set
@@ -1501,7 +1501,7 @@ Feature: nmcli: ipv4
     Scenario: nmcli - ipv4 - method shared when dnsmasq does run
     * Note the output of "pidof NetworkManager" as value "1"
     * Prepare veth pairs "test1,test2" bridged over "vethbr"
-    * Execute "dnsmasq --interface test1 --pid-file=/tmp/dnsmasq_ip4.pid &"
+    * Execute "/usr/sbin/dnsmasq --log-dhcp --log-queries --conf-file=/dev/null --no-hosts --keep-in-foreground --bind-interfaces --except-interface=lo --clear-on-reload --pid-file=/tmp/dnsmasq_ip4.pid &"
     * Add a new connection of type "ethernet" and options "con-name tc1 autoconnect no ifname test1 ipv4.method shared ipv6.method ignore"
     * Add a new connection of type "ethernet" and options "con-name tc2 autoconnect no ifname test2 ipv4.may-fail yes ipv6.method manual ipv6.addresses 1::1/128"
     * Bring up connection "tc1" ignoring error
@@ -1509,7 +1509,6 @@ Feature: nmcli: ipv4
      And Note the output of "pidof NetworkManager" as value "2"
      And Check noted values "1" and "2" are the same
      And "disconnected" is visible with command "nmcli  device show test1" in "10" seconds
-
 
 
     @rhbz1172780
