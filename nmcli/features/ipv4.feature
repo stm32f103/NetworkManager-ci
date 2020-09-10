@@ -594,7 +594,7 @@ Feature: nmcli: ipv4
 
 
     @rhbz1422610
-    @ver+=1.8.0
+    @ver+=1.8.0 @fedoraver-=32
     @con_ipv4_remove @delete_testeth0 @restore_hostname @eth3_disconnect @ifcfg-rh
     @ipv4_ignore_resolveconf_with_ignore_auto_dns_var3
     Scenario: NM - ipv4 - preserve resolveconf when hostnamectl is called and ignore_auto_dns set
