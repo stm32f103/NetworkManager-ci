@@ -687,7 +687,7 @@ Feature: nmcli - ethernet
 
 
     @rhbz1614700 @rhbz1807171
-    @ver+=1.25 @rhelver+=8
+    @ver+=1.25 @rhelver+=8 @fedoraver-=32
     @skip_in_centos
     @con_ethernet_remove @prepare_patched_netdevsim
     @ethtool_features_ring
@@ -702,7 +702,7 @@ Feature: nmcli - ethernet
 
 
     @rhbz1614700 @rhbz1807171
-    @ver+=1.25 @rhelver+=8
+    @ver+=1.25 @rhelver+=8 @fedoraver-=32
     @skip_in_centos
     @con_ethernet_remove @prepare_patched_netdevsim
     @ethtool_features_coal
