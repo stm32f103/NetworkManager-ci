@@ -1835,8 +1835,9 @@ def after_scenario(context, scenario):
                 call("ovs-vsctl del-br ovsbr0", shell=True)
 
                 # in case of fail we need to kill this
-                call('rm -rf /etc/dnsmasq.d/nmstate.conf', shell=True)
                 call('systemctl stop dnsmasq', shell=True)
+                call("pkill -f 'dnsmasq.*/etc/dnsmasq.d/nmstate.conf'", shell=True)
+                call('rm -rf /etc/dnsmasq.d/nmstate.conf', shell=True)
 
                 # Rename devices back to eth1/eth2
                 call("ip link del eth1", shell=True)
