@@ -3,7 +3,7 @@ Feature: Bridge TUI tests
   Background:
   * Prepare virtual terminal environment
 
-    @bridge
+    @bridge @ifcfg-rh
     @nmtui_bridge_add_default_bridge
     Scenario: nmtui - bridge - add default bridge
     * Prepare new connection of type "Bridge" named "bridge0"

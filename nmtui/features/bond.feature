@@ -5,7 +5,7 @@ Feature: Bond TUI tests
 
     @rhbz1715720
     @ver+=1.18.4
-    @bond
+    @bond @ifcfg-rh
     @nmtui_bond_add_default_bond
     Scenario: nmtui - bond - add default bond
     * Prepare new connection of type "Bond" named "bond0"
@@ -62,8 +62,6 @@ Feature: Bond TUI tests
     * Set "Device" field to "bond0"
     * Ensure "Automatically connect" is not checked
     * Confirm the connection settings
-    Then Check ifcfg-name file created for connection "bond0"
-    Then "TYPE=Bond" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-bond0"
     Then "bond0" is visible with command "nmcli connection"
     Then "bond0" is not visible with command "nmcli device"
 
