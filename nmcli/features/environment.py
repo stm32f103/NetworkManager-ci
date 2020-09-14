@@ -601,6 +601,11 @@ def before_scenario(context, scenario):
                     os.system("nmcli device disconnect eth0")
                     sleep(2)
                 print ("---------------------------")
+            if 'ifcfg-rh' in scenario.tags:
+                print ("---------------------------")
+                print ("setting ifcfg-rh plugin")
+                call("printf '# configured by beaker-test\n[main]\nplugins=ifcfg-rh\n' > /etc/NetworkManager/conf.d/99-xxcustom.conf", shell=True)
+                restart_NM_service()
             if 'wifi' in scenario.tags:
                 wifi_rescan()
             if 'nmtui_general_activate_screen_no_connections' in scenario.tags:
@@ -1626,6 +1631,11 @@ def after_scenario(context, scenario):
                 reset_hwaddr_nmtui('eth1')
                 reset_hwaddr_nmtui('eth2')
                 os.system("sudo ip link del team0")
+            if 'ifcfg-rh' in scenario.tags:
+                print ("---------------------------")
+                print ("resetting ifcfg plugin")
+                call('sudo rm -f /etc/NetworkManager/conf.d/99-xxcustom.conf', shell=True)
+                restart_NM_service()
             if 'inf' in scenario.tags:
                 os.system("sudo nmcli connection delete id infiniband0 infiniband0-port")
             if 'dsl' in scenario.tags:
