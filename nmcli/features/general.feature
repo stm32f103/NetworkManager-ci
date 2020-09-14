@@ -1452,7 +1452,7 @@ Feature: nmcli - general
 
     @ver+=1.26.0
     @rhelver+=8 @fedoraver+=31
-    @nmstate_setup
+    @nmstate_setup @ifcfg-rh
     @nmstate
     Scenario: NM - general - nmstate
     * Restart NM
