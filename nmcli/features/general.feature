@@ -606,9 +606,13 @@ Feature: nmcli - general
 
 
     @rhbz1114681
-    @general_vlan @ifcfg-rh
+    @general_vlan @ifcfg-rh @add_testeth8
     @nmcli_general_keep_slave_device_unmanaged
     Scenario: nmcli - general - keep slave device unmanaged
+    # We need to delete keyfile testeth8
+    * Execute "nmcli con del testeth8"
+    # And add ifcfg one
+    * Add a new connection of type "ethernet" and options "con-name testeth8 ifname eth8"
     Given Check ifcfg-name file created for connection "testeth8"
     * Execute "echo -e NM_CONTROLLED=no >> /etc/sysconfig/network-scripts/ifcfg-testeth8"
     * Reload connections
