@@ -238,7 +238,7 @@ Feature: Team TUI tests
     Then "team-slave-eth2" is not visible with command "nmcli connection"
 
 
-    @team
+    @team @ifcfg-rh
     @nmtui_team_infiniband_slaves
     Scenario: nmtui - team - infiniband slaves
     * Prepare new connection of type "Team" named "team0"
