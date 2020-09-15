@@ -181,14 +181,14 @@ Feature: Ethernet TUI tests
     * Set "Profile name" field to "ethernet"
     * Set "Device" field to "eth1"
     * Come in "ETHERNET" category
-    * Set "Cloned MAC address" field to "f0:de:aa:fb:bb:cc"
+    * Set "Cloned MAC address" field to "f1:de:aa:fb:bb:cc"
     * Come back to the top of editor
     * Empty the field "Cloned MAC address"
     * Confirm the connection settings
     * Execute "sleep 5"
     Then ".*Unable to add new connection.*" is not visible on screen
-    Then "ether f0:de:aa:fb:bb:cc" is not visible with command "ip a"
-    Then "MACADDR=F0:DE:AA:FB:BB:CC" is not visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet"
+    Then "ether f1:de:aa:fb:bb:cc" is not visible with command "ip a"
+    Then "MACADDR=F1:DE:AA:FB:BB:CC" is not visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet"
 
 
     @ethernet
