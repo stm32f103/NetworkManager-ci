@@ -610,8 +610,8 @@ def before_scenario(context, scenario):
                 wifi_rescan()
             if 'nmtui_general_activate_screen_no_connections' in scenario.tags:
                 print ("Moving all connection profiles to temp dir")
-                os.system("mkdir /tmp/backup_profiles")
-                os.system("mv -f /etc/sysconfig/network-scripts/ifcfg-* /tmp/backup_profiles")
+                os.system("rm -rf /etc/NetworkManager/system-connections/testeth*")
+                os.system("rm -rf /etc/sysconfig/network-scripts/ifcfg-*")
                 os.system("nmcli con reload")
             if 'simwifi' in scenario.tags:
                 print ("Preparing simulated wifi setup")
@@ -1706,9 +1706,8 @@ def after_scenario(context, scenario):
                 sleep(10)
             if 'nmtui_general_activate_screen_no_connections' in scenario.tags:
                 print ("Restoring all connection profiles from temp dir")
-                os.system("cp -f /tmp/backup_profiles/* /etc/sysconfig/network-scripts/")
-                os.system("rm -rf /tmp/backup_profiles")
-                os.system("nmcli con reload")
+                restore_connections ()
+                wait_for_testeth0 ()
             if 'nmtui_ethernet_activate_connection_specific_device' in scenario.tags:
                 if os.system("nmcli connection show -a |grep testeth7") == 0:
                     print ("Disconnect testeth7")
