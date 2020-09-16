@@ -606,6 +606,8 @@ def before_scenario(context, scenario):
                 print ("setting ifcfg-rh plugin")
                 call("printf '# configured by beaker-test\n[main]\nplugins=ifcfg-rh\n' > /etc/NetworkManager/conf.d/99-xxcustom.conf", shell=True)
                 restart_NM_service()
+                # VV Do not lower this
+                sleep(0.5)
             if 'wifi' in scenario.tags:
                 wifi_rescan()
             if 'nmtui_general_activate_screen_no_connections' in scenario.tags:
