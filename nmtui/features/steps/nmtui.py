@@ -143,7 +143,7 @@ def start_nmtui(context):
     for line in context.screen.display:
         if 'NetworkManager TUI' in line:
             break
-    sleep(0.3)
+    sleep(0.5)
 
 @step('Nmtui process is running')
 def check_process_running(context):
