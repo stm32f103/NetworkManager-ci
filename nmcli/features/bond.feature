@@ -7,7 +7,7 @@
     # @test_name (compiled from scenario name)
     # Scenario:
 
-    @slaves @bond
+    @slaves @bond @rhelver+=9
     @bond_add_default_bond
     Scenario: nmcli - bond - add default bond
      * Open editor for a type "bond"
