@@ -7,7 +7,7 @@
      # @test_name (compiled from scenario name)
      # Scenario:
 
-    @alias @ifcfg-rh
+    @alias
     @alias_ifcfg_add_single_alias
     Scenario: ifcfg - alias - add single alias
     * Add a new connection of type "ethernet" and options "ifname eth7 con-name eth7 autoconnect yes ipv4.may-fail no ipv4.method manual ipv4.addresses 192.168.0.100/24 ipv4.gateway 192.168.0.1"
