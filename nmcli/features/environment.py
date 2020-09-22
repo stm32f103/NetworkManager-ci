@@ -448,7 +448,12 @@ def setup_hostapd():
 
 def wifi_rescan():
     print("Commencing wireless network rescan")
-    call("time sudo nmcli dev wifi list --rescan yes", shell=True)
+    out = check_output("time sudo nmcli dev wifi list --rescan yes", shell=True).decode('utf-8', 'ignore').strip()
+    while 'wpa2-psk' not in out:
+        sleep(5)
+        print ("* still not seeing wpa2-psk")
+        out = check_output("time sudo nmcli dev wifi list --rescan yes", shell=True).decode('utf-8', 'ignore').strip()
+    print (out)
 
 def setup_hostapd_wireless():
     print ("setting up hostapd wireless")
@@ -607,10 +612,11 @@ def before_scenario(context, scenario):
                     print ("setting ifcfg-rh plugin")
                     call("printf '# configured by beaker-test\n[main]\nplugins=ifcfg-rh\n' > /etc/NetworkManager/conf.d/99-xxcustom.conf", shell=True)
                     restart_NM_service()
-                    # VV Do not lower this
-                    sleep(0.5)
                     if 'simwifi' in scenario.tags:
-                        sleep(5)
+                        wifi_rescan()
+                    else:
+                        # VV Do not lower this as nmtui can be behaving weirdly
+                        sleep(0.8)
             if 'wifi' in scenario.tags:
                 wifi_rescan()
             if 'nmtui_general_activate_screen_no_connections' in scenario.tags:
@@ -1643,6 +1649,10 @@ def after_scenario(context, scenario):
                     print ("resetting ifcfg plugin")
                     call('sudo rm -f /etc/NetworkManager/conf.d/99-xxcustom.conf', shell=True)
                     restart_NM_service()
+                    if 'simwifi' in scenario.tags:
+                        wifi_rescan ()
+                    else:
+                        sleep(0.8)
             if 'inf' in scenario.tags:
                 os.system("sudo nmcli connection delete id infiniband0 infiniband0-port")
             if 'dsl' in scenario.tags:
@@ -1708,9 +1718,7 @@ def after_scenario(context, scenario):
                 os.system("ip link set mtu 1500 dev eth1")
             if 'nmtui_wifi_ap' in scenario.tags:
                 os.system("sudo service NetworkManager restart")
-                sleep(5)
                 wifi_rescan()
-                sleep(10)
             if 'nmtui_general_activate_screen_no_connections' in scenario.tags:
                 print ("Restoring all connection profiles from temp dir")
                 restore_connections ()
@@ -2624,7 +2632,6 @@ def after_scenario(context, scenario):
 
             if 'nmcli_wifi_ap' in scenario.tags:
                 wifi_rescan()
-                sleep(10)
 
             if 'keyfile_cleanup' in scenario.tags:
                 print ("---------------------------")
