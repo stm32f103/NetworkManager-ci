@@ -467,7 +467,8 @@ def setup_hostapd_wireless():
     if call("sh prepare/hostapd_wireless.sh tmp/8021x/certs namespace", shell=True) != 0:
         call("sh prepare/hostapd_wireless.sh teardown", shell=True)
         sys.exit(1)
-    wifi_rescan()
+    if not os.path.isfile('/tmp/wireless_hostapd_check.txt'):
+        wifi_rescan()
 
 def teardown_hostapd_wireless():
     call("sh prepare/hostapd_wireless.sh teardown", shell=True)
