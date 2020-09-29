@@ -52,19 +52,18 @@ def dracut_run(context):
 
     rc = subprocess.call(
         "cd contrib/dracut/; . ./test_environment.sh; "
-        "echo FAIL > $TESTDIR/client.img; "
+        "echo NONE > /tmp/dracut_client_result.img; "
         "cat check_lib/*.sh /tmp/client-check.sh > $TESTDIR/client_check.img; "
         "timeout %s sudo bash ./run-qemu "
-        "-drive format=raw,index=0,media=disk,file=$TESTDIR/client.img "
+        "-drive format=raw,index=0,media=disk,file=/tmp/dracut_client_result.img "
         "-drive format=raw,index=1,media=disk,file=$TESTDIR/client_check.img "
         "%s -append \"%s\" -initrd $TESTDIR/%s "
         "&> /tmp/dracut_run.log" % (timeout, qemu_args, kernel_args, initrd), shell=True)
     log = utf_only_open_read("/tmp/dracut_run.log")
     context.embed("text/plain", log, "DRACUT_RUN")
-    assert rc == 0, "Test run FAILED"
-    result = command_output(None,
-                            "cd contrib/dracut; . ./test_environment.sh; cat $TESTDIR/client.img")
-    assert "PASS" in result, "Test FAILED"
+    result = utf_only_open_read("/tmp/dracut_client_result.img")
+    assert rc == 0, f"VM returned state: {rc}, result file: {result}"
+    assert "PASS" in result, f"Test result file: {result}"
 
     for log_line in log_contains:
         assert log_line in log, "Fail: not visible in log:\n" + log_line

@@ -21,7 +21,7 @@ Feature: NM: dracut
     * Run dracut test
       | Param  | Value                                          |
       | kernel | root=dhcp ro                                   |
-      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000 |
+      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000e |
       | qemu   | -net socket,connect=127.0.0.1:12320            |
       | check  | nmcli_con_active "Wired Connection" ens2       |
       | check  | nmcli_con_num 1                                |
@@ -39,7 +39,7 @@ Feature: NM: dracut
     * Run dracut test
       | Param  | Value                                          |
       | kernel | root=dhcp ro ip=dhcp rd.neednet=1              |
-      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000 |
+      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000e |
       | qemu   | -net socket,connect=127.0.0.1:12320            |
       | check  | nmcli_con_active "Wired Connection" ens2       |
       | check  | nmcli_con_num 1                                |
@@ -58,7 +58,7 @@ Feature: NM: dracut
       | Param  | Value                                          |
       | kernel | root=/dev/nfs nfsroot=192.168.50.1:/client ro  |
       | kernel | ip=dhcp                                        |
-      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000 |
+      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000e |
       | qemu   | -net socket,connect=127.0.0.1:12320            |
       | check  | nmcli_con_active "Wired Connection" ens2       |
       | check  | nmcli_con_num 1                                |
@@ -77,7 +77,7 @@ Feature: NM: dracut
       | Param  | Value                                          |
       | kernel | root=nfs:192.168.50.1:/client ro               |
       | kernel | ip=192.168.50.201::255.255.255.0:::ens2:off    |
-      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000 |
+      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000e |
       | qemu   | -net socket,connect=127.0.0.1:12320            |
       | check  | nmcli_con_active ens2 ens2                     |
       | check  | nmcli_con_num 1                                |
@@ -95,7 +95,7 @@ Feature: NM: dracut
       | Param  | Value                                                                                 |
       | kernel | root=nfs:192.168.50.1:/client ro                                                      |
       | kernel | ip=192.168.50.201::255.255.255.0:::ens2:dhcp                                          |
-      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000                                        |
+      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000e                                        |
       | qemu   | -net socket,connect=127.0.0.1:12320                                                   |
       | check  | nmcli_con_active ens2 ens2                                                            |
       | check  | nmcli_con_num 1                                                                       |
@@ -116,7 +116,7 @@ Feature: NM: dracut
       | Param  | Value                                                                                  |
       | kernel | root=nfs:192.168.50.1:/client ro                                                       |
       | kernel | ip=192.168.50.201::192.168.50.1:255.255.255.0:dracut-nfs-client:52-54-00-12-34-00:none |
-      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000                                         |
+      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000e                                         |
       | qemu   | -net socket,connect=127.0.0.1:12320                                                    |
       | check  | nmcli_con_active '52\:54\:00\:12\:34\:00' ens2                                         |
       | check  | nmcli_con_num 1                                                                        |
@@ -139,7 +139,7 @@ Feature: NM: dracut
       | Param  | Value                                                                                 |
       | kernel | root=dhcp ro                                                                          |
       | kernel | rd.net.dhcp.vendor-class=RedHat                                                       |
-      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000                                        |
+      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000e                                        |
       | qemu   | -net socket,connect=127.0.0.1:12320                                                   |
       | check  | nmcli_con_active "Wired Connection" ens2                                              |
       | check  | nmcli_con_prop "Wired Connection" ipv4.dhcp-vendor-class-identifier RedHat            |
@@ -159,7 +159,7 @@ Feature: NM: dracut
       | Param  | Value                                               |
       | kernel | root=nfs:[deaf:beef::1]:/nfs/client ip=auto6        |
       | kernel | ro                                                  |
-      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000      |
+      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000e      |
       | qemu   | -net socket,connect=127.0.0.1:12320                 |
       | check  | nmcli_con_active "Wired Connection" ens2            |
       | check  | nmcli_con_num 1                                     |
@@ -177,7 +177,7 @@ Feature: NM: dracut
       | Param  | Value                                               |
       | kernel | root=nfs:[deaf:beef::1]:/nfs/client ro              |
       | kernel | ip=dhcp6                                            |
-      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000      |
+      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000e      |
       | qemu   | -net socket,connect=127.0.0.1:12320                 |
       | check  | nmcli_con_active "Wired Connection" ens2            |
       | check  | nmcli_con_num 1                                     |
@@ -195,7 +195,7 @@ Feature: NM: dracut
       | Param  | Value                                                                              |
       | kernel | root=nfs:[deaf:beef::1]:/nfs/client ro                                             |
       | kernel | ip=[deaf:beef::ac:1]::[deaf:beef::1]:64:dracut-nfs-client-6:52-54-00-12-34-00:none |
-      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000                                     |
+      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000e                                     |
       | qemu   | -net socket,connect=127.0.0.1:12320                                                |
       | check  | nmcli_con_active '52\:54\:00\:12\:34\:00' ens2                                     |
       | check  | nmcli_con_num 1                                                                    |
@@ -218,7 +218,7 @@ Feature: NM: dracut
       | Param  | Value                                                                                 |
       | kernel | root=nfs:192.168.50.1:/client ro                                                      |
       | kernel | ipv6.disable=1                                                                        |
-      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000                                        |
+      | qemu   | -net nic,macaddr=52:54:00:12:34:00,model=e1000e                                        |
       | qemu   | -net socket,connect=127.0.0.1:12320                                                   |
       | check  | nmcli_con_active "Wired Connection" ens2                                              |
       | check  | nmcli_con_num 1                                                                       |
@@ -243,7 +243,7 @@ Feature: NM: dracut
       | Param  | Value                                          |
       | kernel | root=/dev/root netroot=dhcp                    |
       | kernel | rw rd.auto rd.iscsi.initiator=$(iscsi-iname)   |
-      | qemu   | -net nic,macaddr=52:54:00:12:34:a1,model=e1000 |
+      | qemu   | -net nic,macaddr=52:54:00:12:34:a1,model=e1000e |
       | qemu   | -net socket,connect=127.0.0.1:12320            |
       | check  | nmcli_con_active "Wired Connection" ens2       |
       | check  | nmcli_con_num 1                                |
@@ -262,8 +262,8 @@ Feature: NM: dracut
       | Param  | Value                                          |
       | kernel | root=/dev/root netroot=dhcp ip=ens2:dhcp       |
       | kernel | rw rd.auto rd.iscsi.initiator=$(iscsi-iname)   |
-      | qemu   | -net nic,macaddr=52:54:00:12:34:a1,model=e1000 |
-      | qemu   | -net nic,macaddr=52:54:00:12:34:a2,model=e1000 |
+      | qemu   | -net nic,macaddr=52:54:00:12:34:a1,model=e1000e |
+      | qemu   | -net nic,macaddr=52:54:00:12:34:a2,model=e1000e |
       | qemu   | -net socket,connect=127.0.0.1:12320            |
       | check  | nmcli_con_active ens2 ens2                     |
       | check  | nmcli_con_num 1                                |
@@ -284,8 +284,8 @@ Feature: NM: dracut
       | kernel | root=LABEL=singleroot                          |
       | kernel | rd.iscsi.ibft=1 rd.iscsi.firmware=1            |
       | kernel | rw rd.auto                                     |
-      | qemu   | -net nic,macaddr=52:54:00:12:34:a1,model=e1000 |
-      | qemu   | -net nic,macaddr=52:54:00:12:34:a2,model=e1000 |
+      | qemu   | -net nic,macaddr=52:54:00:12:34:a1,model=e1000e |
+      | qemu   | -net nic,macaddr=52:54:00:12:34:a2,model=e1000e |
       | qemu   | -net socket,connect=127.0.0.1:12320            |
       | qemu   | -acpitable file=conf/ibft.table                |
       | check  | nmcli_con_active "iBFT Connection 0" ens2      |
@@ -311,8 +311,8 @@ Feature: NM: dracut
       | kernel | rd.iscsi.initiator=$(iscsi-iname)                        |
       | kernel | rd.iscsi.firmware rd.iscsi.waitnet=0                     |
       | kernel | rd.iscsi.testroute=0                                     |
-      | qemu   | -net nic,macaddr=52:54:00:12:34:a1,model=e1000           |
-      | qemu   | -net nic,macaddr=52:54:00:12:34:a2,model=e1000           |
+      | qemu   | -net nic,macaddr=52:54:00:12:34:a1,model=e1000e           |
+      | qemu   | -net nic,macaddr=52:54:00:12:34:a2,model=e1000e           |
       | qemu   | -net socket,connect=127.0.0.1:12320                      |
       | check  | nmcli_con_active ens2 ens2                               |
       | check  | nmcli_con_active ens3 ens3                               |
@@ -340,7 +340,7 @@ Feature: NM: dracut
       | Param  | Value                                          |
       | kernel | root=nfs:192.168.50.1:/nfs/client ro           |
       | kernel | bridge net.ifnames=0                           |
-      | qemu   | -net nic,macaddr=52:54:00:12:34:01,model=e1000 |
+      | qemu   | -net nic,macaddr=52:54:00:12:34:01,model=e1000e |
       | qemu   | -net socket,connect=127.0.0.1:12320            |
       | check  | nmcli_con_active br0 br0                       |
       | check  | nmcli_con_active eth0 eth0                     |
@@ -361,9 +361,9 @@ Feature: NM: dracut
       | kernel | bridge=foobr0:ens3,ens4                        |
       | kernel | ip=192.168.50.101:::255.255.255.0::foobr0:off  |
       | qemu   | -netdev socket,id=n0,connect=127.0.0.1:12320   |
-      | qemu   | -device e1000,netdev=n0,mac=52:54:00:12:34:00  |
+      | qemu   | -device e1000e,netdev=n0,mac=52:54:00:12:34:00  |
       | qemu   | -netdev socket,id=n1,connect=127.0.0.1:12321   |
-      | qemu   | -device e1000,netdev=n1,mac=52:54:00:12:34:01  |
+      | qemu   | -device e1000e,netdev=n1,mac=52:54:00:12:34:01  |
       | check  | nmcli_con_active foobr0 foobr0                 |
       | check  | nmcli_con_active ens3 ens3                     |
       | check  | nmcli_con_active ens4 ens4                     |
@@ -387,9 +387,9 @@ Feature: NM: dracut
       | kernel | root=dhcp ro                                   |
       | kernel | bond=bond0:ens3,ens4:mode=balance-rr           |
       | qemu   | -netdev socket,id=n1,connect=127.0.0.1:12321   |
-      | qemu   | -device e1000,netdev=n1,mac=52:54:00:12:34:10  |
+      | qemu   | -device e1000e,netdev=n1,mac=52:54:00:12:34:10  |
       | qemu   | -netdev socket,id=n2,connect=127.0.0.1:12322   |
-      | qemu   | -device e1000,netdev=n2,mac=52:54:00:12:34:11  |
+      | qemu   | -device e1000e,netdev=n2,mac=52:54:00:12:34:11  |
       | check  | nmcli_con_active bond0 bond0                   |
       | check  | nmcli_con_active ens3 ens3                     |
       | check  | nmcli_con_active ens4 ens4                     |
@@ -409,9 +409,9 @@ Feature: NM: dracut
     #  | kernel | root=dhcp ro                                   |
     #  | kernel | team=team0:ens3,ens4                           |
     #  | qemu   | -netdev socket,id=n1,connect=127.0.0.1:12321   |
-    #  | qemu   | -device e1000,netdev=n1,mac=52:54:00:12:34:10  |
+    #  | qemu   | -device e1000e,netdev=n1,mac=52:54:00:12:34:10  |
     #  | qemu   | -netdev socket,id=n2,connect=127.0.0.1:12322   |
-    #  | qemu   | -device e1000,netdev=n2,mac=52:54:00:12:34:11  |
+    #  | qemu   | -device e1000e,netdev=n2,mac=52:54:00:12:34:11  |
     #  | check  | nmcli_con_active team0 team0                   |
     #  | check  | nmcli_con_active ens3 ens3                     |
     #  | check  | nmcli_con_active ens4 ens4                     |
@@ -435,7 +435,7 @@ Feature: NM: dracut
       | kernel | root=dhcp ro                                         |
       | kernel | vlan=vlan5:ens3                                      |
       | qemu   | -netdev socket,id=n7,connect=127.0.0.1:12327         |
-      | qemu   | -device e1000,netdev=n7,mac=52:54:00:12:34:11        |
+      | qemu   | -device e1000e,netdev=n7,mac=52:54:00:12:34:11        |
       | check  | nmcli_con_active vlan5 vlan5                         |
       | check  | nmcli_con_num 1                                      |
       | check  | ip_route_unique "default via 192.168.55.5 dev vlan5" |
@@ -465,19 +465,19 @@ Feature: NM: dracut
       | kernel  | ip=vlan9:dhcp                                              |
       | kernel  | bootdev=vlan9                                              |
       | qemu    | -netdev socket,id=n1,connect=127.0.0.1:12321               |
-      | qemu    | -device e1000,netdev=n1,mac=52:54:00:12:34:11              |
+      | qemu    | -device e1000e,netdev=n1,mac=52:54:00:12:34:11              |
       | qemu    | -netdev socket,id=n2,connect=127.0.0.1:12322               |
-      | qemu    | -device e1000,netdev=n2,mac=52:54:00:12:34:12              |
+      | qemu    | -device e1000e,netdev=n2,mac=52:54:00:12:34:12              |
       | qemu    | -netdev socket,id=n3,connect=127.0.0.1:12323               |
-      | qemu    | -device e1000,netdev=n3,mac=52:54:00:12:34:13              |
+      | qemu    | -device e1000e,netdev=n3,mac=52:54:00:12:34:13              |
       | qemu    | -netdev socket,id=n4,connect=127.0.0.1:12324               |
-      | qemu    | -device e1000,netdev=n4,mac=52:54:00:12:34:14              |
+      | qemu    | -device e1000e,netdev=n4,mac=52:54:00:12:34:14              |
       | qemu    | -netdev socket,id=n5,connect=127.0.0.1:12325               |
-      | qemu    | -device e1000,netdev=n5,mac=52:54:00:12:34:15              |
+      | qemu    | -device e1000e,netdev=n5,mac=52:54:00:12:34:15              |
       | qemu    | -netdev socket,id=n6,connect=127.0.0.1:12326               |
-      | qemu    | -device e1000,netdev=n6,mac=52:54:00:12:34:16              |
+      | qemu    | -device e1000e,netdev=n6,mac=52:54:00:12:34:16              |
       | qemu    | -netdev socket,id=n7,connect=127.0.0.1:12327               |
-      | qemu    | -device e1000,netdev=n7,mac=52:54:00:12:34:17              |
+      | qemu    | -device e1000e,netdev=n7,mac=52:54:00:12:34:17              |
       | check   | nmcli_con_active ens3 ens3                                 |
       | check   | nmcli_con_active ens4 ens4                                 |
       | check   | nmcli_con_active bond0 bond0                               |
@@ -543,8 +543,8 @@ Feature: NM: dracut
       | kernel | root=LABEL=singleroot rd.iscsi.ibft=1          |
       | kernel | rd.iscsi.firmware=1                            |
       | kernel | rw rd.auto                                     |
-      | qemu   | -net nic,macaddr=52:54:00:12:34:a1,model=e1000 |
-      | qemu   | -net nic,macaddr=52:54:00:12:34:a2,model=e1000 |
+      | qemu   | -net nic,macaddr=52:54:00:12:34:a1,model=e1000e |
+      | qemu   | -net nic,macaddr=52:54:00:12:34:a2,model=e1000e |
       | qemu   | -net socket,connect=127.0.0.1:12320            |
       | qemu   | -acpitable file=conf/ibft.table                |
       | check  | nmcli_con_active ibft0 ibft0                   |

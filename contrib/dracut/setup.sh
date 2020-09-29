@@ -380,11 +380,11 @@ EOF
       # Make server's dracut image
       dracut -i $TESTDIR/overlay-server / \
              -m "bash crypt lvm mdraid udev-rules base rootfs-block fs-lib debug kernel-modules qemu" \
-             -d "8021q ipvlan macvlan bonding af_packet piix ide-gd_mod ata_piix ext3 sd_mod e1000 drbg" \
+             -d "8021q ipvlan macvlan bonding af_packet piix ide-gd_mod ata_piix ext3 sd_mod e1000e drbg" \
              --no-hostonly-cmdline -N --no-compress \
              -f $TESTDIR/initramfs.server $KVERSION
       rm -rf -- $TESTDIR/overlay-server
-    ) &
+    )
 
     # client initramfs with NM module
     (
@@ -404,11 +404,11 @@ EOF
         dracut -i $TESTDIR/overlay-client-NM / \
                -o "plymouth dash dmraid network-legacy" \
                -a "debug network-manager ifcfg" \
-               -d "8021q ipvlan macvlan bonding af_packet piix ext3 ide-gd_mod ata_piix sd_mod e1000 nfs sunrpc" \
+               -d "8021q ipvlan macvlan bonding af_packet piix ext3 ide-gd_mod ata_piix sd_mod e1000e nfs sunrpc" \
                --no-hostonly-cmdline -N --no-compress \
                -f $TESTDIR/initramfs.client.NM $KVERSION
        rm -rf -- $TESTDIR/overlay-client-NM
-     ) &
+     )
 
      # client initramfs with legacy module
      (
@@ -428,13 +428,11 @@ EOF
        dracut -i $TESTDIR/overlay-client-legacy / \
               -o "plymouth dash dmraid network-manager" \
               -a "debug network-legacy ifcfg" \
-              -d "8021q ipvlan macvlan bonding af_packet piix ext3 ide-gd_mod ata_piix sd_mod e1000 nfs sunrpc" \
+              -d "8021q ipvlan macvlan bonding af_packet piix ext3 ide-gd_mod ata_piix sd_mod e1000e nfs sunrpc" \
               --no-hostonly-cmdline -N --no-compress \
               -f $TESTDIR/initramfs.client.legacy $KVERSION
        rm -rf -- $TESTDIR/overlay-client-legacy
-  ) &
-
-  wait
+  )
 
   if ! run_server; then
       echo "Failed to start server" 1>&2
@@ -476,16 +474,16 @@ run_server() {
         -drive format=raw,index=3,media=disk,file=$TESTDIR/iscsidisk3.img \
         -netdev socket,id=n0,listen=127.0.0.1:12320 \
         -netdev hubport,hubid=1,id=h1,netdev=n0 \
-        -netdev hubport,hubid=1,id=h2 -device e1000,mac=52:54:00:12:34:56,netdev=h2 \
-        -netdev hubport,hubid=1,id=h3 -device e1000,mac=52:54:00:12:34:57,netdev=h3 \
-        -netdev hubport,hubid=1,id=h4 -device e1000,mac=52:54:00:12:34:58,netdev=h4 \
-        -netdev socket,id=n1,listen=127.0.0.1:12321 -device e1000,netdev=n1,mac=52:54:00:12:34:61 \
-        -netdev socket,id=n2,listen=127.0.0.1:12322 -device e1000,netdev=n2,mac=52:54:00:12:34:62 \
-        -netdev socket,id=n3,listen=127.0.0.1:12323 -device e1000,netdev=n3,mac=52:54:00:12:34:63 \
-        -netdev socket,id=n4,listen=127.0.0.1:12324 -device e1000,netdev=n4,mac=52:54:00:12:34:64 \
-        -netdev socket,id=n5,listen=127.0.0.1:12325 -device e1000,netdev=n5,mac=52:54:00:12:34:65 \
-        -netdev socket,id=n6,listen=127.0.0.1:12326 -device e1000,netdev=n6,mac=52:54:00:12:34:66 \
-        -netdev socket,id=n7,listen=127.0.0.1:12327 -device e1000,netdev=n7,mac=52:54:00:12:34:67 \
+        -netdev hubport,hubid=1,id=h2 -device e1000e,mac=52:54:00:12:34:56,netdev=h2 \
+        -netdev hubport,hubid=1,id=h3 -device e1000e,mac=52:54:00:12:34:57,netdev=h3 \
+        -netdev hubport,hubid=1,id=h4 -device e1000e,mac=52:54:00:12:34:58,netdev=h4 \
+        -netdev socket,id=n1,listen=127.0.0.1:12321 -device e1000e,netdev=n1,mac=52:54:00:12:34:61 \
+        -netdev socket,id=n2,listen=127.0.0.1:12322 -device e1000e,netdev=n2,mac=52:54:00:12:34:62 \
+        -netdev socket,id=n3,listen=127.0.0.1:12323 -device e1000e,netdev=n3,mac=52:54:00:12:34:63 \
+        -netdev socket,id=n4,listen=127.0.0.1:12324 -device e1000e,netdev=n4,mac=52:54:00:12:34:64 \
+        -netdev socket,id=n5,listen=127.0.0.1:12325 -device e1000e,netdev=n5,mac=52:54:00:12:34:65 \
+        -netdev socket,id=n6,listen=127.0.0.1:12326 -device e1000e,netdev=n6,mac=52:54:00:12:34:66 \
+        -netdev socket,id=n7,listen=127.0.0.1:12327 -device e1000e,netdev=n7,mac=52:54:00:12:34:67 \
         -serial file:"$TESTDIR"/server.log \
         -append "panic=1 quiet root=/dev/sda rootfstype=ext3 rw $SERVER_DEBUG console=ttyS0,115200n81 selinux=0 noapic" \
         -initrd $TESTDIR/initramfs.server \
