@@ -628,7 +628,7 @@ Feature: nmcli - vlan
     * Execute "nmcli con add type vlan con-name vlan ifname eth7.80 dev eth7 id 80 ipv4.dhcp-timeout 5 vlan.parent $(nmcli --mode tabular -t -f connection.uuid connection show vlan1) ipv6.method ignore"
     * Bring "up" connection "vlan1"
     Then "eth7:connected:vlan1" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "20" seconds
-    Then "connect" is visible with command "nmcli device show eth7.80" for full "10" seconds
+    Then "\(connect" is visible with command "nmcli device show eth7.80" for full "10" seconds
 
 
     @rhbz1765047
