@@ -17,7 +17,7 @@ def utf_only_open_read(file, mode='r'):
 @step(u'Run dracut test')
 def dracut_run(context):
     qemu_args = ""
-    kernel_args = "rd.net.timeout.dhcp=3 panic=1 systemd.crash_reboot rd.shell=0 rd.debug loglevel=7 " \
+    kernel_args = "rd.net.timeout.dhcp=20 panic=1 systemd.crash_reboot rd.shell=0 rd.debug loglevel=7 " \
                   "rd.retry=50 console=ttyS0,115200n81 noapic "
     initrd = "initramfs.client.NM"
     checks = ""

@@ -94,6 +94,8 @@ ip addr add 192.168.55.13/30 dev bond0.13
 ip link add link bond1 name bond1.17 type vlan id 17
 ip link set dev bond1.17 up
 ip addr add 192.168.55.17/30 dev bond1.17
+#ens8
+ip addr add 192.168.55.21/30 dev ens8
 #vlan33@ens8
 ip link add link ens8 name ens8.33 type vlan id 33
 ip link set dev ens8.33 up

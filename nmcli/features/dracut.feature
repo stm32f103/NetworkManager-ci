@@ -471,10 +471,9 @@ Feature: NM: dracut
       | kernel  | vlan=bond0.13:bond0                                        |
       | kernel  | bond=bond0:ens3,ens4:mode=balance-rr                       |
       | kernel  | team=team0:ens5,ens6                                       |
-      #| kernel  | bridge=br0:ens7,ens8                                       |
+      | kernel  | bridge=br0:ens7,ens8                                       |
       | kernel  | vlan=team0.0017:team0                                      |
-      #| kernel  | vlan=br0.33:br0                                            |
-      | kernel  | ip=vlan9:dhcp                                              |
+      | kernel  | vlan=br0.33:br0                                            |
       | kernel  | bootdev=vlan9                                              |
       | qemu    | -netdev socket,id=n1,connect=127.0.0.1:12321               |
       | qemu    | -device e1000,netdev=n1,mac=52:54:00:12:34:11              |
@@ -498,15 +497,13 @@ Feature: NM: dracut
       | check   | nmcli_con_active ens6 ens6                                 |
       | check   | nmcli_con_active team0 team0 45                            |
       | check   | nmcli_con_active team0.0017 team0.0017 45                  |
-      #| check   | nmcli_con_active ens7 ens7                                 |
-      #| check   | nmcli_con_active ens8 ens8                                 |
-      #| check   | nmcli_con_active br0 br0                                   |
-      #| check   | nmcli_con_active br0.33 br0.33 45                          |
+      | check   | nmcli_con_active ens7 ens7                                 |
+      | check   | nmcli_con_active ens8 ens8                                 |
+      | check   | nmcli_con_active br0 br0 45                                |
+      | check   | nmcli_con_active br0.33 br0.33 45                          |
       | check   | nmcli_con_active vlan0005 vlan0005 45                      |
       | check   | nmcli_con_active vlan9 vlan9 45                            |
-      #| check   | nmcli_con_num 14                                           |
-      | check   | nmcli_con_num 10                                           |
-      #| check   | link_no_ip4 br0                                            |
+      | check   | nmcli_con_num 14                                           |
       | check   | link_no_ip4 ens3                                           |
       | check   | link_no_ip4 ens4                                           |
       | check   | link_no_ip4 ens5                                           |
@@ -520,22 +517,25 @@ Feature: NM: dracut
       | check   | ip_route_unique "192.168.55.8/30 dev vlan9"                |
       | check   | ip_route_unique "192.168.55.12/30 dev bond0.13"            |
       | check   | ip_route_unique "192.168.55.16/30 dev team0.0017"          |
-      #| check   | ip_route_unique "192.168.55.32/29 dev br0.33"              |
+      | check   | ip_route_unique "192.168.55.20/30 dev br0"                 |
+      | check   | ip_route_unique "192.168.55.32/29 dev br0.33"              |
       | check   | ip_route_unique "default via 192.168.53.1 dev bond0"       |
       | check   | ip_route_unique "default via 192.168.54.1 dev team0"       |
       | check   | ip_route_unique "default via 192.168.55.5 dev vlan0005"    |
       | check   | ip_route_unique "default via 192.168.55.9 dev vlan9"       |
       | check   | ip_route_unique "default via 192.168.55.13 dev bond0.13"   |
       | check   | ip_route_unique "default via 192.168.55.17 dev team0.0017" |
-      #| check   | ip_route_unique "default via 192.168.55.33 dev br0.33"     |
+      | check   | ip_route_unique "default via 192.168.55.21 dev br0"        |
+      | check   | ip_route_unique "default via 192.168.55.33 dev br0.33"     |
       # run IP renew checks simultaneously, `wait` at the end until all checks are finished
+      | check   | { wait_for_ip4_renew 192.168.55.22 br0 & }                 |
       | check   | { wait_for_ip4_renew 192.168.53.101 bond0 & }              |
       | check   | { wait_for_ip4_renew 192.168.54.101 team0 & }              |
       | check   | { wait_for_ip4_renew 192.168.55.6 vlan0005 & }             |
       | check   | { wait_for_ip4_renew 192.168.55.10 vlan9 & }               |
       | check   | { wait_for_ip4_renew 192.168.55.14 bond0.13 & }            |
       | check   | { wait_for_ip4_renew 192.168.55.18 team0.0017 & }          |
-      #| check   | { wait_for_ip4_renew 192.168.55.35 br0.33 & }              |
+      | check   | { wait_for_ip4_renew 192.168.55.35 br0.33 & }              |
       | check   | wait                                                       |
       #| check   | nfs_server 192.168.55.10                                   |
 
