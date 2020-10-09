@@ -1298,11 +1298,14 @@ def before_scenario(context, scenario):
                     wait_for_testeth0()
                     call("sudo yum -y install firewalld", shell=True)
                 call("sudo systemctl unmask firewalld", shell=True)
+                sleep(1)
+                call("sudo systemctl stop firewalld", shell=True)
+                sleep(5)
                 call("sudo systemctl start firewalld", shell=True)
                 call("sudo nmcli con modify testeth0 connection.zone public", shell=True)
                 # Add a sleep here to prevent firewalld to hang
                 # (see https://bugzilla.redhat.com/show_bug.cgi?id=1495893)
-                call("sleep 1", shell=True)
+                sleep(1)
 
             if 'restore_hostname' in scenario.tags:
                print ("---------------------------")

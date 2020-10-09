@@ -512,8 +512,9 @@ Feature: nmcli: ipv4
     @ipv4_dns_manual
     Scenario: nmcli - ipv4 - dns - method static + IP + dns
     * Add a new connection of type "ethernet" and options "ifname eth3 con-name con_ipv4 ipv4.method static ipv4.addresses 192.168.122.253/24 ipv4.gateway 192.168.122.1 ipv4.dns '8.8.8.8, 8.8.4.4'"
-    Then "nameserver 8.8.8.8.*nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf" in "10" seconds
-    Then "nameserver 192.168.100.1" is not visible with command "cat /etc/resolv.conf"
+    Then Nameserver "8.8.8.8" is set in "10" seconds
+    Then Nameserver "8.8.4.4" is set
+    Then Nameserver "192.168.100.1" is not set
 
 
     @con_ipv4_remove

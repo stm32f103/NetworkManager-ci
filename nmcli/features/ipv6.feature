@@ -399,9 +399,9 @@
     @ipv6_dns_manual_IP_with_manual_dns
     Scenario: nmcli - ipv6 - dns - method static + IP + dns
      * Add a new connection of type "ethernet" and options "ifname eth10 con-name con_ipv6 ipv4.may-fail no ipv6.method static ipv6.addresses 2001::1/126 ipv6.gateway 4000::1 ipv6.dns '4000::1, 5000::1'"
-    Then "nameserver 4000::1" is visible with command "cat /etc/resolv.conf" in "45" seconds
-    Then "nameserver 5000::1" is visible with command "cat /etc/resolv.conf"
-    Then "nameserver 10." is visible with command "cat /etc/resolv.conf"
+    Then Nameserver "4000::1" is set in "45" seconds
+    Then Nameserver "5000::1" is set
+    Then Nameserver "10." is set
 
 
     @con_ipv6_remove @eth0
