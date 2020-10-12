@@ -521,18 +521,18 @@ Feature: nmcli: ipv4
     @ipv4_dns_manual_when_method_auto
     Scenario: nmcli - ipv4 - dns - method auto + dns
     * Add a new connection of type "ethernet" and options "ifname eth3 con-name con_ipv4 ipv4.dns '8.8.8.8, 8.8.4.4'"
-    Then "nameserver 8.8.8.8" is visible with command "cat /etc/resolv.conf" in "10" seconds
-    Then "nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf"
-    Then "nameserver 192.168.100.1" is visible with command "cat /etc/resolv.conf"
+    Then Nameserver "8.8.8.8" is set in "10" seconds
+    Then Nameserver "8.8.4.4" is set
+    Then Nameserver "192.168.100.1" is set
 
 
     @con_ipv4_remove
     @ipv4_dns_manual_when_ignore_auto_dns
     Scenario: nmcli - ipv4 - dns - method auto + dns + ignore automaticaly obtained
     * Add a new connection of type "ethernet" and options "ifname eth3 con-name con_ipv4 ipv4.method static ipv4.addresses 192.168.122.253/24 ipv4.gateway 192.168.122.1 ipv4.dns '8.8.8.8, 8.8.4.4' ipv4.ignore-auto-dns yes"
-    Then "nameserver 8.8.8.8" is visible with command "cat /etc/resolv.conf" in "10" seconds
-    Then "nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf"
-    Then "nameserver 192.168.100.1" is not visible with command "cat /etc/resolv.conf"
+    Then Nameserver "8.8.8.8" is set in "10" seconds
+    Then Nameserver "8.8.4.4" is set
+    Then Nameserver "192.168.100.1" is not set
 
 
     @rhbz1405431
@@ -546,14 +546,14 @@ Feature: nmcli: ipv4
     * Execute "echo 'search boston.com' > /etc/resolv.conf"
     * Execute "echo 'nameserver 1.2.3.4' >> /etc/resolv.conf"
     * Start NM
-    When "boston.com" is visible with command "cat /etc/resolv.conf"
-     And "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
+    When Domain "boston.com" is set
+     And Nameserver "1.2.3.4" is set
     * Restart NM
-    When "boston.com" is visible with command "cat /etc/resolv.conf"
-     And "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
+    When Domain "boston.com" is set
+     And Nameserver "1.2.3.4" is set
     * Restart NM
-    Then "boston.com" is visible with command "cat /etc/resolv.conf"
-     And "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
+    Then Domain "boston.com" is set
+     And Nameserver "1.2.3.4" is set
 
 
     @rhbz1426748
@@ -565,14 +565,14 @@ Feature: nmcli: ipv4
     * Bring "down" connection "con_ipv4"
     * Execute "echo 'search boston.com' > /etc/resolv.conf"
     * Execute "echo 'nameserver 1.2.3.4' >> /etc/resolv.conf"
-    When "boston.com" is visible with command "cat /etc/resolv.conf"
-     And "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
+    When Domain "boston.com" is set
+     And Nameserver "1.2.3.4" is set
     * Restart NM
-    When "boston.com" is visible with command "cat /etc/resolv.conf"
-     And "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
+    When Domain "boston.com" is set
+     And Nameserver "1.2.3.4" is set
     * Restart NM
-    Then "boston.com" is visible with command "cat /etc/resolv.conf"
-     And "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
+    Then Domain "boston.com" is set
+     And Nameserver "1.2.3.4" is set
 
 
     @rhbz1344303
@@ -584,14 +584,14 @@ Feature: nmcli: ipv4
     * Bring "down" connection "con_ipv4"
     * Execute "echo 'search boston.com' > /etc/resolv.conf"
     * Execute "echo 'nameserver 1.2.3.4' >> /etc/resolv.conf"
-    When "boston.com" is visible with command "cat /etc/resolv.conf"
-     And "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
+    When Domain "boston.com" is set
+     And Nameserver "1.2.3.4" is set
     * Execute "hostnamectl set-hostname braunberg"
-    When "boston.com" is visible with command "cat /etc/resolv.conf"
-     And "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
+    When Domain "boston.com" is set
+     And Nameserver "1.2.3.4" is set
     * Execute "hostnamectl set-hostname --transient BraunBerg"
-    Then "boston.com" is visible with command "cat /etc/resolv.conf"
-     And "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
+    Then Domain "boston.com" is set
+     And Nameserver "1.2.3.4" is set
 
 
     @rhbz1422610
@@ -603,20 +603,20 @@ Feature: nmcli: ipv4
     * Bring "down" connection "con_ipv4"
     * Execute "echo 'search boston.com' > /etc/resolv.conf"
     * Execute "echo 'nameserver 1.2.3.4' >> /etc/resolv.conf"
-    When "boston.com" is visible with command "cat /etc/resolv.conf"
-     And "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
+    When Domain "boston.com" is set
+     And Nameserver "1.2.3.4" is set
     * Execute "hostnamectl set-hostname braunberg"
-    When "boston.com" is visible with command "cat /etc/resolv.conf"
-     And "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
+    When Domain "boston.com" is set
+     And Nameserver "1.2.3.4" is set
     * Execute "hostnamectl set-hostname --transient BraunBerg"
-    When "boston.com" is visible with command "cat /etc/resolv.conf"
-     And "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
+    When Domain "boston.com" is set
+     And Nameserver "1.2.3.4" is set
      And "BraunBerg" is visible with command "hostnamectl --transient" in "5" seconds
 
     * Execute "ip add add 1.2.3.1/24 dev eth3"
     Then "braunberg" is visible with command "hostnamectl --static" for full "5" seconds
-     And "boston.com" is visible with command "cat /etc/resolv.conf"
-     And "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
+     And Domain "boston.com" is set
+     And Nameserver "1.2.3.4" is set
 
 
     @rhbz+=1423490
@@ -631,7 +631,7 @@ Feature: nmcli: ipv4
     * Execute "ln -s /tmp/resolv.conf /etc/resolv.conf"
     * Add a new connection of type "ethernet" and options "con-name con_ipv4 ifname eth3 ipv4.dns 8.8.8.8"
     * Bring "up" connection "con_ipv4"
-    Then "nameserver 8.8.8.8" is visible with command "cat /etc/resolv.conf" in "20" seconds
+    Then Nameserver "8.8.8.8" is set in "20" seconds
      And "nameserver 8.8.8.8" is visible with command "cat /var/run/NetworkManager/resolv.conf"
      And "are identical" is not visible with command "diff -s /tmp/resolv.conf /tmp/resolv_orig.conf"
      And "/etc/resolv.conf -> /tmp/resolv.conf" is visible with command "ls -all /etc/resolv.conf"
@@ -639,6 +639,7 @@ Feature: nmcli: ipv4
 
     @rhbz+=1423490
     @ver+=1.8.0
+    @rhel_pkg @fedoraver-=0
     @con_ipv4_remove @restore_resolvconf @restart
     @ipv4_dns_resolvconf_symlinked
     Scenario: nmcli - ipv4 - dns - symlink
@@ -646,7 +647,7 @@ Feature: nmcli: ipv4
     * Execute "echo -e '[main]\nrc-manager=symlink' > /etc/NetworkManager/conf.d/99-resolv.conf"
     * Restart NM
     When "activated" is visible with command "nmcli -g GENERAL.STATE con show testeth0" in "45" seconds
-    When "nameserver" is visible with command "cat /etc/resolv.conf" in "20" seconds
+    When "nameserver" is set in "20" seconds
     * Execute "cp /etc/resolv.conf /tmp/resolv_orig.conf"
     * Execute "mv -f /etc/resolv.conf /tmp/resolv.conf"
     * Execute "ln -s /tmp/resolv.conf /etc/resolv.conf"
@@ -661,6 +662,7 @@ Feature: nmcli: ipv4
 
     @rhbz+=1423490
     @ver+=1.8.0
+    @rhel_pkg @fedoraver-=0
     @con_ipv4_remove @restore_resolvconf @restart
     @ipv4_dns_resolvconf_file
     Scenario: nmcli - ipv4 - dns - file
@@ -668,14 +670,14 @@ Feature: nmcli: ipv4
     * Execute "echo -e '[main]\nrc-manager=file' > /etc/NetworkManager/conf.d/99-resolv.conf"
     * Restart NM
     When "activated" is visible with command "nmcli -g GENERAL.STATE con show testeth0" in "45" seconds
-    When "nameserver" is visible with command "cat /etc/resolv.conf" in "20" seconds
+    When "nameserver" is set in "20" seconds
     * Execute "cp /etc/resolv.conf /tmp/resolv_orig.conf"
     * Execute "mv -f /etc/resolv.conf /tmp/resolv.conf"
     * Execute "ln -s /tmp/resolv.conf /etc/resolv.conf"
     * Add a new connection of type "ethernet" and options "con-name con_ipv4 ifname eth3 ipv4.dns 8.8.8.8"
     * Bring "up" connection "con_ipv4"
-    Then "nameserver 8.8.8.8" is visible with command "cat /etc/resolv.conf" in "20" seconds
-     And "nameserver 8.8.8.8" is visible with command "cat /var/run/NetworkManager/resolv.conf"
+    Then Nameserver "8.8.8.8" is set in "20" seconds
+     And Nameserver "8.8.8.8" is visible with command "cat /var/run/NetworkManager/resolv.conf"
      And "are identical" is not visible with command "diff -s /tmp/resolv.conf /tmp/resolv_orig.conf"
      And "/etc/resolv.conf -> /tmp/resolv.conf" is visible with command "ls -all /etc/resolv.conf"
 
@@ -690,9 +692,9 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "con_ipv4"
-    Then "nameserver 8.8.8.8" is visible with command "cat /etc/resolv.conf"
-    Then "nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf"
-    Then "nameserver 192.168.100.1" is not visible with command "cat /etc/resolv.conf"
+    Then Nameserver "8.8.8.8" is set
+    Then Nameserver "8.8.4.4" is set
+    Then Nameserver "192.168.100.1" is not set
 
 
     @con_ipv4_remove
@@ -701,9 +703,9 @@ Feature: nmcli: ipv4
     * Add a new connection of type "ethernet" and options "ifname eth3 con-name con_ipv4 ipv4.addresses 192.168.122.253/24 ipv4.gateway 192.168.122.1 ipv4.dns '8.8.8.8, 8.8.4.4'"
     * Modify connection "con_ipv4" changing options "ipv4.dns ''"
     * Bring "up" connection "con_ipv4"
-    Then "nameserver 8.8.8.8" is not visible with command "cat /etc/resolv.conf"
-    Then "nameserver 8.8.4.4" is not visible with command "cat /etc/resolv.conf"
-    Then "nameserver 192.168.100.1" is visible with command "cat /etc/resolv.conf"
+    Then Nameserver "8.8.8.8" is not set
+    Then Nameserver "8.8.4.4" is not set
+    Then Nameserver "192.168.100.1" is set
 
 
     @con_ipv4_remove @eth0
@@ -711,12 +713,12 @@ Feature: nmcli: ipv4
     Scenario: nmcli - ipv4 - dns - reload
     * Add a new connection of type "ethernet" and options "ifname eth0 con-name con_ipv4 ipv4.may-fail no ipv4.dns '8.8.8.8, 8.8.4.4'"
     * Bring "up" connection "con_ipv4"
-    When "nameserver 8.8.8.8" is visible with command "cat /etc/resolv.conf" in "10" seconds
-    When "nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf"
+    When Nameserver "8.8.8.8" is set in "10" seconds
+    When Nameserver "8.8.4.4" is set
     * Execute "echo 'INVALID_DNS' > /etc/resolv.conf"
     * Execute "sudo kill -SIGUSR1 $(pidof NetworkManager)"
-    Then "nameserver 8.8.8.8" is visible with command "cat /etc/resolv.conf" in "45" seconds
-    Then "nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf"
+    Then Nameserver "8.8.8.8" is set in "45" seconds
+    Then Nameserver "8.8.4.4" is set
     * Execute "sleep 3"
     Then Ping "boston.com"
 
@@ -725,7 +727,7 @@ Feature: nmcli: ipv4
     @ipv4_dns-search_add
     Scenario: nmcli - ipv4 - dns-search - add dns-search
     * Add a new connection of type "ethernet" and options "ifname eth0 con-name con_ipv4 ipv4.may-fail no ipv4.dns-search google.com"
-    When "google.com" is visible with command "cat /etc/resolv.conf" in "45" seconds
+    When "google.com" is set in "45" seconds
     Then Ping "maps"
     Then Ping "maps.google.com"
 
@@ -736,9 +738,9 @@ Feature: nmcli: ipv4
     * Add a new connection of type "ethernet" and options "ifname eth0 con-name con_ipv4 ipv4.may-fail no ipv4.dns-search google.com"
     * Modify connection "con_ipv4" changing options "ipv4.dns-search ''"
     * Bring "up" connection "con_ipv4"
-    Then " google.com" is not visible with command "cat /etc/resolv.conf"
+    Then " google.com" is not set
     Then Unable to ping "maps"
-    When "nameserver" is visible with command "cat /etc/resolv.conf" in "10" seconds
+    When "nameserver" is set in "10" seconds
     Then Ping "maps.google.com"
 
 
@@ -904,7 +906,7 @@ Feature: nmcli: ipv4
     @ipv4_add_dns_options
     Scenario: nmcli - ipv4 - dns-options - add
     * Add a new connection of type "ethernet" and options "ifname eth3 con-name con_ipv4 ipv4.dns-options debug ipv4.may-fail no"
-    Then "options debug" is visible with command "cat /etc/resolv.conf" in "45" seconds
+    Then "options debug" is set in "45" seconds
 
 
     @con_ipv4_remove @eth0
@@ -913,15 +915,15 @@ Feature: nmcli: ipv4
     * Add a new connection of type "ethernet" and options "ifname eth3 con-name con_ipv4 autoconnect no ipv4.dns-options debug ipv4.may-fail no"
     * Modify connection "con_ipv4" changing options "ipv4.dns-option ''"
     * Bring "up" connection "con_ipv4"
-    Then "options debug" is not visible with command "cat /etc/resolv.conf" in "5" seconds
+    Then "options debug" is not set in "5" seconds
 
 
     @con_ipv4_remove @eth0
     @ipv4_dns-search_ignore_auto_routes
     Scenario: nmcli - ipv4 - dns-search - dns-search + ignore auto obtained routes
     * Add a new connection of type "ethernet" and options "ifname eth3 con-name con_ipv4 ipv6.method ignore ipv6.ignore-auto-dns yes ipv4.dns-search google.com ipv4.ignore-auto-dns yes"
-    Then "google.com" is visible with command "cat /etc/resolv.conf" in "45" seconds
-    Then "virtual" is not visible with command "cat /etc/resolv.conf"
+    Then "google.com" is set in "45" seconds
+    Then "virtual" is not set
 
 
     @con_ipv4_remove
