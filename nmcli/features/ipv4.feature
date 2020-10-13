@@ -2138,7 +2138,7 @@ Feature: nmcli: ipv4
 
 
     @rhbz1871042
-    @ver+=1.26
+    @ver+=1.26.4
     @con_ipv4_remove @ifcfg-rh
     @ipv4_dhcp_vendor_class_ifcfg
     Scenario: NM - ipv4 - ipv4.dhcp-vendor-class-identifier is translated to ifcfg
