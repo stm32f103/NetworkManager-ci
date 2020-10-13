@@ -924,7 +924,8 @@ Feature: nmcli: ipv4
     Then Domain "options debug" is not set in "5" seconds
 
 
-    @con_ipv4_remove @eth0
+    @not_with_systemd_resolved
+    @con_ipv4_remove
     @ipv4_dns-search_ignore_auto_routes
     Scenario: nmcli - ipv4 - dns-search - dns-search + ignore auto obtained routes
     * Add a new connection of type "ethernet" and options "ifname eth3 con-name con_ipv4 ipv6.method ignore ipv6.ignore-auto-dns yes ipv4.dns-search google.com ipv4.ignore-auto-dns yes"
