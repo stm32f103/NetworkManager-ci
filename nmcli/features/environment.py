@@ -2669,6 +2669,8 @@ def after_scenario(context, scenario):
                 print ("---------------------------")
                 print ("restore /etc/resolv.conf")
                 call('rm -rf /etc/resolv.conf', shell=True)
+                if call("systemctl is-active systemd-resolved", shell=True) == 0:
+                    call("ln -s /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf", shell=True)
                 call('rm -rf /tmp/resolv_orig.conf', shell=True)
                 call('rm -rf /tmp/resolv.conf', shell=True)
                 call("rm -rf /etc/NetworkManager/conf.d/99-resolv.conf", shell=True)
