@@ -746,7 +746,6 @@ Feature: nmcli: ipv4
     * Bring "up" connection "con_ipv4"
     Then Domain "google.com" is not set
     Then Unable to ping "maps"
-    When "nameserver" is set in "10" seconds
     Then Ping "maps.google.com"
 
 
