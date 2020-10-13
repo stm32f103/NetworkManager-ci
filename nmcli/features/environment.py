@@ -849,6 +849,11 @@ def before_scenario(context, scenario):
                 else:
                     context.revert_unmanaged = False
 
+            if 'not_with_systemd_resolved' in scenario.tags:
+                print ("---------------------------")
+                if call("systemctl is-active systemd-resolved", shell=True) == 0:
+                    sys.exit(77)
+
             if 'not_under_internal_DHCP' in scenario.tags:
                 if call("grep -q Ootpa /etc/redhat-release", shell=True) == 0 and \
                    call("NetworkManager --print-config|grep dhclient", shell=True) != 0:

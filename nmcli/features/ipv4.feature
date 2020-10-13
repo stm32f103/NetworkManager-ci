@@ -558,6 +558,7 @@ Feature: nmcli: ipv4
 
     @rhbz1426748
     @ver+=1.8.0
+    @not_with_systemd_resolved
     @con_ipv4_remove @restart @delete_testeth0
     @ipv4_ignore_resolveconf_with_ignore_auto_dns_var1
     Scenario: NM - ipv4 - preserve resolveconf if ignore_auto_dns with NM service up
@@ -577,6 +578,7 @@ Feature: nmcli: ipv4
 
     @rhbz1344303
     @ver+=1.8.0
+    @not_with_systemd_resolved
     @con_ipv4_remove @delete_testeth0 @restore_hostname
     @ipv4_ignore_resolveconf_with_ignore_auto_dns_var2
     Scenario: NM - ipv4 - preserve resolveconf when hostnamectl is called and ignore_auto_dns set
@@ -595,7 +597,8 @@ Feature: nmcli: ipv4
 
 
     @rhbz1422610
-    @ver+=1.8.0 @fedoraver-=32
+    @ver+=1.8.0
+    @not_with_systemd_resolved
     @con_ipv4_remove @delete_testeth0 @restore_hostname @eth3_disconnect @ifcfg-rh
     @ipv4_ignore_resolveconf_with_ignore_auto_dns_var3
     Scenario: NM - ipv4 - preserve resolveconf when hostnamectl is called and ignore_auto_dns set
@@ -621,7 +624,8 @@ Feature: nmcli: ipv4
 
     @rhbz+=1423490
     @ver+=1.8.0
-    @rhelver-=7 @rhel_pkg @fedoraver-=0
+    @rhelver-=7 @rhel_pkg
+    @not_with_systemd_resolved
     @con_ipv4_remove @restore_resolvconf @restart
     @ipv4_dns_resolvconf_rhel7_default
     Scenario: nmcli - ipv4 - dns - rhel7 default
@@ -639,7 +643,7 @@ Feature: nmcli: ipv4
 
     @rhbz+=1423490
     @ver+=1.8.0
-    @rhel_pkg @fedoraver-=0
+    @not_with_systemd_resolved
     @con_ipv4_remove @restore_resolvconf @restart
     @ipv4_dns_resolvconf_symlinked
     Scenario: nmcli - ipv4 - dns - symlink
@@ -662,7 +666,7 @@ Feature: nmcli: ipv4
 
     @rhbz+=1423490
     @ver+=1.8.0
-    @rhel_pkg @fedoraver-=0
+    @rhel_pkg @not_with_systemd_resolved
     @con_ipv4_remove @restore_resolvconf @restart
     @ipv4_dns_resolvconf_file
     Scenario: nmcli - ipv4 - dns - file
@@ -708,6 +712,7 @@ Feature: nmcli: ipv4
     Then Nameserver "192.168.100.1" is set
 
 
+    @not_with_systemd_resolved
     @con_ipv4_remove @eth0
     @reload_dns
     Scenario: nmcli - ipv4 - dns - reload
@@ -902,28 +907,29 @@ Feature: nmcli: ipv4
 
 
     @rhbz1264410
-    @con_ipv4_remove @eth0
+    @con_ipv4_remove @eth0 @fedoraver-=32
     @ipv4_add_dns_options
     Scenario: nmcli - ipv4 - dns-options - add
     * Add a new connection of type "ethernet" and options "ifname eth3 con-name con_ipv4 ipv4.dns-options debug ipv4.may-fail no"
-    Then "options debug" is set in "45" seconds
+    Then Domain "options debug" is set in "45" seconds
 
 
+    @not_with_systemd_resolved
     @con_ipv4_remove @eth0
     @ipv4_remove_dns_options
     Scenario: nmcli - ipv4 - dns-options - remove
     * Add a new connection of type "ethernet" and options "ifname eth3 con-name con_ipv4 autoconnect no ipv4.dns-options debug ipv4.may-fail no"
     * Modify connection "con_ipv4" changing options "ipv4.dns-option ''"
     * Bring "up" connection "con_ipv4"
-    Then "options debug" is not set in "5" seconds
+    Then Domain "options debug" is not set in "5" seconds
 
 
     @con_ipv4_remove @eth0
     @ipv4_dns-search_ignore_auto_routes
     Scenario: nmcli - ipv4 - dns-search - dns-search + ignore auto obtained routes
     * Add a new connection of type "ethernet" and options "ifname eth3 con-name con_ipv4 ipv6.method ignore ipv6.ignore-auto-dns yes ipv4.dns-search google.com ipv4.ignore-auto-dns yes"
-    Then "google.com" is set in "45" seconds
-    Then "virtual" is not set
+    Then Domain "google.com" is set in "45" seconds
+    Then Domain "virtual" is not set
 
 
     @con_ipv4_remove
