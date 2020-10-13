@@ -537,6 +537,7 @@ Feature: nmcli: ipv4
 
     @rhbz1405431
     @ver+=1.6.0
+    @not_with_systemd_resolved
     @con_ipv4_remove @restart @delete_testeth0
     @ipv4_ignore_resolveconf_with_ignore_auto_dns
     Scenario: nmcli - ipv4 - preserve resolveconf if ignore_auto_dns
@@ -732,7 +733,7 @@ Feature: nmcli: ipv4
     @ipv4_dns-search_add
     Scenario: nmcli - ipv4 - dns-search - add dns-search
     * Add a new connection of type "ethernet" and options "ifname eth0 con-name con_ipv4 ipv4.may-fail no ipv4.dns-search google.com"
-    When "google.com" is set in "45" seconds
+    When Domain "google.com" is set in "45" seconds
     Then Ping "maps"
     Then Ping "maps.google.com"
 
@@ -743,7 +744,7 @@ Feature: nmcli: ipv4
     * Add a new connection of type "ethernet" and options "ifname eth0 con-name con_ipv4 ipv4.may-fail no ipv4.dns-search google.com"
     * Modify connection "con_ipv4" changing options "ipv4.dns-search ''"
     * Bring "up" connection "con_ipv4"
-    Then " google.com" is not set
+    Then Domain "google.com" is not set
     Then Unable to ping "maps"
     When "nameserver" is set in "10" seconds
     Then Ping "maps.google.com"
