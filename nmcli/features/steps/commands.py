@@ -164,6 +164,7 @@ def get_nameserver_or_domain(context, server, seconds=1):
         cmd = 'cat /etc/resolv.conf' % server
     return check_pattern_command(context, cmd, server, seconds, check_type="not")
 
+
 @step(u'Noted value contains "{pattern}"')
 def note_print_property_b(context, pattern):
     assert re.search(pattern, context.noted['noted-value']) is not None, "Noted value '%s' does not match the pattern '%s'!" % (context.noted['noted-value'], pattern)
