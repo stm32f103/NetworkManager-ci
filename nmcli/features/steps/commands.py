@@ -148,7 +148,7 @@ def get_nameserver_or_domain(context, server, seconds=1):
         # We have systemd-resolvd running
         cmd = 'resolvectl dns; resolvectl domain'
     else:
-        cmd = 'cat /etc/resolv.conf' % server
+        cmd = 'cat /etc/resolv.conf'
     return check_pattern_command(context, cmd, server, seconds)
 
 
