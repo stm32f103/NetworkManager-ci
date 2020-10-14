@@ -218,6 +218,7 @@ def dump_status_nmcli(context, when):
                   'nmcli d',
                   'hostnamectl',
                   'NetworkManager --print-config',
+                  'cat /etc/resolv.conf',
                   'ps aux | grep dhclient' ]
 
     for cmd in cmds:
@@ -938,6 +939,10 @@ def before_scenario(context, scenario):
             if 'dns_dnsmasq' in scenario.tags:
                 print ("---------------------------")
                 print ("set dns=dnsmasq")
+                if call("systemctl is-active systemd-resolved", shell=True) == 0:
+                    context.systemd_resolved = True
+                    call("systemctl stop systemd-resolved", shell=True)
+                    call("rm -rf /etc/resolv.conf", shell=True)
                 call("printf '# configured by beaker-test\n[main]\ndns=dnsmasq\n' > /etc/NetworkManager/conf.d/99-xtest-dns.conf", shell=True)
                 reload_NM_service ()
                 context.dns_script="dnsmasq.sh"
@@ -2183,6 +2188,9 @@ def after_scenario(context, scenario):
                 call("rm -f /etc/NetworkManager/conf.d/99-xtest-dns.conf", shell=True)
                 reload_NM_service ()
                 context.dns_script=""
+                if context.systemd_resolved == True:
+                    call("systemctl restart systemd-resolved", shell=True)
+
 
             if 'internal_DHCP' in scenario.tags:
                 print ("---------------------------")
