@@ -146,7 +146,7 @@ def hostname_visible(context, log, seconds=1):
 def get_nameserver_or_domain(context, server, seconds=1):
     if call('systemctl is-active systemd-resolved.service -q', shell=True) == 0:
         # We have systemd-resolvd running
-        cmd = 'systemd-resolve --status |grep -A 100 Link'
+        cmd = 'resolvectl dns; resolvectl domain'
     else:
         cmd = 'cat /etc/resolv.conf' % server
     return check_pattern_command(context, cmd, server, seconds)
