@@ -428,8 +428,8 @@
     * Add a new connection of type "ethernet" and options "ifname eth10 con-name con_ipv6 ipv6.dns '4000::1'"
     * Modify connection "con_ipv6" changing options "+ipv6.dns 2000::1"
      * Bring "up" connection "con_ipv6"
-    Then Nameserver "4000::1" is set in "45" seconds
-    Then Nameserver "2000::1" is set
+     Then Nameserver "2000::1" is set in "45" seconds
+    Then Nameserver "4000::1" is set
 
 
     @con_ipv6_remove @eth0
