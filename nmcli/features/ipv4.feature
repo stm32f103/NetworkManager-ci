@@ -682,7 +682,7 @@ Feature: nmcli: ipv4
     * Add a new connection of type "ethernet" and options "con-name con_ipv4 ifname eth3 ipv4.dns 8.8.8.8"
     * Bring "up" connection "con_ipv4"
     Then Nameserver "8.8.8.8" is set in "20" seconds
-     And Nameserver "8.8.8.8" is visible with command "cat /var/run/NetworkManager/resolv.conf"
+     And "nameserver 8.8.8.8" is visible with command "cat /var/run/NetworkManager/resolv.conf"
      And "are identical" is not visible with command "diff -s /tmp/resolv.conf /tmp/resolv_orig.conf"
      And "/etc/resolv.conf -> /tmp/resolv.conf" is visible with command "ls -all /etc/resolv.conf"
 
