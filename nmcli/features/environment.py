@@ -943,6 +943,8 @@ def before_scenario(context, scenario):
                     context.systemd_resolved = True
                     call("systemctl stop systemd-resolved", shell=True)
                     call("rm -rf /etc/resolv.conf", shell=True)
+                else:
+                    context.systemd_resolved = False
                 call("printf '# configured by beaker-test\n[main]\ndns=dnsmasq\n' > /etc/NetworkManager/conf.d/99-xtest-dns.conf", shell=True)
                 reload_NM_service ()
                 context.dns_script="dnsmasq.sh"
