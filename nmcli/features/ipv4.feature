@@ -697,7 +697,7 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "con_ipv4"
-    Then Nameserver "8.8.8.8" is set
+    Then Nameserver "8.8.8.8" is set in "5" seconds
     Then Nameserver "8.8.4.4" is set
     Then Nameserver "192.168.100.1" is not set
 
@@ -710,7 +710,7 @@ Feature: nmcli: ipv4
     * Bring "up" connection "con_ipv4"
     Then Nameserver "8.8.8.8" is not set
     Then Nameserver "8.8.4.4" is not set
-    Then Nameserver "192.168.100.1" is set
+    Then Nameserver "192.168.100.1" is set in "5" seconds
 
 
     @not_with_systemd_resolved
