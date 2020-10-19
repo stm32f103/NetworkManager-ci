@@ -2,7 +2,7 @@
 
 function setup () {
     MAJOR="$(uname -r |awk -F '-' '{print $1}')"
-    MINOR="$(uname -r |awk -F '-' '{print $2}'|awk -F '.' '{print  $1"."$2}')"
+    MINOR="$(uname -r |awk -F '-' '{print $2}'|awk -F '.' '{print  $1"."$2"."$3}')"
     LINUX=linux-$MAJOR-$MINOR
     # We need this patched netdevsim device to support ring/coal ethtool options
     PATCH="0001-netdevsim-add-mock-support-for-coalescing-and-ring-o-1.patch"
@@ -14,7 +14,7 @@ function setup () {
         URL='https://kojipkgs.fedoraproject.org//packages/kernel'
         LINUX="$(echo $LINUX |awk -F '.' '{print $1 "." $2}')"
     fi
-    
+
     # If we have all necessary things done
     if ! test -f /tmp/netdevsim_installed; then
 
