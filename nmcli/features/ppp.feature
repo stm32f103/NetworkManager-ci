@@ -14,7 +14,7 @@ Feature: nmcli - ppp
     * Execute "ip link add test11 type veth peer name test12"
     * Prepare pppoe server for user "test" with "networkmanager" password and IP "192.168.111.2" authenticated via "pap"
     * Start pppoe server with "isp" and IP "192.168.111.254" on device "test12"
-    * Add a new connection of type "pppoe" and options "con-name ppp imy-ppp pppoe.parent test11 service isp username test password networkmanager"
+    * Add a new connection of type "pppoe" and options "con-name ppp ifname my-ppp pppoe.parent test11 service isp username test password networkmanager"
     * Execute "ip link set dev test11 up"
     * Bring "up" connection "ppp"
     Then Nameserver "8.8.8.8" is set in "5" seconds
