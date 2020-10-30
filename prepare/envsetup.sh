@@ -732,7 +732,7 @@ setup_configure_environment () {
     [ "$1" == "first_test_setup" ] && return
 
     # Configure hw specific needs (veth, wifi, etc)
-    local_setup_configure_nm_eth_part2
+    local_setup_configure_nm_eth_part2 $1
     case "$1" in
         *dcb_*)
             local_setup_configure_nm_dcb
