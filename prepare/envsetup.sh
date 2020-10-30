@@ -527,7 +527,7 @@ local_setup_configure_nm_eth_part2 () {
                 yes 2>/dev/null | cp -rf /etc/sysconfig/network-scripts/ifcfg-testeth0 /tmp/testeth0
             fi
         else
-            ifcfg_parse_options_with_commentf ! test -f /tmp/testeth0; then
+            if ! test -f /tmp/testeth0; then
                 yes 2>/dev/null | cp -rf /etc/NetworkManager/system-connections/testeth0.nmconnection /tmp/testeth0
             fi
         fi
