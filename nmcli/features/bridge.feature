@@ -388,7 +388,7 @@ Feature: nmcli - bridge
     Then "BRIDGE.SLAVES:\s+dummy0" is visible with command "nmcli -f bridge.slaves dev show br0"
 
 
-    @ver+=1.25 @ver-=1.28
+    @ver+=1.25 @ver-=1.27
     @rhbz1030947 @rhbz1816202
     @dummy
     @bridge_reflect_changes_from_outside_of_NM
@@ -407,7 +407,7 @@ Feature: nmcli - bridge
     Then "BRIDGE.SLAVES:\s+dummy0" is visible with command "nmcli -f bridge.slaves dev show br0"
 
 
-    @ver+=1.29
+    @ver+=1.28
     @rhbz1030947 @rhbz1816202 @rhbz1869079
     @dummy
     @bridge_reflect_changes_from_outside_of_NM
@@ -424,9 +424,9 @@ Feature: nmcli - bridge
     * Execute "ip link set dummy0 master br0"
     When "dummy0\s+dummy\s+connected \(externally\)\s+dummy" is visible with command "nmcli d" in "5" seconds
     When "BRIDGE.SLAVES:\s+dummy0" is visible with command "nmcli -f bridge.slaves dev show br0"
-    * Add a new connection of type "dummy" and options "ifname dummy0 con-name dummy0 ipv4.method disabled ipv6.method disabled"
-    * Bring "up" connection "dummy0"
-    Then "dummy0\s+dummy\s+connected\s+dummy" is visible with command "nmcli d" in "5" seconds
+    * Add a new connection of type "dummy" and options "ifname dummy0 con-name dummy1 ipv4.method disabled ipv6.method disabled"
+    * Bring "up" connection "dummy1"
+    Then "dummy0\s+dummy\s+connected\s+dummy1" is visible with command "nmcli d" in "5" seconds
     Then "BRIDGE.SLAVES:\s+dummy0" is not visible with command "nmcli -f bridge.slaves dev show br0" in "5" seconds
     Then "master" is not visible with command "ip a s dummy0"
 

@@ -2667,7 +2667,7 @@ def after_scenario(context, scenario):
             if 'dummy' in scenario.tags:
                 print ("---------------------------")
                 print ("removing dummy and bridge/bond/team devices")
-                call("nmcli con del dummy0", shell=True)
+                call("nmcli con del dummy0 dummy1", shell=True)
                 call("ip link delete dummy0", shell=True)
                 call("ip link del br0", shell=True)
                 call("ip link del vlan", shell=True)
