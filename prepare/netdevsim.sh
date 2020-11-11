@@ -53,10 +53,11 @@ function setup () {
     # If we are able to insert module create devices and exit 0
     echo "** installing the patched one"
     if insmod netdevsim.ko; then
+        sleep 0.5
         echo "0 3" > /sys/bus/netdevsim/new_device
         touch /tmp/netdevsim
     else
-        # If we fail to load exit 1
+        echo "** we fail to load - > exit 1"
         exit 1
     fi
     echo "** done"
