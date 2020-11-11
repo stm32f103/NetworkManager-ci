@@ -2,7 +2,6 @@
 
 function setup () {
     MAJOR="$(uname -r |awk -F '-' '{print $1}')"
-    $arch=$arch
     MINOR="$(uname -r |awk -F '-' '{print $2}'| rev| cut -d. -f2-  |rev)"
     LINUX=linux-$MAJOR-$MINOR
     # We need this patched netdevsim device to support ring/coal ethtool options
