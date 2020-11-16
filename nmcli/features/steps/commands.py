@@ -76,6 +76,11 @@ def execute_command(context, command):
     sleep(0.3)
 
 
+@step(u'ExecuteNoFail "{command}"')
+def execute_command(context, command):
+    subprocess.check_call(command, shell=True)
+
+
 @step(u'Execute "{command}" without waiting for process to finish')
 def execute_command(context, command):
     Popen(command, shell=True)
