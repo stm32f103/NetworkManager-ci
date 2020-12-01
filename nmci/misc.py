@@ -1,3 +1,4 @@
+import os
 import re
 import subprocess
 import sys
@@ -21,6 +22,67 @@ class _Misc:
         if not re.match("^" + self.TEST_NAME_VALID_CHAR_REGEX + "+$", test_name):
             raise ValueError(f"Invalid test name {test_name0}")
         return test_name
+
+    def test_get_feature_files(self, feature):
+
+        import glob
+
+        if feature[0] == "/":
+            feature_dir = os.path.join(feature, "features")
+        else:
+            feature_dir = util.base_dir(feature, "features")
+
+        return glob.glob(feature_dir + "/*.feature")
+
+    def test_load_tags_from_features(self, feature, test_name=None):
+
+        files = self.test_get_feature_files(feature)
+        if not files:
+            return []
+
+        def _split_line(line):
+
+            # replace tabs with spaces.
+            line = line.replace("\t", " ")
+
+            # trim at the first '#' (which indicates a comment).
+            i = line.find("#")
+            if i != -1:
+                line = line[0:i]
+
+            words = line.split(" ")
+
+            # remove empty tokens.
+            words = [w for w in words if w]
+
+            return words
+
+        test_tags = subprocess.check_output(
+            [
+                "awk",
+                "--",
+                """
+                    BEGIN {ORS=\" \"}
+                    /^\\s*@/ { print $0 }
+                    /^\\s*Scenario/ { print \"\\n\" }
+                """,
+                *files,
+            ]
+        )
+        test_tags = test_tags.decode("utf-8", "error")
+        test_tags = test_tags.split("\n")
+        test_tags = [_split_line(line) for line in test_tags]
+        test_tags = [line for line in test_tags if line]
+
+        rr = re.compile("^@" + self.TEST_NAME_VALID_CHAR_REGEX + "+$")
+        for line in test_tags:
+            if not all((rr.match(s) for s in line)):
+                raise ValueError("unexpected characters in tags: %s" % (line))
+
+        test_tags = [[s[1:] for s in line] for line in test_tags]
+        if test_name is not None:
+            test_tags = [line for line in test_tags if test_name in line]
+        return test_tags
 
     def nmlog_parse_dnsmasq(self, ifname):
         s = util.process_run(
