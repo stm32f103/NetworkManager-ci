@@ -84,6 +84,34 @@ class _Misc:
             test_tags = [line for line in test_tags if test_name in line]
         return test_tags
 
+    def test_version_tag_parse(self, version_tag, tag_candidate):
+
+        if not version_tag.startswith(tag_candidate):
+            raise ValueError(
+                f'tag "{version_tag}" does not start with "{tag_candidate}"'
+            )
+
+        version_tag = version_tag[len(tag_candidate) :]
+
+        if version_tag.startswith("+=") or version_tag.startswith("-="):
+            op = version_tag[0:2]
+            ver = version_tag[2:]
+        elif version_tag.startswith("+") or version_tag.startswith("-"):
+            op = version_tag[0:1]
+            ver = version_tag[1:]
+        else:
+            raise ValueError(
+                f'tag "{version_tag}" does not have a suitable "+-" part for "{tag_candidate}"'
+            )
+
+        if not re.match("^[0-9.]+$", ver):
+            raise ValueError(
+                'tag "{version_tag}" does not have a suitable version number for "{tag_candidate}"'
+            )
+
+        ver_arr = [int(x) for x in ver.split(".")]
+        return (op, ver_arr)
+
     def nmlog_parse_dnsmasq(self, ifname):
         s = util.process_run(
             [util.util_dir("helpers/nmlog-parse-dnsmasq.sh"), ifname], as_utf8=True
