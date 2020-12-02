@@ -30,17 +30,21 @@ def dns_check(dns_plugin, device, kind, arg, has):
     ex = None
     try:
         info = nmci.misc.get_dns_info(dns_plugin, ifname=device)
+
+        assert info['default_route'] is not None or dns_plugin == 'systemd-resolved'
+
         if kind == 'default-route':
-            if arg != '.':
-                raise ValueError(f"For kind \"default-route\", we expect domain \".\" but got \"{arg}\"")
-            if info['default_route'] is None:
-                # The option is not supported by systemd-resolved.
-                # We accept that gracefully.
-                if dns_plugin != 'systemd-resolved':
-                    raise ValueError(f"For \"default-route\" we expect that only systemd-resolved can give None value")
-                return
-            if has == info['default_route']:
-                return
+            if arg == 'no':
+                if info['default_route'] in [None, False] and not any((d[0] == '.' for d in info['domains'])):
+                   return
+            elif arg == 'default':
+                if info['default_route'] in [None, True] and not any((d[0] == '.' for d in info['domains'])):
+                   return
+            elif arg in ['routing', 'search']:
+                if info['default_route'] in [None, True] and any((d[0] == '.' and d[1] == arg for d in info['domains'])):
+                   return
+            else:
+                raise ValueError(f"unsupported default-route kind {arg}")
         elif kind == 'dns':
             xhas = (arg in info['dns'])
             if has == xhas:
@@ -58,6 +62,7 @@ def dns_check(dns_plugin, device, kind, arg, has):
             raise ValueError(f"unsupported kind \"{kind}\"")
     except Exception as e:
         ex = e
+
     raise AssertionError("DNS %s \"%s\" is unexpectedly %sset for device \"%s\" (plugin %s) (settings: %s) (exception: %s)" % (
                          kind, arg, 'not ' if has else '', device, dns_plugin, info, ex))
 
@@ -82,6 +87,12 @@ def dns_check_domain_has(context, device, domain, kind="domain-routing"):
 @step(u'device "{device}" does not have DNS domain "{domain}" for "{kind}"')
 def dns_check_domain_not(context, device, domain, kind='domain'):
     dns_check(context.dns_plugin, device, kind, domain, False)
+
+
+@step(u'device "{device}" has "{what}" DNS default-route')
+def dns_check_default_route_has(context, device, what):
+    assert what in ['no', 'default', 'routing', 'search']
+    dns_check(context.dns_plugin, device, 'default-route', what, None)
 
 
 @step(u'Create device "{dev}" in "{ns}" with address "{addr}"')
