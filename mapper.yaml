@@ -1269,7 +1269,7 @@ testmapper:
         feature: general
     - hostname_mode_dhcp:
         feature: general
-    - hostname_mode_dhcp_no_gw_no_default_hostname:
+    - pull_hostname_from_dhcp_no_gw_no_default_hostname:
         feature: general
     - hostname_mode_full_without_dhcp_hosts:
         feature: general
