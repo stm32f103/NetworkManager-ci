@@ -8,13 +8,13 @@ from behave import step
 import nmci_step
 
 
-@step(u'Reboot')
+@step(u"Reboot")
 def reboot(context):
     context.nm_restarted = True
     assert nmci_step.command_code(context, "sudo systemctl stop NetworkManager") == 0
-    for x in range(1,11):
-        nmci_step.command_code(context, "sudo ip link set dev eth%d down" %int(x))
-        nmci_step.command_code(context, "sudo ip addr flush dev eth%d" %int(x))
+    for x in range(1, 11):
+        nmci_step.command_code(context, "sudo ip link set dev eth%d down" % int(x))
+        nmci_step.command_code(context, "sudo ip addr flush dev eth%d" % int(x))
 
     nmci_step.command_code(context, "sudo ip link set dev em1 down")
     nmci_step.command_code(context, "sudo ip addr flush dev em1")
@@ -40,13 +40,16 @@ def reboot(context):
     time.sleep(2)
 
 
-@step(u'Start NM')
+@step(u"Start NM")
 def start_NM(context):
     context.nm_restarted = True
-    assert nmci_step.command_code(context, "sudo systemctl start NetworkManager.service") == 0
+    assert (
+        nmci_step.command_code(context, "sudo systemctl start NetworkManager.service")
+        == 0
+    )
 
 
-@step(u'Restart NM')
+@step(u"Restart NM")
 def restart_NM(context):
     context.nm_restarted = True
     nmci_step.command_code(context, "systemctl restart NetworkManager") == 0
@@ -55,7 +58,7 @@ def restart_NM(context):
 
 
 @step(u'Kill NM with signal "{signal}"')
-@step(u'Kill NM')
+@step(u"Kill NM")
 def stop_NM(context, signal=""):
     context.nm_restarted = True
     if signal:
@@ -63,15 +66,21 @@ def stop_NM(context, signal=""):
     subprocess.call("kill %s $(pidof NetworkManager) && sleep 5" % (signal), shell=True)
 
 
-@step(u'Stop NM')
+@step(u"Stop NM")
 def stop_NM(context):
     context.nm_restarted = True
-    assert nmci_step.command_code(context, "sudo systemctl stop NetworkManager.service") == 0
+    assert (
+        nmci_step.command_code(context, "sudo systemctl stop NetworkManager.service")
+        == 0
+    )
 
 
 @step(u'Stop NM and clean "{device}"')
 def stop_NM_and_clean(context, device):
     context.nm_restarted = True
-    assert nmci_step.command_code(context, "sudo systemctl stop NetworkManager.service") == 0
-    assert nmci_step.command_code(context, "sudo ip addr flush dev %s" %(device)) == 0
-    assert nmci_step.command_code(context, "sudo ip link set %s down" %(device)) == 0
+    assert (
+        nmci_step.command_code(context, "sudo systemctl stop NetworkManager.service")
+        == 0
+    )
+    assert nmci_step.command_code(context, "sudo ip addr flush dev %s" % (device)) == 0
+    assert nmci_step.command_code(context, "sudo ip link set %s down" % (device)) == 0

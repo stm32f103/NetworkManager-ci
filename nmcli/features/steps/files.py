@@ -32,14 +32,18 @@ def check_file_is_contained(context, file1, file2):
 @step(u'Check file "{file1}" is identical to file "{file2}"')
 def check_file_is_identical(context, file1, file2):
     import filecmp
+
     assert filecmp.cmp(file1, file2)
 
 
 @step(u'ifcfg-"{con_name}" file does not exist')
 def ifcfg_doesnt_exist(context, con_name):
-    cat = pexpect.spawn('cat /etc/sysconfig/network-scripts/ifcfg-%s' % con_name, logfile=context.log, encoding='utf-8')
-    assert cat.expect('No such file') == 0, 'Ifcfg-%s exists!' % con_name
-
+    cat = pexpect.spawn(
+        "cat /etc/sysconfig/network-scripts/ifcfg-%s" % con_name,
+        logfile=context.log,
+        encoding="utf-8",
+    )
+    assert cat.expect("No such file") == 0, "Ifcfg-%s exists!" % con_name
 
 
 @step('"{filename}" is file')
@@ -65,12 +69,15 @@ def is_file(context, path):
 @step('"{filename}" is symlink with destination "{destination}"')
 def is_file(context, filename, destination=None):
     if "<noted_value>" in filename:
-        filename = filename.replace("<noted_value>", context.noted['noted-value'])
+        filename = filename.replace("<noted_value>", context.noted["noted-value"])
     assert os.path.islink(filename), '"%s" is not a symlink' % filename
     realpath = os.path.realpath(filename)
     if destination is None:
         return True
-    assert realpath == destination, 'symlink "%s" has destination "%s" instead of "%s"' % (filename, realpath, destination)
+    assert realpath == destination, (
+        'symlink "%s" has destination "%s" instead of "%s"'
+        % (filename, realpath, destination)
+    )
     return True
 
 
@@ -88,24 +95,26 @@ def remove_file(context, filename):
     return True
 
 
-@step('Create symlink {source} with destination {destination}')
+@step("Create symlink {source} with destination {destination}")
 def create_symlink(context, source, destination):
     cmd = 'sudo ln -s "%s" "%s"' % (destination, source)
     nmci_step.command_code(context, cmd)
 
 
-@step(u'Check ifcfg-name file created with noted connection name')
+@step(u"Check ifcfg-name file created with noted connection name")
 def check_ifcfg_exists(context):
-    command = 'cat /etc/sysconfig/network-scripts/ifcfg-%s' % context.noted['noted-value']
-    pattern = 'NAME=%s' % context.noted['noted-value']
+    command = (
+        "cat /etc/sysconfig/network-scripts/ifcfg-%s" % context.noted["noted-value"]
+    )
+    pattern = "NAME=%s" % context.noted["noted-value"]
     return commands.check_pattern_command(context, command, pattern, seconds=2)
 
 
 @step(u'Check ifcfg-name file created for connection "{con_name}"')
 def check_ifcfg_exists_given_device(context, con_name):
     nmci_step.additional_sleep(1)
-    command = 'cat /etc/sysconfig/network-scripts/ifcfg-%s' % con_name
-    pattern = 'NAME=%s' % con_name
+    command = "cat /etc/sysconfig/network-scripts/ifcfg-%s" % con_name
+    pattern = "NAME=%s" % con_name
     return commands.check_pattern_command(context, command, pattern, seconds=2)
 
 
@@ -118,19 +127,19 @@ def write_dispatcher_file(context, path, params=None):
         if not os.path.exists(dir):
             os.makedirs(dir)
     else:
-        disp_file  = '/etc/NetworkManager/dispatcher.d/%s' % path
-    f = open(disp_file,'w')
-    f.write('#!/bin/bash\n')
+        disp_file = "/etc/NetworkManager/dispatcher.d/%s" % path
+    f = open(disp_file, "w")
+    f.write("#!/bin/bash\n")
     if params:
         f.write(params)
-    f.write('\necho $2 >> /tmp/dispatcher.txt\n')
+    f.write("\necho $2 >> /tmp/dispatcher.txt\n")
     f.close()
-    nmci_step.command_code(context, 'chmod +x %s' % disp_file)
+    nmci_step.command_code(context, "chmod +x %s" % disp_file)
     nmci_step.command_code(context, "> /tmp/dispatcher.txt")
     time.sleep(8)
 
 
-@step('Reset /etc/hosts')
+@step("Reset /etc/hosts")
 def reset_hosts(context):
     cmd = "echo '127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4' > /etc/hosts"
     nmci_step.command_code(context, cmd)
@@ -140,15 +149,17 @@ def reset_hosts(context):
 
 @step(u'Check solicitation for "{dev}" in "{file}"')
 def check_solicitation(context, dev, file):
-    #file = '/tmp/solicitation.txt'
-    #dev = 'enp0s25'
-    cmd = "ip a s %s |grep ff:ff|awk {'print $2'}" %dev
+    # file = '/tmp/solicitation.txt'
+    # dev = 'enp0s25'
+    cmd = "ip a s %s |grep ff:ff|awk {'print $2'}" % dev
     mac = ""
-    for line in nmci_step.command_output(context, cmd).split('\n'):
-        if line.find(':') != -1:
+    for line in nmci_step.command_output(context, cmd).split("\n"):
+        if line.find(":") != -1:
             mac = line.strip()
 
-    mac_last_4bits = mac.split(':')[-2]+mac.split(':')[-1]
-    dump = open(file, 'r')
+    mac_last_4bits = mac.split(":")[-2] + mac.split(":")[-1]
+    dump = open(file, "r")
 
-    assert mac_last_4bits not in dump.readlines(), "Route solicitation from %s was found in tshark dump" % mac
+    assert mac_last_4bits not in dump.readlines(), (
+        "Route solicitation from %s was found in tshark dump" % mac
+    )
