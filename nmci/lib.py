@@ -368,7 +368,7 @@ def setup_openvpn(tags):
     time.sleep(1)
     counter = 1
     while nmci.command_code("grep 'Initialization Sequence Completed' /tmp/openvpn.log ") != 0:
-        print ("** waiting %ss", counter )
+        print (" ** waiting %ss", counter )
         time.sleep(1)
         counter += 1
         if counter == 5:
@@ -552,9 +552,9 @@ def wait_for_testeth0():
         restore_testeth0()
 
     if nmci.command_code("nmcli con show -a |grep -q testeth0") != 0:
-        print("** we don't have testeth0 activat{ing,ed}, let's do it now")
+        print(" ** we don't have testeth0 activat{ing,ed}, let's do it now")
         if nmci.command_code("nmcli device show eth0 |grep -q '(connected)'") == 0:
-            print("** device eth0 is connected, let's disconnect it first")
+            print(" ** device eth0 is connected, let's disconnect it first")
             nmci.run("nmcli dev disconnect eth0")
         nmci.run("nmcli con up testeth0")
 
@@ -562,13 +562,13 @@ def wait_for_testeth0():
     # We need to check for all 3 items to have working connection out
     while nmci.command_code("nmcli connection show testeth0 |grep -qzE 'IP4.ADDRESS.*IP4.GATEWAY.*IP4.DNS'") != 0:
         time.sleep(1)
-        print("** %s: we don't have IPv4 (address, default route or dns) complete" % counter)
+        print(" ** %s: we don't have IPv4 (address, default route or dns) complete" % counter)
         counter += 1
         if counter == 20:
             restore_testeth0()
         if counter == 40:
             assert False, "Testeth0 cannot be upped..this is wrong"
-    print("** we do have IPv4 complete")
+    print(" ** we do have IPv4 complete")
 
 
 def reload_NM_service():

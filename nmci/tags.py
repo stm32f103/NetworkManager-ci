@@ -232,7 +232,7 @@ def gsm_bs(ctx, scen):
                     continue
                 else:
                     timeout -= freq
-                    print("** still locked.. wating %s seconds before next try" % freq)
+                    print(" ** still locked.. wating %s seconds before next try" % freq)
                     if not initialized:
                         initialized = nmci.lib.reinitialize_devices()
                     time.sleep(freq)
@@ -878,7 +878,7 @@ def simwifi_p2p_bs(ctx, scen):
         sys.exit(77)
 
     if nmci.command_code("ls /tmp/nm_*_supp_configured") == 0:
-        print("** need to remove previous setup")
+        print(" ** need to remove previous setup")
         nmci.lib.teardown_hostapd_wireless()
 
     nmci.run('modprobe -r mac80211_hwsim')
@@ -1039,10 +1039,13 @@ def openvpn_bs(ctx, scen):
 
 def openvpn_as(ctx, scen):
     print("---------------------------")
-    print("deleting openvpn profile")
+    print("teardown OpenVPN")
+    print(" ** restoring testeth0")
+    nmci.lib.restore_testeth0()
+    print(" ** deleting openvpn profile")
     nmci.run('nmcli connection delete openvpn')
     #nmci.run("sudo systemctl stop openvpn@test-server")
-    print("teardown OpenVPN")
+    print(" ** stopping OpenVPN")
     nmci.run("sudo kill $(pidof openvpn)")
     # wait for log to be complete
     ctx.ovpn_proc.wait()
@@ -1297,7 +1300,7 @@ def performance_bs(ctx, scen):
     print("---------------------------")
     print("* run only on gsm-r5 machine")
     if nmci.command_code("hostname |grep -q gsm-r5") != 0:
-        print("** skipping")
+        print(" ** skipping")
         sys.exit(77)
     # NM needs to go down
 
@@ -1757,7 +1760,7 @@ def nmstate_setup_bs(ctx, scen):
     print("* is OVS active?")
     if nmci.command_code('systemctl is-active openvswitch') != 0 or \
             nmci.command_code('systemctl status ovs-vswitchd.service |grep -q ERR') != 0:
-        print("** restarting OVS service")
+        print(" ** restarting OVS service")
         nmci.run('systemctl restart openvswitch')
         nmci.lib.restart_NM_service()
 
