@@ -287,7 +287,7 @@ install_el7_packages () {
     fi
 
     yum -y install git iw net-tools wireshark psmisc bridge-utils firewalld dhcp ethtool python36-dbus \
-                   python36-gobject dnsmasq NetworkManager-vpnc tc
+                   python36-gobject dnsmasq NetworkManager-vpnc iproute-tc openvpn
 
     yum -y install https://kojipkgs.fedoraproject.org//packages/hostapd/2.8/1.el7/$(arch)/hostapd-2.8-1.el7.$(arch).rpm
 
