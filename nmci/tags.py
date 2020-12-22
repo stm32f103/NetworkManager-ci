@@ -4,7 +4,6 @@ import sys
 import nmci
 import nmci.lib
 import time
-import glob
 import re
 
 
@@ -27,9 +26,9 @@ def _register_tag(tag_name, before_scenario=None, after_scenario=None):
 
 
 def skip_restarts_bs(ctx, scen):
-    print("---------------------------")
-    print("skipping service restart tests if /tmp/nm_skip_restarts exists")
     if os.path.isfile('/tmp/nm_skip_restarts') or os.path.isfile('/tmp/nm_skip_STR'):
+        print("---------------------------")
+        print("skipping service restart tests as /tmp/nm_skip_restarts exists")
         sys.exit(77)
 
 
@@ -1031,44 +1030,11 @@ def openvpn_bs(ctx, scen):
         nmci.lib.restart_NM_service()
 
     # This is an internal RH workaround for secondary architecures that are not present in EPEL
-
     nmci.run("[ -x /usr/sbin/openvpn ] || sudo yum -y install https://vbenes.fedorapeople.org/NM/openvpn-2.3.8-1.el7.$(uname -p).rpm\
                                                           https://vbenes.fedorapeople.org/NM/pkcs11-helper-1.11-3.el7.$(uname -p).rpm")
     nmci.run("rpm -q NetworkManager-openvpn || sudo yum -y install https://vbenes.fedorapeople.org/NM/NetworkManager-openvpn-1.0.8-1.el7.$(uname -p).rpm")
     nmci.lib.reload_NM_service()
-
-    samples = glob.glob(os.path.abspath('tmp/openvpn'))[0]
-    with open("/etc/openvpn/trest-server.conf", "w") as cfg:
-        cfg.write('# OpenVPN configuration for client testing')
-        cfg.write("\n" + 'mode server')
-        cfg.write("\n" + 'tls-server')
-        cfg.write("\n" + 'port 1194')
-        cfg.write("\n" + 'proto udp')
-        cfg.write("\n" + 'dev tun')
-        cfg.write("\n" + 'persist-key')
-        cfg.write("\n" + 'persist-tun')
-        cfg.write("\n" + 'ca %s/sample-keys/ca.crt' % samples)
-        cfg.write("\n" + 'cert %s/sample-keys/server.crt' % samples)
-        cfg.write("\n" + 'key %s/sample-keys/server.key' % samples)
-        cfg.write("\n" + 'dh %s/sample-keys/dh2048.pem' % samples)
-        if 'openvpn6' not in scen.tags:
-            cfg.write("\n" + 'server 172.31.70.0 255.255.255.0')
-            cfg.write("\n" + 'push "dhcp-option DNS 172.31.70.53"')
-            cfg.write("\n" + 'push "dhcp-option DOMAIN vpn.domain"')
-        if 'openvpn4' not in scen.tags:
-            cfg.write("\n" + 'tun-ipv6')
-            cfg.write("\n" + 'push tun-ipv6')
-            cfg.write("\n" + 'ifconfig-ipv6 2001:db8:666:dead::1/64 2001:db8:666:dead::1')
-            cfg.write("\n" + 'ifconfig-ipv6-pool 2001:db8:666:dead::/64')
-            cfg.write("\n" + 'push "ifconfig-ipv6 2001:db8:666:dead::2/64 2001:db8:666:dead::1"')
-            cfg.write("\n" + 'push "route-ipv6 2001:db8:666:dead::/64 2001:db8:666:dead::1"')
-        cfg.write("\n")
-    time.sleep(1)
-    ctx.openvpn_log = open("/tmp/openvpn.log", "w")
-    ctx.ovpn_proc = nmci.Popen("sudo openvpn /etc/openvpn/trest-server.conf",
-                                   stdout=ctx.openvpn_log)
-    time.sleep(6)
-    #call("sudo systemctl restart openvpn@test-server", shell=True)
+    ctx.openvpn_log, ctx.ovpn_proc = nmci.lib.setup_openvpn(scen.tags)
 
 
 def openvpn_as(ctx, scen):

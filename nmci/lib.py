@@ -4,6 +4,7 @@ import fcntl
 import time
 import re
 import nmci
+import glob
 
 
 def nm_pid():
@@ -327,6 +328,40 @@ def setup_libreswan(mode, dh_group, phase1_al="aes", phase2_al=None):
         teardown_libreswan(None)
         assert False, "Libreswan setup failed"
 
+def setup_openvpn(tags):
+    path = "%s/contrib/openvpn" %os.getcwd()
+    samples = glob.glob(os.path.abspath(path))[0]
+    with open("/etc/openvpn/trest-server.conf", "w") as cfg:
+        cfg.write('# OpenVPN configuration for client testing')
+        cfg.write("\n" + 'mode server')
+        cfg.write("\n" + 'tls-server')
+        cfg.write("\n" + 'port 1194')
+        cfg.write("\n" + 'proto udp')
+        cfg.write("\n" + 'dev tun')
+        cfg.write("\n" + 'persist-key')
+        cfg.write("\n" + 'persist-tun')
+        cfg.write("\n" + 'ca %s/sample-keys/ca.crt' % samples)
+        cfg.write("\n" + 'cert %s/sample-keys/server.crt' % samples)
+        cfg.write("\n" + 'key %s/sample-keys/server.key' % samples)
+        cfg.write("\n" + 'dh %s/sample-keys/dh2048.pem' % samples)
+        if 'openvpn6' not in tags:
+            cfg.write("\n" + 'server 172.31.70.0 255.255.255.0')
+            cfg.write("\n" + 'push "dhcp-option DNS 172.31.70.53"')
+            cfg.write("\n" + 'push "dhcp-option DOMAIN vpn.domain"')
+        if 'openvpn4' not in tags:
+            cfg.write("\n" + 'tun-ipv6')
+            cfg.write("\n" + 'push tun-ipv6')
+            cfg.write("\n" + 'ifconfig-ipv6 2001:db8:666:dead::1/64 2001:db8:666:dead::1')
+            #cfg.write("\n" + 'ifconfig-ipv6-pool 2001:db8:666:dead::/64')
+            cfg.write("\n" + 'push "ifconfig-ipv6 2001:db8:666:dead::2/64 2001:db8:666:dead::1"')
+            cfg.write("\n" + 'push "route-ipv6 2001:db8:666:dead::/64 2001:db8:666:dead::1"')
+        cfg.write("\n")
+    time.sleep(1)
+    openvpn_log = open("/tmp/openvpn.log", "w")
+    ovpn_proc = nmci.Popen("sudo openvpn /etc/openvpn/trest-server.conf",
+                                   stdout=openvpn_log)
+    time.sleep(6)
+    return openvpn_log, ovpn_proc
 
 def restore_connections():
     print("* recreate all connections")
