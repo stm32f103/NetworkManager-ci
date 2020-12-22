@@ -1020,20 +1020,6 @@ def openvpn_bs(ctx, scen):
     if ctx.arch == "s390x":
         nmci.lib.wait_for_testeth0()
         sys.exit(77)
-    nmci.lib.wait_for_testeth0()
-    # Install under RHEL7 only
-    if nmci.command_code("grep -q Maipo /etc/redhat-release") == 0:
-        nmci.run("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm")
-    nmci.run("[ -x /usr/sbin/openvpn ] || sudo yum -y install openvpn NetworkManager-openvpn")
-    if nmci.command_code("rpm -q NetworkManager-openvpn") != 0:
-        nmci.run("sudo yum -y install NetworkManager-openvpn-1.0.8-1.el7.$(uname -p).rpm")
-        nmci.lib.restart_NM_service()
-
-    # This is an internal RH workaround for secondary architecures that are not present in EPEL
-    nmci.run("[ -x /usr/sbin/openvpn ] || sudo yum -y install https://vbenes.fedorapeople.org/NM/openvpn-2.3.8-1.el7.$(uname -p).rpm\
-                                                          https://vbenes.fedorapeople.org/NM/pkcs11-helper-1.11-3.el7.$(uname -p).rpm")
-    nmci.run("rpm -q NetworkManager-openvpn || sudo yum -y install https://vbenes.fedorapeople.org/NM/NetworkManager-openvpn-1.0.8-1.el7.$(uname -p).rpm")
-    nmci.lib.reload_NM_service()
     ctx.openvpn_log, ctx.ovpn_proc = nmci.lib.setup_openvpn(scen.tags)
 
 
@@ -1043,6 +1029,7 @@ def openvpn_as(ctx, scen):
     print(" ** restoring testeth0")
     nmci.lib.restore_testeth0()
     print(" ** deleting openvpn profile")
+    nmci.run('nmcli connection down openvpn')
     nmci.run('nmcli connection delete openvpn')
     #nmci.run("sudo systemctl stop openvpn@test-server")
     print(" ** stopping OpenVPN")
