@@ -68,6 +68,7 @@
     @openvpn @openvpn6
     @openvpn_ipv6_neverdefault
     Scenario: nmcli - openvpn - add neverdefault IPv6 connection
+    * Delete connection "testeth0"
     * Add a connection named "openvpn" for device "\*" to "openvpn" VPN
     * Use certificate "sample-keys/client.crt" with key "sample-keys/client.key" and authority "sample-keys/ca.crt" for gateway "127.0.0.1" on OpenVPN connection "openvpn"
     * Modify connection "openvpn" changing options "ipv6.never-default yes"
