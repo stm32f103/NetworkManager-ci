@@ -328,7 +328,9 @@ def setup_libreswan(mode, dh_group, phase1_al="aes", phase2_al=None):
         teardown_libreswan(None)
         assert False, "Libreswan setup failed"
 
+
 def setup_openvpn(tags):
+    print ("* writing openvpn config")
     path = "%s/contrib/openvpn" %os.getcwd()
     samples = glob.glob(os.path.abspath(path))[0]
     with open("/etc/openvpn/trest-server.conf", "w") as cfg:
@@ -352,16 +354,28 @@ def setup_openvpn(tags):
             cfg.write("\n" + 'tun-ipv6')
             cfg.write("\n" + 'push tun-ipv6')
             cfg.write("\n" + 'ifconfig-ipv6 2001:db8:666:dead::1/64 2001:db8:666:dead::1')
-            #cfg.write("\n" + 'ifconfig-ipv6-pool 2001:db8:666:dead::/64')
+            # Not working for newer Fedoras (rhbz1909741)
+            # cfg.write("\n" + 'ifconfig-ipv6-pool 2001:db8:666:dead::/64')
             cfg.write("\n" + 'push "ifconfig-ipv6 2001:db8:666:dead::2/64 2001:db8:666:dead::1"')
             cfg.write("\n" + 'push "route-ipv6 2001:db8:666:dead::/64 2001:db8:666:dead::1"')
         cfg.write("\n")
     time.sleep(1)
     openvpn_log = open("/tmp/openvpn.log", "w")
+    print ("* starting openvpn server")
     ovpn_proc = nmci.Popen("sudo openvpn /etc/openvpn/trest-server.conf",
                                    stdout=openvpn_log)
-    time.sleep(6)
+
+    time.sleep(1)
+    counter = 1
+    while nmci.command_code("grep 'Initialization Sequence Completed' /tmp/openvpn.log ") != 0:
+        print ("** waiting %ss", counter )
+        time.sleep(1)
+        counter += 1
+        if counter == 5:
+            break
+    print (" ** Done" )
     return openvpn_log, ovpn_proc
+
 
 def restore_connections():
     print("* recreate all connections")
