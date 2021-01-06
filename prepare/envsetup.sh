@@ -81,9 +81,8 @@ install_fedora_packages () {
         dnf -y install https://kojipkgs.fedoraproject.org//packages/ipsec-tools/0.8.2/17.fc32/$(arch)/ipsec-tools-0.8.2-17.fc32.$(arch).rpm
         dnf update -y
     fi
-    # Make python3 default if it's not
-    rm -rf /usr/bin/python
-    ln -s /usr/bin/python3 /usr/bin/python
+
+    default_python_3
 
     # Pip down some deps
     dnf -4 -y install python3-pip
@@ -163,9 +162,8 @@ install_fedora_packages () {
 }
 
 install_el8_packages () {
-    # Make python3 default if it's not
-    rm -rf /usr/bin/python
-    ln -s /usr/bin/python3 /usr/bin/python
+
+    default_python_3
 
     # Enable EPEL but on s390x
     if ! uname -a |grep -q s390x; then
@@ -272,8 +270,7 @@ install_el7_packages () {
 
     yum -y install python3 python3-pip
 
-    echo python3 > /tmp/python_command
-    export_python_command
+    default_python_3
 
     python -m pip install --upgrade pip
     python -m pip install setuptools --upgrade
@@ -378,21 +375,10 @@ deploy_ssh_keys () {
     echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOeHlYMy97S9KKda5QdORi6wujhntAoFXIbfrF+rn9CK acardace@redhat.com" >> /root/.ssh/authorized_keys
 }
 
-export_python_command() {
-    if [ -f /tmp/python_command ]; then
-        PYTHON_COMMAND=$(cat /tmp/python_command)
-        if [ -n "$PYTHON_COMMAND" ]; then
-            python() {
-            if [ -f /tmp/python_command ]; then
-                PYTHON_COMMAND=$(cat /tmp/python_command)
-                if [ -n "$PYTHON_COMMAND" ]; then
-                    $PYTHON_COMMAND $@
-                fi
-            fi
-            }
-            export -f python
-        fi
-    fi
+default_python_3() {
+  # Make python3 default if it's not
+  rm -rf /usr/bin/python
+  ln -s /usr/bin/python3 /usr/bin/python
 }
 
 enable_abrt_el8 () {
